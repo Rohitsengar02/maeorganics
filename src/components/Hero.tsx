@@ -75,16 +75,6 @@ const Hero = () => {
 
   const currentSlide = slides[currentIndex];
 
-  const handleNext = () => {
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % slides.length);
-  };
-
-  const handlePrev = () => {
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
   const slideVariants = {
     enter: (direction: number) => ({
       x: direction > 0 ? 30 : -30,
@@ -137,7 +127,7 @@ const Hero = () => {
       </AnimatePresence>
 
       {/* Accent Panel */}
-      <div className="absolute inset-y-0 right-0 z-0 hidden w-[35%] md:block">
+      <div className="absolute inset-y-0 right-0 z-0 hidden w-[30%] md:block">
         <AnimatePresence>
           <motion.div
             key={`accent-${currentSlide.id}`}
@@ -245,7 +235,7 @@ const Hero = () => {
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.7, duration: 0.6, ease: "easeOut" } }}
-                  className="font-headline text-6xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-7xl lg:text-8xl xl:text-9xl"
+                  className="font-headline text-5xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-6xl lg:text-7xl xl:text-8xl"
                 >
                   {currentSlide.title.split(" ")[0]} <br />
                   <span className="bg-gradient-to-r from-[#1a1815] to-[#4a4844] bg-clip-text text-transparent">
@@ -278,7 +268,7 @@ const Hero = () => {
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.9, duration: 0.6, ease: "easeOut" } }}
-                  className="mx-auto max-w-md text-lg leading-relaxed text-[#5a5854] sm:text-xl lg:mx-0 lg:max-w-xl"
+                  className="mx-auto max-w-md text-base leading-relaxed text-[#5a5854] sm:text-lg lg:mx-0 lg:max-w-xl"
                 >
                   {currentSlide.description}
                 </motion.p>
@@ -345,14 +335,13 @@ const Hero = () => {
                     exit="exit"
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative z-10"
-                    style={{ rotate: 0 }} 
                   >
                     <Image
                       src={currentSlide.bottle.src}
                       alt={currentSlide.bottle.alt}
-                      width={340}
+                      width={380}
                       height={580}
-                      className="h-auto w-[280px] object-contain drop-shadow-2xl sm:w-[380px]"
+                      className="h-auto w-[320px] object-contain drop-shadow-2xl sm:w-[420px]"
                       priority
                     />
                   </motion.div>
