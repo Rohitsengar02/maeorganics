@@ -11,4 +11,6 @@ export type Smoothie = {
   description: string;
   price: number;
   image: ImagePlaceholder;
+  rating: number;
+  ratingCount: number;
 };

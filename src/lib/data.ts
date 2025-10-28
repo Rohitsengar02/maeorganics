@@ -6,6 +6,8 @@ export const featuredSmoothies: Smoothie[] = [
       name: 'Sunshine Orange',
       description: 'A vibrant mix of orange, mango, and passion fruit.',
       price: 7.99,
+      rating: 5,
+      ratingCount: 4.9,
       image: {
         id: 'sunshine-orange-smoothie',
         imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/True_fruits_-_Smoothie_yellow.png',
@@ -18,6 +20,8 @@ export const featuredSmoothies: Smoothie[] = [
       name: 'Green Vitality',
       description: 'Spinach, kale, apple, and a hint of ginger for a healthy kick.',
       price: 8.49,
+      rating: 4,
+      ratingCount: 4.6,
       image: {
         id: 'green-vitality-smoothie',
         imageUrl: 'https://pepelasalonline.com/wp-content/uploads/2023/02/33721-TRUE-FRUITS-SMOOTHIE-LIGHT-GREEN-25CL.png',
@@ -30,10 +34,12 @@ export const featuredSmoothies: Smoothie[] = [
       name: 'Berry Bliss',
       description: 'A classic blend of strawberries, blueberries, and raspberries.',
       price: 8.99,
+      rating: 5,
+      ratingCount: 4.8,
       image: {
         id: 'berry_smoothie',
         description: "A delicious berry smoothie with strawberries and blueberries.",
-        imageUrl: "https://images.unsplash.com/photo-1575159249868-df58bf5e09ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxiZXJyeSUyMHNtb290aGllfGVufDB8fHx8MTc2MTU3MzQ0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+        imageUrl: "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png",
         imageHint: "berry smoothie"
       },
     },
@@ -42,6 +48,8 @@ export const featuredSmoothies: Smoothie[] = [
       name: 'Crimson Crush',
       description: 'A refreshing mix of watermelon, mint, and lime.',
       price: 7.49,
+      rating: 4,
+      ratingCount: 4.5,
       image: {
         id: 'red_smoothie',
         description: "A refreshing red smoothie with watermelon and raspberries.",

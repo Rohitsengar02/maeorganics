@@ -2,22 +2,47 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useScroll } from 'framer-motion';
 import { featuredSmoothies } from '@/lib/data';
+import { Star } from 'lucide-react';
 
 const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useTransform(mouseY, [-210, 210], [10, -10]);
+  const rotateY = useTransform(mouseX, [-150, 150], [-10, 10]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   return (
     <motion.div
       ref={cardRef}
-      className="relative flex-shrink-0 w-[300px] h-[420px] rounded-3xl bg-gradient-to-br from-white/20 to-white/10 p-6 shadow-lg backdrop-blur-lg"
-      style={{ transformStyle: 'preserve-3d' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transformStyle: 'preserve-3d',
+        rotateX,
+        rotateY,
+      }}
+      className="relative flex-shrink-0 w-[300px] h-[420px] rounded-3xl bg-white/90 p-6 shadow-lg backdrop-blur-lg"
     >
       <div style={{ transform: 'translateZ(75px)' }} className="absolute inset-4 flex flex-col items-center text-center">
         <motion.div
-            style={{ transform: 'translateZ(50px)' }}
-            className="relative w-40 h-52 drop-shadow-2xl"
+            style={{ transform: 'translateZ(80px)' }}
+            className="relative w-36 h-52 drop-shadow-2xl"
         >
           <Image
             src={smoothie.image.imageUrl}
@@ -27,9 +52,18 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
           />
         </motion.div>
         
-        <h3 className="text-2xl font-bold mt-4 text-[#2d2b28]" style={{ transform: 'translateZ(50px)' }}>{smoothie.name}</h3>
-        <p className="text-sm text-[#5a5854] mt-2" style={{ transform: 'translateZ(40px)' }}>{smoothie.description}</p>
-        <p className="text-3xl font-black text-[#1a1815] mt-4" style={{ transform: 'translateZ(30px)' }}>
+        <h3 className="text-2xl font-bold mt-4 text-[#2d2b28]" style={{ transform: 'translateZ(60px)' }}>{smoothie.name}</h3>
+        
+        <div className="flex items-center gap-2 mt-2" style={{ transform: 'translateZ(50px)' }}>
+            <div className="flex text-yellow-400">
+                {[...Array(5)].map((_, i) => (
+                    <Star key={i} fill={i < smoothie.rating ? 'currentColor' : 'none'} strokeWidth={1} className="w-5 h-5"/>
+                ))}
+            </div>
+            <span className="text-sm text-foreground/70 font-medium">{smoothie.ratingCount.toFixed(1)}</span>
+        </div>
+
+        <p className="text-3xl font-black text-[#1a1815] mt-4" style={{ transform: 'translateZ(40px)' }}>
             ${smoothie.price.toFixed(2)}
         </p>
       </div>
