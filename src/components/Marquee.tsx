@@ -11,7 +11,7 @@ const MarqueeText = ({ children, direction }: { children: React.ReactNode, direc
     });
 
     const x = useTransform(scrollYProgress, [0, 1], [`${20 * direction}%`, `${-20 * direction}%`]);
-    const backgroundColor = useTransform(scrollYProgress, [0.1, 0.9], ['#f3b315', '#ffffff']);
+    const backgroundColor = useTransform(scrollYProgress, [0.1, 0.9], ['#1a1815', '#ffffff']);
     const color = useTransform(scrollYProgress, [0.1, 0.9], ['#ffffff', '#2d2b28']);
 
     return (
