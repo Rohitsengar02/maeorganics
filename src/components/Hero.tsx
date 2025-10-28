@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useScroll, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { ShoppingBag, User } from "lucide-react";
 
 const navLinks = ["About", "Smoothies", "Delivery", "Contact"];
 
@@ -62,9 +63,6 @@ const slides = [
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [quantity, setQuantity] = useState(1);
-
-  const heroRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -124,7 +122,7 @@ const Hero = () => {
   };
 
   return (
-    <section ref={heroRef} className="relative flex min-h-screen w-full items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
       {/* Animated Background */}
       <AnimatePresence>
         <motion.div
@@ -139,7 +137,7 @@ const Hero = () => {
       </AnimatePresence>
 
       {/* Accent Panel */}
-      <div className="absolute inset-y-0 right-0 z-0 hidden md:block" style={{ width: "35%" }}>
+      <div className="absolute inset-y-0 right-0 z-0 hidden w-[35%] md:block">
         <AnimatePresence>
           <motion.div
             key={`accent-${currentSlide.id}`}
@@ -152,7 +150,6 @@ const Hero = () => {
         </AnimatePresence>
       </div>
       
-
       {/* Decorative Blobs */}
       <AnimatePresence>
         <motion.div
@@ -173,7 +170,7 @@ const Hero = () => {
         />
       </AnimatePresence>
 
-      <div className="relative z-10 w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-7xl px-4 pt-6 pb-24 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
@@ -205,25 +202,25 @@ const Hero = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <motion.button
+             <motion.button
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
+              className="hidden sm:flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
             >
-              🛍️
+              <ShoppingBag size={24} className="text-[#2d2b28]" />
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/50 bg-white/70 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
+              className="hidden sm:flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/50 bg-white/70 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
             >
-              😊
+              <User size={24} className="text-[#2d2b28]" />
             </motion.button>
           </div>
         </motion.header>
 
         {/* Main Content */}
-        <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
+        <div className="mt-8 flex flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
           <div className="flex-1 space-y-6 lg:space-y-8">
             <AnimatePresence mode="wait" custom={direction}>
@@ -259,7 +256,7 @@ const Hero = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.8, duration: 0.6, ease: "easeOut" } }}
-                  className="flex items-center gap-4"
+                  className="flex items-center justify-center gap-4 lg:justify-start"
                 >
                   <div className="flex text-lg text-[#ffb627] sm:text-xl">
                     {[...Array(currentSlide.rating)].map((_, i) => (
@@ -281,7 +278,7 @@ const Hero = () => {
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.9, duration: 0.6, ease: "easeOut" } }}
-                  className="max-w-xl text-sm leading-relaxed text-[#5a5854] sm:text-base"
+                  className="mx-auto max-w-md text-sm leading-relaxed text-[#5a5854] sm:text-base lg:mx-0 lg:max-w-xl"
                 >
                   {currentSlide.description}
                 </motion.p>
@@ -290,8 +287,8 @@ const Hero = () => {
           </div>
 
           {/* Bottle Showcase */}
-          <div className="relative flex flex-1 items-center justify-center py-8 lg:py-0">
-            <div className="relative flex w-full max-w-md items-center justify-center lg:max-w-lg">
+          <div className="relative mt-8 flex flex-1 items-center justify-center py-8 lg:mt-0 lg:py-0">
+            <div className="relative flex w-full max-w-xs items-center justify-center sm:max-w-sm md:max-w-md lg:max-w-lg">
               {/* Desktop Ingredients - Left */}
               <div className="hidden min-w-[100px] flex-col items-end gap-8 pr-4 lg:flex">
                 <AnimatePresence mode="popLayout">
@@ -326,7 +323,7 @@ const Hero = () => {
               </div>
 
               {/* Bottle */}
-              <div className="relative flex h-[350px] w-[220px] items-center justify-center sm:h-[400px] sm:w-[250px]">
+              <div className="relative flex h-[300px] w-[180px] items-center justify-center sm:h-[350px] sm:w-[220px]">
                 <AnimatePresence>
                   <motion.div
                     key={`halo-${currentSlide.id}`}
@@ -352,9 +349,9 @@ const Hero = () => {
                     <Image
                       src={currentSlide.bottle.src}
                       alt={currentSlide.bottle.alt}
-                      width={200}
-                      height={350}
-                      className="h-[300px] w-auto object-contain drop-shadow-2xl sm:h-[350px]"
+                      width={180}
+                      height={320}
+                      className="h-[280px] w-auto object-contain drop-shadow-2xl sm:h-[350px]"
                       priority
                     />
                   </motion.div>
@@ -397,20 +394,51 @@ const Hero = () => {
           </div>
         </div>
 
+        {/* Ingredients for Mobile */}
+        <div className="mt-12 lg:hidden">
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={`mobile-ingredients-${currentSlide.id}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 0.3 } }}
+              exit={{ opacity: 0 }}
+              className="flex justify-center gap-4"
+            >
+              {[...currentSlide.baseIngredients, ...currentSlide.extras].slice(0, 4).map((item, i) => (
+                <motion.div
+                  key={item.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + i * 0.1, duration: 0.5, ease: "easeOut" }}
+                  className="flex flex-col items-center gap-2"
+                >
+                  <motion.span
+                    className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-xl shadow-lg`}
+                  >
+                    {item.icon}
+                  </motion.span>
+                  <span className="text-xs font-semibold text-[#2f2a23]">{item.name}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+
         {/* Carousel Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.6, ease: "easeOut" }}
-          className="mt-8 flex items-center justify-center gap-4"
+          transition={{ delay: 1, duration: 0.6, ease: "easeOut" }}
+          className="absolute bottom-28 left-1/2 -translate-x-1/2 transform sm:bottom-8 lg:relative lg:bottom-auto lg:left-auto lg:translate-x-0 lg:mt-8 flex w-full items-center justify-center gap-4"
         >
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handlePrev}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:shadow-xl"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:shadow-xl sm:h-12 sm:w-12"
           >
-            <span className="text-xl text-[#2f2a23]">←</span>
+            <span className="text-lg text-[#2f2a23] sm:text-xl">←</span>
           </motion.button>
 
           <div className="flex gap-2">
@@ -425,7 +453,7 @@ const Hero = () => {
                 }}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? "w-8 bg-[#2f2a23]"
+                    ? "w-6 bg-[#2f2a23] sm:w-8"
                     : "w-2 bg-[#2f2a23]/30 hover:bg-[#2f2a23]/50"
                 }`}
               />
@@ -436,9 +464,9 @@ const Hero = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleNext}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:shadow-xl"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:shadow-xl sm:h-12 sm:w-12"
           >
-            <span className="text-xl text-[#2f2a23]">→</span>
+            <span className="text-lg text-[#2f2a23] sm:text-xl">→</span>
           </motion.button>
         </motion.div>
       </div>

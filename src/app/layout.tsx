@@ -2,6 +2,7 @@
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ReactLenis } from "@studio-freight/react-lenis";
+import { MobileBottomNav } from '@/components/MobileBottomNav';
 
 export default function RootLayout({
   children,
@@ -20,6 +21,7 @@ export default function RootLayout({
           {children}
         </ReactLenis>
         <Toaster />
+        <MobileBottomNav />
       </body>
     </html>
   );
