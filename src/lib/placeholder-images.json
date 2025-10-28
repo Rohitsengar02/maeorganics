@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero_smoothie",
+      "description": "A vibrant orange smoothie in a glass, garnished with an orange slice.",
+      "imageUrl": "https://images.unsplash.com/photo-1654179279965-8ff0872d976b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxvcmFuZ2UlMjBzbW9vdGhpZXxlbnwwfHx8fDE3NjE2MjkwMTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "orange smoothie"
+    },
+    {
+      "id": "green_smoothie",
+      "description": "A healthy green smoothie with spinach and kiwi.",
+      "imageUrl": "https://images.unsplash.com/photo-1540073202216-5919f7d8307b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Z3JlZW4lMjBzbW9vdGhpZXxlbnwwfHx8fDE3NjE1NzIzODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "green smoothie"
+    },
+    {
+      "id": "berry_smoothie",
+      "description": "A delicious berry smoothie with strawberries and blueberries.",
+      "imageUrl": "https://images.unsplash.com/photo-1575159249868-df58bf5e09ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxiZXJyeSUyMHNtb290aGllfGVufDB8fHx8MTc2MTU3MzQ0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "berry smoothie"
+    },
+    {
+      "id": "tropical_smoothie",
+      "description": "A tropical smoothie with mango and pineapple.",
+      "imageUrl": "https://images.unsplash.com/photo-1682637534903-43c598a08e39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx5ZWxsb3clMjBzbW9vdGhpZXxlbnwwfHx8fDE3NjE2MjkwMTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "yellow smoothie"
+    },
+    {
+      "id": "red_smoothie",
+      "description": "A refreshing red smoothie with watermelon and raspberries.",
+      "imageUrl": "https://images.unsplash.com/photo-1749940015122-9263483c4642?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyZWQlMjBzbW9vdGhpZXxlbnwwfHx8fDE3NjE2MjkwMTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "red smoothie"
+    }
+  ]
 }
