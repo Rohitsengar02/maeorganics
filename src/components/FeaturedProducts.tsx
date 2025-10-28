@@ -44,15 +44,15 @@ const FeaturedProducts = () => {
     offset: ['start end', 'end start'],
   });
 
-  const x = useTransform(scrollYProgress, [0.1, 0.8], ['5%', '-60%']);
+  const x = useTransform(scrollYProgress, [0.1, 0.8], ['5%', '-30%']);
 
   return (
-    <section ref={targetRef} className="relative h-[150vh] py-24" id="featured-products">
+    <section ref={targetRef} className="relative h-[150vh] py-0" id="featured-products">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <div className="container max-w-7xl mx-auto px-4 absolute top-24 left-1/2 -translate-x-1/2 z-10">
            <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Smoothies</h2>
         </div>
-        <motion.div style={{ x }} className="flex gap-8 pl-[20%] mt-24">
+        <motion.div style={{ x }} className="flex gap-8 pl-[20%] mt-36">
             {featuredSmoothies.map((smoothie) => (
               <SmoothieCard key={smoothie.id} smoothie={smoothie} />
             ))}
