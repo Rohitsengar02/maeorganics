@@ -2,6 +2,7 @@
 import { Star, Leaf, FlaskConical, CircleCheck } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from './ui/button';
+import { motion } from 'framer-motion';
 
 const features = [
   {
@@ -31,19 +32,67 @@ const features = [
 ];
 
 const WhyChooseUs = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+  
+  const leftItemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 },
+  };
+
+  const rightItemVariants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: { opacity: 1, x: 0 },
+  };
+
+  const centerItemVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1 },
+  };
+
+
   return (
-    <section className="py-24 bg-[#fdf8e8]">
+    <section className="py-24 bg-[#fdf8e8] overflow-hidden">
       <div className="container max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
+        <motion.div 
+          className="text-center mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          variants={itemVariants}
+          transition={{ duration: 0.5 }}
+        >
           <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Why Choose Our Smoothies?</h2>
           <p className="max-w-2xl mx-auto mt-4 text-[#5a5854]">
             Your self-care ritual in a bottle! It has branched-chain amino acids, is whatever & further has shatavari, an adaptogen that is prized.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-y-12 md:gap-x-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-3 items-center gap-y-12 md:gap-x-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
+        >
           {/* Left Column */}
-          <div className="space-y-12">
+          <motion.div 
+            className="space-y-12"
+            variants={leftItemVariants}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <div className={features[0].align}>
               {features[0].icon}
               <h3 className="text-xl font-bold text-[#2d2b28] mt-2">{features[0].title}</h3>
@@ -54,10 +103,14 @@ const WhyChooseUs = () => {
               <h3 className="text-xl font-bold text-[#2d2b28] mt-2">{features[2].title}</h3>
               <p className="text-[#5a5854] mt-1">{features[2].description}</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Center Column - Image */}
-          <div className="flex flex-col items-center justify-center order-first md:order-none">
+          <motion.div 
+            className="flex flex-col items-center justify-center order-first md:order-none"
+            variants={centerItemVariants}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <div className="relative w-64 h-96">
                 <Image
                     src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png"
@@ -70,10 +123,14 @@ const WhyChooseUs = () => {
             <Button className="mt-8 rounded-full bg-[#f3b315] hover:bg-[#e0a30b] text-primary-foreground font-bold">
                 Learn More
             </Button>
-          </div>
+          </motion.div>
 
           {/* Right Column */}
-          <div className="space-y-12">
+          <motion.div 
+            className="space-y-12"
+            variants={rightItemVariants}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
             <div className={features[1].align}>
               {features[1].icon}
               <h3 className="text-xl font-bold text-[#2d2b28] mt-2">{features[1].title}</h3>
@@ -84,9 +141,9 @@ const WhyChooseUs = () => {
               <h3 className="text-xl font-bold text-[#2d2b28] mt-2">{features[3].title}</h3>
               <p className="text-[#5a5854] mt-1">{features[3].description}</p>
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );
