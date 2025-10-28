@@ -11,7 +11,7 @@ const slides = [
   {
     id: 1,
     bottle: {
-      src: "https://upload.wikimedia.org/wikipedia/commons/8/8d/True_fruits_-_Smoothie_yellow.png",
+      src: "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png",
       alt: "True Fruits yellow smoothie bottle",
     },
     title: "Sunshine Orange",
