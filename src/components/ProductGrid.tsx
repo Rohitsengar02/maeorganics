@@ -14,6 +14,11 @@ const containerVariants = {
   },
 };
 
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const ProductGrid = () => {
   return (
     <section className="py-24 bg-[#fdf8e8]">
@@ -25,15 +30,17 @@ const ProductGrid = () => {
           </p>
         </div>
 
-        <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            variants={containerVariants}
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={containerVariants}
         >
           {allProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <motion.div key={product.id} variants={itemVariants}>
+              <ProductCard product={product} />
+            </motion.div>
           ))}
         </motion.div>
       </div>
