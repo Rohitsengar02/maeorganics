@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronRight, LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Footer from '@/components/Footer';
 import ProductGrid from '@/components/ProductGrid';
 import { Header } from '@/components/header';
@@ -25,12 +26,19 @@ export default function ShopPage() {
       <Header />
       <main className="flex-grow">
         {/* Page Header */}
-        <div className="bg-white/50 py-8">
-          <div className="container mx-auto max-w-7xl px-4 text-center">
-            <h1 className="text-4xl font-headline font-black text-[#2d2b28]">
+        <div className="relative h-64 w-full">
+          <Image
+            src="https://images.unsplash.com/photo-1516594798947-7b7a67b5a1a7?q=80&w=2070&auto=format&fit=crop"
+            alt="Fresh ingredients for smoothies"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+            <h1 className="text-5xl font-headline font-black">
               Shop
             </h1>
-            <div className="mt-2 flex items-center justify-center text-sm font-medium text-[#5a5854]">
+            <div className="mt-2 flex items-center text-sm font-medium">
               <Link href="/" className="hover:text-primary">
                 Home
               </Link>
@@ -40,7 +48,7 @@ export default function ShopPage() {
           </div>
         </div>
 
-        <div className="container mx-auto max-w-7xl px-4 py-8">
+        <div className="container mx-auto max-w-7xl px-4 py-12">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
             {/* Desktop Sidebar */}
             <div className="hidden lg:block">

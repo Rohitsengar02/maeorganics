@@ -42,8 +42,8 @@ const ShopSidebar = () => {
         <div className="space-y-4">
           {featuredSmoothies.slice(0, 3).map((product) => (
             <div key={product.id} className="flex items-center gap-4">
-              <div className="relative h-16 w-16 rounded-md bg-gray-100">
-                <Image src={product.image.imageUrl} alt={product.name} fill className="object-contain p-1" />
+              <div className="relative h-16 w-16 rounded-md bg-gray-100/50 flex-shrink-0">
+                <Image src={product.image.imageUrl} alt={product.name} fill className="object-contain p-2" />
               </div>
               <div>
                 <p className="font-semibold text-sm">{product.name}</p>
