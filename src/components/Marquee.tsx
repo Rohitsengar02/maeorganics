@@ -2,15 +2,6 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { cn } from '@/lib/utils';
-
-const marqueeTexts = [
-  "Pure Herbal Freshness 🌿",
-  "Aloe & Mint Powered Cleanse 🍃",
-  "Soothing Fragrance. Gentle Touch 💧",
-  "Nature’s Care for Every Wash 🌱",
-  "EcoBless – Made from Nature ♻️",
-];
 
 const MarqueeText = ({ children, direction }: { children: React.ReactNode, direction: number }) => {
     const marqueeRef = useRef<HTMLDivElement>(null);
@@ -20,14 +11,16 @@ const MarqueeText = ({ children, direction }: { children: React.ReactNode, direc
     });
 
     const x = useTransform(scrollYProgress, [0, 1], [`${20 * direction}%`, `${-20 * direction}%`]);
+    const backgroundColor = useTransform(scrollYProgress, [0.1, 0.9], ['#f3b315', '#ffffff']);
+    const color = useTransform(scrollYProgress, [0.1, 0.9], ['#ffffff', '#2d2b28']);
 
     return (
-        <motion.div ref={marqueeRef} className="overflow-hidden py-8 bg-[#f3b315]" style={{ x }}>
+        <motion.div ref={marqueeRef} className="overflow-hidden py-8 px-4" style={{ backgroundColor, x }}>
             <div className="flex gap-8 whitespace-nowrap">
                 {Array.from({ length: 5 }).map((_, i) => (
-                    <span key={i} className="text-3xl font-headline font-semibold text-white">
+                    <motion.span key={i} className="text-3xl font-headline font-semibold" style={{ color }}>
                         {children}
-                    </span>
+                    </motion.span>
                 ))}
             </div>
         </motion.div>
