@@ -29,13 +29,13 @@ export function MobileBottomNav() {
               <item.icon
                 className={cn(
                   'h-6 w-6 transition-colors',
-                  isActive ? 'text-yellow-500' : 'text-gray-400'
+                  isActive ? 'text-primary' : 'text-gray-400'
                 )}
               />
               <span
                 className={cn(
                   'text-xs font-medium transition-colors',
-                  isActive ? 'text-yellow-600' : 'text-gray-500'
+                  isActive ? 'text-primary' : 'text-gray-500'
                 )}
               >
                 {item.label}
@@ -43,7 +43,7 @@ export function MobileBottomNav() {
               {isActive && (
                 <motion.div
                   layoutId="active-indicator"
-                  className="h-1 w-1 bg-yellow-500 rounded-full"
+                  className="h-1 w-1 bg-primary rounded-full"
                 />
               )}
             </motion.div>
