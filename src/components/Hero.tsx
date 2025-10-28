@@ -99,19 +99,37 @@ const Hero = () => {
 
   const slideVariants = {
     enter: (direction: number) => ({
+      x: direction > 0 ? 50 : -50,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 50 : -50,
+      opacity: 0,
+    }),
+  };
+
+  const bottleVariants = {
+    enter: (direction: number) => ({
       x: direction > 0 ? 100 : -100,
       opacity: 0,
       scale: 0.8,
+      rotate: direction > 0 ? -15 : 15,
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
+      rotate: 0,
     },
     exit: (direction: number) => ({
-      x: direction > 0 ? -100 : 100,
+      x: direction < 0 ? 100 : -100,
       opacity: 0,
       scale: 0.8,
+      rotate: direction < 0 ? 15 : -15,
     }),
   };
 
@@ -124,7 +142,7 @@ const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
+        transition={{ duration: 1, ease: "easeInOut" }}
         className="absolute inset-0 z-0"
         style={{ backgroundColor: currentSlide.baseBackground }}
       />
@@ -133,10 +151,10 @@ const Hero = () => {
       <AnimatePresence mode="wait">
         <motion.div
           key={`accent-${currentSlide.id}`}
-          initial={{ x: "100%", opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: "100%", opacity: 0 }}
-          transition={{ duration: 0.7, ease: [0.43, 0.13, 0.23, 0.96] }}
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
           className="absolute inset-y-0 right-0 z-0 hidden md:block"
           style={{ width: "35%", backgroundColor: currentSlide.accentBackground }}
         />
@@ -147,7 +165,7 @@ const Hero = () => {
         key={`blob1-${currentSlide.id}`}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 0.1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         className="absolute -left-32 top-1/4 h-96 w-96 rounded-full blur-3xl"
         style={{ backgroundColor: currentSlide.accentBackground }}
       />
@@ -155,7 +173,7 @@ const Hero = () => {
         key={`blob2-${currentSlide.id}`}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 0.08 }}
-        transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
         className="absolute -bottom-20 right-0 h-80 w-80 rounded-full blur-3xl"
         style={{ backgroundColor: currentSlide.accentBackground }}
       />
@@ -165,7 +183,7 @@ const Hero = () => {
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: [0.6, 0.01, -0.05, 0.95] }}
           className="flex items-center justify-between"
         >
           <motion.div
@@ -182,7 +200,7 @@ const Hero = () => {
                 href="#"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: 0.2 + i * 0.1, ease: "easeOut" }}
                 whileHover={{ y: -2, color: "#000" }}
                 className="transition-all duration-200"
               >
@@ -221,22 +239,22 @@ const Hero = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] }}
+                transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                 className="space-y-4"
               >
                 <motion.span
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
                   className="inline-block text-xs font-bold uppercase tracking-[0.3em] text-[#b8884d] sm:text-sm"
                 >
                   {currentSlide.subtitle}
                 </motion.span>
 
                 <motion.h1
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
                   className="text-4xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-5xl lg:text-6xl xl:text-7xl"
                 >
                   {currentSlide.title.split(" ")[0]} <br />
@@ -246,9 +264,9 @@ const Hero = () => {
                 </motion.h1>
 
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
                   className="flex items-center gap-4"
                 >
                   <div className="flex text-lg text-[#ffb627] sm:text-xl">
@@ -257,7 +275,7 @@ const Hero = () => {
                         key={i}
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5 + i * 0.1 }}
+                        transition={{ delay: 0.8 + i * 0.05, type: "spring", stiffness: 300, damping: 20 }}
                       >
                         ★
                       </motion.span>
@@ -269,9 +287,9 @@ const Hero = () => {
                 </motion.div>
 
                 <motion.p
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
                   className="max-w-xl text-sm leading-relaxed text-[#5a5854] sm:text-base"
                 >
                   {currentSlide.description}
@@ -284,13 +302,13 @@ const Hero = () => {
 
             {/* Mobile Ingredients */}
             <div className="flex items-center justify-between gap-4 lg:hidden">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={`mobile-base-${currentSlide.id}`}
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.4, staggerChildren: 0.1 }}
+                  transition={{ duration: 0.5, ease: "easeOut", staggerChildren: 0.1 }}
                   className="flex flex-col gap-3"
                 >
                   {currentSlide.baseIngredients.map((item, i) => (
@@ -298,12 +316,13 @@ const Hero = () => {
                       key={item.name}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.1 }}
+                      transition={{ delay: 0.8 + i * 0.1, ease: "easeOut" }}
                       className="flex items-center gap-3"
                     >
                       <span className="text-sm font-semibold text-[#2f2a23]">{item.name}</span>
                       <motion.span
-                        whileHover={{ scale: 1.2, rotate: 360 }}
+                        whileHover={{ scale: 1.2, rotate: 15 }}
+                        transition={{type: "spring", stiffness: 300}}
                         className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-base shadow-lg`}
                       >
                         {item.icon}
@@ -313,13 +332,13 @@ const Hero = () => {
                 </motion.div>
               </AnimatePresence>
 
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={`mobile-extra-${currentSlide.id}`}
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 30 }}
-                  transition={{ duration: 0.4, staggerChildren: 0.1 }}
+                  transition={{ duration: 0.5, ease: "easeOut", staggerChildren: 0.1 }}
                   className="flex flex-col items-end gap-3"
                 >
                   {currentSlide.extras.map((item, i) => (
@@ -327,12 +346,13 @@ const Hero = () => {
                       key={item.name}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.1 }}
+                      transition={{ delay: 0.8 + i * 0.1, ease: "easeOut" }}
                       className="flex items-center gap-3"
                     >
                       <span className="text-sm font-semibold text-[#2f2a23]">{item.name}</span>
                       <motion.span
-                        whileHover={{ scale: 1.2, rotate: -360 }}
+                        whileHover={{ scale: 1.2, rotate: -15 }}
+                        transition={{type: "spring", stiffness: 300}}
                         className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-base shadow-lg`}
                       >
                         {item.icon}
@@ -349,13 +369,13 @@ const Hero = () => {
             <div className="relative flex w-full max-w-md items-center justify-center lg:max-w-lg">
               {/* Desktop Ingredients - Left */}
               <div className="hidden min-w-[100px] flex-col items-end gap-8 pr-4 lg:flex">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                   <motion.div
                     key={`desktop-base-${currentSlide.id}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.4 }}
                     className="flex flex-col gap-8"
                   >
                     {currentSlide.baseIngredients.map((item, i) => (
@@ -363,13 +383,13 @@ const Hero = () => {
                         key={item.name}
                         initial={{ opacity: 0, x: 40 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.6 + i * 0.1, duration: 0.4 }}
+                        transition={{ delay: 0.8 + i * 0.1, duration: 0.5, ease: "easeOut" }}
                         className="flex items-center gap-3"
                       >
                         <span className="text-sm font-semibold text-[#2f2a23]">{item.name}</span>
                         <motion.span
-                          whileHover={{ scale: 1.2, rotate: 360 }}
-                          transition={{ duration: 0.3 }}
+                          whileHover={{ scale: 1.2, rotate: 15 }}
+                          transition={{ type: "spring", stiffness: 300 }}
                           className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-lg shadow-xl`}
                         >
                           {item.icon}
@@ -384,10 +404,10 @@ const Hero = () => {
               <div ref={bottleRef} className="relative flex h-[350px] w-[220px] items-center justify-center sm:h-[400px] sm:w-[250px]">
                 <motion.div
                   key={`halo-${currentSlide.id}`}
-                  initial={{ scale: 0, opacity: 0, rotate: -180 }}
-                  animate={{ scale: 1, opacity: 0.9, rotate: 0 }}
-                  exit={{ scale: 0, opacity: 0, rotate: 180 }}
-                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  initial={{ scale: 0, opacity: 0, rotate: -90 }}
+                  animate={{ scale: 1, opacity: 0.8, rotate: 0 }}
+                  exit={{ scale: 0, opacity: 0, rotate: 90 }}
+                  transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                   className={`absolute inset-0 m-auto h-[90%] w-[80%] rounded-[50%] bg-gradient-to-t ${currentSlide.haloGradient} blur-2xl`}
                 />
 
@@ -395,10 +415,11 @@ const Hero = () => {
                   <motion.div
                     key={currentSlide.id}
                     custom={direction}
-                    initial={{ x: direction > 0 ? 100 : -100, opacity: 0, scale: 0.8, rotateY: 90 }}
-                    animate={{ x: 0, opacity: 1, scale: 1, rotateY: 0 }}
-                    exit={{ x: direction > 0 ? -100 : 100, opacity: 0, scale: 0.8, rotateY: -90 }}
-                    transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
+                    variants={bottleVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative z-10"
                   >
                     <Image
@@ -415,13 +436,13 @@ const Hero = () => {
 
               {/* Desktop Ingredients - Right */}
               <div className="hidden min-w-[100px] flex-col gap-8 pl-4 lg:flex">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                   <motion.div
                     key={`desktop-extra-${currentSlide.id}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.4 }}
                     className="flex flex-col gap-8"
                   >
                     {currentSlide.extras.map((item, i) => (
@@ -429,12 +450,12 @@ const Hero = () => {
                         key={item.name}
                         initial={{ opacity: 0, x: -40 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.6 + i * 0.1, duration: 0.4 }}
+                        transition={{ delay: 0.8 + i * 0.1, duration: 0.5, ease: "easeOut" }}
                         className="flex items-center gap-3"
                       >
                         <motion.span
-                          whileHover={{ scale: 1.2, rotate: -360 }}
-                          transition={{ duration: 0.3 }}
+                          whileHover={{ scale: 1.2, rotate: -15 }}
+                          transition={{ type: "spring", stiffness: 300 }}
                           className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-lg shadow-xl`}
                         >
                           {item.icon}
@@ -453,7 +474,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
           className="mt-8 flex items-center justify-center gap-4"
         >
           <motion.button
@@ -618,3 +639,5 @@ const Hero = () => {
 };
 
 export default Hero;
+
+    
