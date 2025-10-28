@@ -3,7 +3,9 @@
 import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { ShoppingBag, User } from "lucide-react";
+import { ShoppingBag, User, Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
 
 const navLinks = ["About", "Smoothies", "Delivery", "Contact"];
 
@@ -217,6 +219,28 @@ const Hero = () => {
             >
               <User size={24} className="text-[#2d2b28]" />
             </motion.button>
+             <div className="md:hidden">
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Menu className="h-6 w-6 text-[#2d2b28]" />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right">
+                        <nav className="flex flex-col gap-6 pt-10 text-lg font-medium">
+                            {navLinks.map((item) => (
+                            <a
+                                key={item}
+                                href="#"
+                                className="text-foreground/80 transition-colors hover:text-foreground"
+                            >
+                                {item}
+                            </a>
+                            ))}
+                        </nav>
+                    </SheetContent>
+                </Sheet>
+            </div>
           </div>
         </motion.header>
 
@@ -286,56 +310,56 @@ const Hero = () => {
               </motion.div>
             </AnimatePresence>
             {/* Product Suggestions (Bottom Cards) */}
-<motion.div
-  initial={{ opacity: 0, y: 50 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
-  className="mt-10 space-y-5 hidden lg:block"
->
-  <h3 className="text-lg font-semibold text-[#1a1815] tracking-wide">
-    You might also like :
-  </h3>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
+              className="mt-10 space-y-5 hidden lg:block"
+            >
+              <h3 className="text-lg font-semibold text-[#1a1815] tracking-wide">
+                You might also like :
+              </h3>
 
-  <div className="flex flex-wrap gap-6">
-    {/* Card 1 */}
-    <motion.div
-      whileHover={{ y: -8, scale: 1.03 }}
-      transition={{ type: "spring", stiffness: 250, damping: 18 }}
-      className="relative flex items-center justify-between w-[230px] rounded-2xl bg-[#fff8f0] shadow-md hover:shadow-xl transition-all duration-500 px-5 py-3 cursor-pointer"
-    >
-      <div className="flex flex-col">
-        <span className="text-[15px] font-semibold text-[#1a1815]">Apple Smoothie</span>
-        <span className="text-[#b8884d] text-sm font-medium">$79</span>
-      </div>
-      <div className="w-14 h-14 relative">
-        <img
-          src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png"
-          alt="Apple Smoothie"
-          className="object-contain w-full h-full"
-        />
-      </div>
-    </motion.div>
+              <div className="flex flex-wrap gap-6">
+                {/* Card 1 */}
+                <motion.div
+                  whileHover={{ y: -8, scale: 1.03 }}
+                  transition={{ type: "spring", stiffness: 250, damping: 18 }}
+                  className="relative flex items-center justify-between w-[230px] rounded-2xl bg-[#fff8f0] shadow-md hover:shadow-xl transition-all duration-500 px-5 py-3 cursor-pointer"
+                >
+                  <div className="flex flex-col">
+                    <span className="text-[15px] font-semibold text-[#1a1815]">Apple Smoothie</span>
+                    <span className="text-[#b8884d] text-sm font-medium">$79</span>
+                  </div>
+                  <div className="w-14 h-14 relative">
+                    <img
+                      src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png"
+                      alt="Apple Smoothie"
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                </motion.div>
 
-    {/* Card 2 */}
-    <motion.div
-      whileHover={{ y: -8, scale: 1.03 }}
-      transition={{ type: "spring", stiffness: 250, damping: 18 }}
-      className="relative flex items-center justify-between w-[230px] rounded-2xl bg-[#fff8f0] shadow-md hover:shadow-xl transition-all duration-500 px-5 py-3 cursor-pointer"
-    >
-      <div className="flex flex-col">
-        <span className="text-[15px] font-semibold text-[#1a1815]">Lemon Smoothie</span>
-        <span className="text-[#b8884d] text-sm font-medium">$49</span>
-      </div>
-      <div className="w-14 h-14 relative">
-        <img
-          src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png"
-          alt="Lemon Smoothie"
-          className="object-contain w-full h-full"
-        />
-      </div>
-    </motion.div>
-  </div>
-</motion.div>
+                {/* Card 2 */}
+                <motion.div
+                  whileHover={{ y: -8, scale: 1.03 }}
+                  transition={{ type: "spring", stiffness: 250, damping: 18 }}
+                  className="relative flex items-center justify-between w-[230px] rounded-2xl bg-[#fff8f0] shadow-md hover:shadow-xl transition-all duration-500 px-5 py-3 cursor-pointer"
+                >
+                  <div className="flex flex-col">
+                    <span className="text-[15px] font-semibold text-[#1a1815]">Lemon Smoothie</span>
+                    <span className="text-[#b8884d] text-sm font-medium">$49</span>
+                  </div>
+                  <div className="w-14 h-14 relative">
+                    <img
+                      src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png"
+                      alt="Lemon Smoothie"
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
 
           </div>
 
@@ -376,7 +400,7 @@ const Hero = () => {
               </div>
 
               {/* Bottle */}
-              <div className="relative flex h-[500px] w-[350px] items-center justify-center sm:h-[650px] sm:w-[450px]">
+              <div className="relative flex h-[500px] w-[350px] items-center justify-center sm:h-[450px] sm:w-[250px]">
                 <AnimatePresence>
                   <motion.div
                     key={`halo-${currentSlide.id}`}
@@ -397,7 +421,7 @@ const Hero = () => {
                     animate="center"
                     exit="exit"
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                    className="relative z-10 mt-24"
+                    className="relative z-10"
                     style={{ 
                       rotate: 0,
                       y: imageY
@@ -408,11 +432,44 @@ const Hero = () => {
                       alt={currentSlide.bottle.alt}
                       width={173}
                       height={223}
-                      className="h-auto mt-[-200px] w-full object-contain drop-shadow-2xl"
+                      className="h-auto w-full object-contain drop-shadow-2xl"
                       priority
                     />
                   </motion.div>
                 </AnimatePresence>
+
+                 {/* Mobile Ingredients */}
+                 <div className="absolute inset-0 z-20 flex items-center justify-center lg:hidden">
+                    <AnimatePresence mode="popLayout">
+                        <motion.div
+                        key={`mobile-ingredients-${currentSlide.id}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, transition: { delay: 0.5, staggerChildren: 0.1 } }}
+                        exit={{ opacity: 0 }}
+                        className="relative h-full w-full"
+                        >
+                        {currentSlide.baseIngredients.map((item, i) => (
+                            <motion.div
+                            key={item.name}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1, transition: { delay: 0.8 + i * 0.1, type: 'spring' } }}
+                            className="absolute"
+                            style={{
+                                top: `${20 + i * 25}%`,
+                                left: i % 2 === 0 ? '5%' : 'auto',
+                                right: i % 2 !== 0 ? '5%' : 'auto',
+                            }}
+                            >
+                            <motion.div
+                                className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-lg shadow-xl`}
+                            >
+                                {item.icon}
+                            </motion.div>
+                            </motion.div>
+                        ))}
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
               </div>
 
               {/* Desktop Ingredients - Right */}
@@ -451,17 +508,17 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Ingredients for Mobile */}
+        {/* Ingredients for Mobile (bottom) */}
         <div className="mt-12 lg:hidden">
           <AnimatePresence mode="popLayout">
             <motion.div
-              key={`mobile-ingredients-${currentSlide.id}`}
+              key={`mobile-ingredients-bottom-${currentSlide.id}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: { delay: 0.3 } }}
               exit={{ opacity: 0 }}
               className="flex justify-center gap-4"
             >
-              {[...currentSlide.baseIngredients, ...currentSlide.extras].slice(0, 4).map((item, i) => (
+              {[...currentSlide.extras].slice(0, 3).map((item, i) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, y: 20 }}
@@ -486,5 +543,6 @@ const Hero = () => {
 };
 
 export default Hero;
+    
 
     
