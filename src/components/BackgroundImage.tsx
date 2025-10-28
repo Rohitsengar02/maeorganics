@@ -11,11 +11,12 @@ export function BackgroundImage() {
   const x = useTransform(scrollYProgress, [0.3, 0.8], ['-10%', '-155%']);
   const rotate = useTransform(scrollYProgress, [0.3, 0.8], [-5, 5]);
   const scale = useTransform(scrollYProgress, [0.3, 0.8], [1.2, 0.8]);
+  const opacity = useTransform(scrollYProgress, [0.3, 0.35], [0, 1]);
   
   return (
     <motion.div 
         className="absolute right-[-10%] top-0 w-[400px] h-[700px] mt-[70vh] z-0"
-        style={{ y, x, rotate, scale }}
+        style={{ y, x, rotate, scale, opacity }}
     >
     <Image
         src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png"
