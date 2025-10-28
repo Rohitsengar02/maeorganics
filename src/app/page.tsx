@@ -2,6 +2,7 @@
 import FeaturedProducts from '@/components/FeaturedProducts';
 import Hero from '@/components/Hero';
 import Marquee from '@/components/Marquee';
+import WhyChooseUs from '@/components/WhyChooseUs';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
         <Hero />
         <Marquee />
         <FeaturedProducts />
+        <WhyChooseUs />
       </main>
     </div>
   );
