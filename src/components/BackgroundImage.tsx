@@ -12,15 +12,10 @@ export function BackgroundImage() {
   const rotate = useTransform(scrollYProgress, [0.3, 0.8], [-5, 5]);
   const scale = useTransform(scrollYProgress, [0.3, 0.8], [1.2, 0.8]);
   
-  // Z-index: Start behind, then move to front
-  const zIndex = useTransform(scrollYProgress, (pos) => {
-    return pos > 0.35 && pos < 0.78 ? 40 : 0;
-  });
-
   return (
     <motion.div 
-        className="absolute right-[-10%] top-0 w-[400px] h-[700px] mt-[70vh]"
-        style={{ y, x, rotate, scale, zIndex }}
+        className="absolute right-[-10%] top-0 w-[400px] h-[700px] mt-[70vh] z-0"
+        style={{ y, x, rotate, scale }}
     >
     <Image
         src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png"
