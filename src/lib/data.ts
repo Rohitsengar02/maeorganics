@@ -58,3 +58,42 @@ export const featuredSmoothies: Smoothie[] = [
       },
     },
   ];
+
+export const smoothieCategories = [
+  {
+    id: "cat-1",
+    name: "Energizing Blends",
+    image: "https://picsum.photos/seed/cat1/400/500",
+    hint: "citrus smoothie"
+  },
+  {
+    id: "cat-2",
+    name: "Immunity Boosters",
+    image: "https://picsum.photos/seed/cat2/400/500",
+    hint: "green smoothie"
+  },
+  {
+    id: "cat-3",
+    name: "Detox Smoothies",
+    image: "https://picsum.photos/seed/cat3/400/500",
+    hint: "vegetable smoothie"
+  },
+  {
+    id: "cat-4",
+    name: "Protein Power",
+    image: "https://picsum.photos/seed/cat4/400/500",
+    hint: "protein shake"
+  },
+  {
+    id: "cat-5",
+    name: "Green Goodness",
+    image: "https://picsum.photos/seed/cat5/400/500",
+    hint: "kale smoothie"
+  },
+  {
+    id: "cat-6",
+    name: "Berry Classics",
+    image: "https://picsum.photos/seed/cat6/400/500",
+    hint: "berry smoothie"
+  },
+];
