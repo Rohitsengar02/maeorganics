@@ -3,28 +3,37 @@
 import { motion } from 'framer-motion';
 
 const text = "maeorganics";
+const letters = text.split("");
 
-const svgVariants = {
+const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
+  visible: (i = 1) => ({
     opacity: 1,
-    transition: { duration: 1, ease: 'easeInOut' },
-  },
+    transition: { staggerChildren: 0.1, delayChildren: 0.04 * i },
+  }),
 };
 
-const pathVariants = {
-  hidden: {
-    pathLength: 0,
-    fill: 'rgba(74, 72, 68, 0)',
-  },
-  visible: {
-    pathLength: 1,
-    fill: 'rgba(74, 72, 68, 1)',
-    transition: {
-      default: { duration: 2, ease: 'easeInOut' },
-      fill: { duration: 1, ease: 'easeIn', delay: 1.8 },
+const childVariants = {
+    hidden: {
+        opacity: 0,
+        y: 20,
+        x: '50%',
+        transition: {
+            type: 'spring',
+            damping: 12,
+            stiffness: 100,
+        },
     },
-  },
+    visible: {
+        opacity: 1,
+        y: 0,
+        x: '50%',
+        transition: {
+            type: 'spring',
+            damping: 12,
+            stiffness: 100,
+        },
+    },
 };
 
 export const Preloader = () => {
@@ -34,28 +43,18 @@ export const Preloader = () => {
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
       className="fixed inset-0 z-[200] flex items-center justify-center bg-[#fdf8e8]"
     >
-      <motion.svg
-        width="300"
-        height="100"
-        viewBox="0 0 300 100"
-        variants={svgVariants}
+      <motion.div
+        className="font-headline text-3xl md:text-5xl font-bold text-[#4a4844] flex"
+        variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.text
-          x="50%"
-          y="50%"
-          dy="15px"
-          textAnchor="middle"
-          fontFamily="Caprasimo"
-          fontSize="3rem"
-          stroke="#4a4844"
-          strokeWidth="1px"
-          variants={pathVariants}
-        >
-          {text}
-        </motion.text>
-      </motion.svg>
+        {letters.map((letter, index) => (
+          <motion.span key={index} variants={childVariants} style={{ position: 'relative', display: 'inline-block' }}>
+            {letter}
+          </motion.span>
+        ))}
+      </motion.div>
     </motion.div>
   );
 };
