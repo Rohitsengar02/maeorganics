@@ -1,11 +1,8 @@
+'use client'
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-
-export const metadata: Metadata = {
-  title: 'Smoothie',
-  description: 'Freshly blended smoothies, just for you.',
-};
+import { ReactLenis } from "@studio-freight/react-lenis";
 
 export default function RootLayout({
   children,
@@ -20,7 +17,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        {children}
+        <ReactLenis root>
+          {children}
+        </ReactLenis>
         <Toaster />
       </body>
     </html>
