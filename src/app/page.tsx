@@ -8,6 +8,7 @@ import { BackgroundImage } from '@/components/BackgroundImage';
 import { Preloader } from '@/components/Preloader';
 import { AnimatePresence } from 'framer-motion';
 import CategoriesCarousel from '@/components/CategoriesCarousel';
+import ShopFeatures from '@/components/ShopFeatures';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +37,7 @@ export default function Home() {
           <FeaturedProducts />
           <WhyChooseUs />
           <CategoriesCarousel />
+          <ShopFeatures />
         </main>
       )}
     </div>
