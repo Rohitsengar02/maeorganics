@@ -21,7 +21,7 @@ const itemVariants = {
 
 const ProductGrid = () => {
   return (
-    <section className="py-24 bg-[#fdf8e8]">
+    <section className="py-24 bg-[#fdf8e8] relative z-10">
       <div className="container max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Our Full Collection</h2>
