@@ -7,7 +7,7 @@ import { BackgroundImage } from '@/components/BackgroundImage';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#fdf8e8]">
+    <div className="flex min-h-screen flex-col bg-[#fdf8e8] overflow-hidden">
       <main className="relative">
         <Hero />
         <Marquee />

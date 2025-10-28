@@ -7,20 +7,20 @@ export function BackgroundImage() {
   const { scrollYProgress } = useScroll();
 
   // Animate from behind Marquee to WhyChooseUs section
-  // Y position: Start at top of FeaturedProducts, end in WhyChooseUs
-  const y = useTransform(scrollYProgress, [0.3, 0.7], ['-50vh', '250vh']);
-  const rotate = useTransform(scrollYProgress, [0.3, 0.7], [-15, 15]);
-  const scale = useTransform(scrollYProgress, [0.3, 0.7], [0.8, 1.2]);
+  const y = useTransform(scrollYProgress, [0.3, 0.8], ['-50vh', '150vh']);
+  const x = useTransform(scrollYProgress, [0.3, 0.8], ['10%', '-15%']);
+  const rotate = useTransform(scrollYProgress, [0.3, 0.8], [-5, 5]);
+  const scale = useTransform(scrollYProgress, [0.3, 0.8], [1.2, 0.8]);
   
   // Z-index: Start behind, then move to front
   const zIndex = useTransform(scrollYProgress, (pos) => {
-    return pos > 0.35 && pos < 0.75 ? 40 : 0;
+    return pos > 0.35 && pos < 0.78 ? 40 : 0;
   });
 
   return (
     <motion.div 
-        className="absolute right-[-10%] top-0 w-[500px] h-[700px] mt-[90vh]"
-        style={{ y, rotate, scale, zIndex }}
+        className="absolute right-[-20%] top-0 w-[400px] h-[600px] mt-[90vh]"
+        style={{ y, x, rotate, scale, zIndex }}
     >
     <Image
         src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png"
