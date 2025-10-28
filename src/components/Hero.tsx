@@ -323,7 +323,7 @@ const Hero = () => {
               </div>
 
               {/* Bottle */}
-              <div className="relative flex h-[300px] w-[180px] items-center justify-center sm:h-[350px] sm:w-[220px]">
+              <div className="relative flex h-[350px] w-[220px] items-center justify-center sm:h-[450px] sm:w-[280px]">
                 <AnimatePresence>
                   <motion.div
                     key={`halo-${currentSlide.id}`}
@@ -349,9 +349,9 @@ const Hero = () => {
                     <Image
                       src={currentSlide.bottle.src}
                       alt={currentSlide.bottle.alt}
-                      width={180}
-                      height={320}
-                      className="h-[280px] w-auto object-contain drop-shadow-2xl sm:h-[350px]"
+                      width={250}
+                      height={420}
+                      className="h-[350px] w-auto object-contain drop-shadow-2xl sm:h-[450px]"
                       priority
                     />
                   </motion.div>
