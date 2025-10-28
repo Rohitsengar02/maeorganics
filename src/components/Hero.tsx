@@ -6,8 +6,14 @@ import Image from "next/image";
 import { ShoppingBag, User, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
-const navLinks = ["About", "Smoothies", "Delivery", "Contact"];
+const navLinks = [
+  {label: "About", href: "#about"}, 
+  {label: "Smoothies", href: "/shop"}, 
+  {label: "Delivery", href: "#delivery"}, 
+  {label: "Contact", href: "#contact"}
+];
 
 const slides = [
   {
@@ -191,15 +197,15 @@ const Hero = () => {
           <nav className="hidden items-center gap-6 text-sm font-medium text-[#4a4844] md:flex lg:gap-8">
             {navLinks.map((item, i) => (
               <motion.a
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.1, ease: "easeOut" }}
                 whileHover={{ y: -2, color: "#000" }}
                 className="transition-all duration-200"
               >
-                {item}
+                {item.label}
               </motion.a>
             ))}
           </nav>
@@ -229,13 +235,13 @@ const Hero = () => {
                     <SheetContent side="right">
                         <nav className="flex flex-col gap-6 pt-10 text-lg font-medium">
                             {navLinks.map((item) => (
-                            <a
-                                key={item}
-                                href="#"
+                            <Link
+                                key={item.label}
+                                href={item.href}
                                 className="text-foreground/80 transition-colors hover:text-foreground"
                             >
-                                {item}
-                            </a>
+                                {item.label}
+                            </Link>
                             ))}
                         </nav>
                     </SheetContent>

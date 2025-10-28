@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, ShoppingBag, User, Search } from 'lucide-react';
+import { Home, ShoppingBag, User, Search, Store } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
-  { href: '#search', icon: Search, label: 'Search' },
+  { href: '/shop', icon: Store, label: 'Shop' },
   { href: '#cart', icon: ShoppingBag, label: 'Cart' },
   { href: '#profile', icon: User, label: 'Profile' },
 ];
