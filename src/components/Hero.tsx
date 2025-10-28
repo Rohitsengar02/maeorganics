@@ -12,52 +12,55 @@ const slides = [
     id: 1,
     bottle: {
       src: "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png",
-      alt: "True Fruits yellow smoothie bottle",
+      alt: "EcoBless Citrus Glow Handwash Bottle",
     },
-    title: "Sunshine Orange",
-    subtitle: "CITRUS BLAST",
-    description: "Start your day with a burst of vitamin C. Our signature orange smoothie combines fresh-squeezed citrus with tropical fruits and creamy textures for the ultimate morning boost.",
-    price: "$5.99",
+    title: "Citrus Glow",
+    subtitle: "VITAMIN BURST",
+    description:
+      "Awaken your senses with EcoBless Citrus Glow Handwash — enriched with orange peel, lemon, and honey extracts. Its vitamin-rich formula deeply cleanses and refreshes, leaving your hands bright, smooth, and energized.",
+    price: "₹299.00",
     rating: 5,
-    baseBackground: "#fdf8e8",
-    accentBackground: "#ffc857",
-    haloGradient: "from-[#ffb627] via-[#ffd666] to-[#ffe9a3]",
+    baseBackground: "#fff7e6",
+    accentBackground: "#ffb84d",
+    haloGradient: "from-[#ffb84d] via-[#ffd580] to-[#fff0b3]",
     baseIngredients: [
-      { name: "Banana", icon: "🍌", accent: "from-[#fff4d6] to-[#ffe88c]" },
-      { name: "Pineapple", icon: "🍍", accent: "from-[#fff0c2] to-[#ffd54f]" },
-      { name: "Orange", icon: "🍊", accent: "from-[#ffe4b3] to-[#ffb347]" },
+      { name: "Orange Peel", icon: "🍊", accent: "from-[#fff0cc] to-[#ffd580]" },
+      { name: "Lemon Extract", icon: "🍋", accent: "from-[#fff7d6] to-[#ffe680]" },
+      { name: "Honey", icon: "🍯", accent: "from-[#fff5cc] to-[#ffd633]" }
     ],
     extras: [
-      { name: "Almond Milk", icon: "🥛", accent: "from-[#fff5e1] to-[#ffd89b]" },
-      { name: "Avocado", icon: "🥑", accent: "from-[#e8f5d7] to-[#9ed86f]" },
-      { name: "Mango", icon: "🥭", accent: "from-[#ffe7c7] to-[#ffb84d]" },
+      { name: "Turmeric", icon: "🌻", accent: "from-[#fff5cc] to-[#ffcc33]" },
+      { name: "Papaya", icon: "🥭", accent: "from-[#fff0cc] to-[#ffb366]" },
+      { name: "Vitamin C", icon: "💊", accent: "from-[#fff7e0] to-[#ffe680]" }
     ],
   },
   {
     id: 2,
     bottle: {
-      src: "https://pepelasalonline.com/wp-content/uploads/2023/02/33721-TRUE-FRUITS-SMOOTHIE-LIGHT-GREEN-25CL.png",
-      alt: "True Fruits light green smoothie bottle",
+      src: "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png",
+      alt: "EcoBless Green Essence Handwash Bottle",
     },
-    title: "Green Vitality",
-    subtitle: "DETOX BLEND",
-    description: "Refresh and rejuvenate with our nutrient-packed green smoothie. Loaded with leafy greens, tropical kiwi, and crisp apple for a revitalizing experience.",
-    price: "$6.49",
+    title: "Green Essence",
+    subtitle: "HERBAL FRESH",
+    description:
+      "Experience the purity of nature with our EcoBless Green Essence Handwash. Infused with aloe vera, mint, and lemon for a refreshing and gentle cleanse that leaves hands soft, clean, and naturally fragrant.",
+    price: "₹299.00",
     rating: 5,
     baseBackground: "#f0f9f0",
     accentBackground: "#90cc7f",
     haloGradient: "from-[#6fba5c] via-[#8fd67d] to-[#c8f4b8]",
     baseIngredients: [
-      { name: "Kiwi", icon: "🥝", accent: "from-[#e6f9d8] to-[#b8e986]" },
-      { name: "Spinach", icon: "🥬", accent: "from-[#dff5d3] to-[#95d183]" },
-      { name: "Green Apple", icon: "🍏", accent: "from-[#dff9d4] to-[#a8e68d]" },
+      { name: "Aloe Vera", icon: "🪴", accent: "from-[#e6f9d8] to-[#b8e986]" },
+      { name: "Mint Leaves", icon: "🍃", accent: "from-[#dff5d3] to-[#95d183]" },
+      { name: "Lemon Extract", icon: "🍋", accent: "from-[#dff9d4] to-[#a8e68d]" }
     ],
     extras: [
-      { name: "Coconut Water", icon: "🥥", accent: "from-[#f5fae8] to-[#d4e8a8]" },
-      { name: "Kale", icon: "🥬", accent: "from-[#ddf5d2] to-[#a3d89a]" },
-      { name: "Ginger", icon: "🫚", accent: "from-[#faf3e0] to-[#e8d3a0]" },
+      { name: "Green Apple", icon: "🍏", accent: "from-[#f5fae8] to-[#d4e8a8]" },
+      { name: "Cucumber", icon: "🥒", accent: "from-[#ddf5d2] to-[#a3d89a]" },
+      { name: "Tea Tree Oil", icon: "🌿", accent: "from-[#faf3e0] to-[#e8d3a0]" }
     ],
-  },
+  }
+  
 ];
 
 const Hero = () => {
@@ -102,8 +105,8 @@ const Hero = () => {
 
   const x = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().x + 'px']);
   const y = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().y + 'px']);
-  const width = useTransform(scrollYProgress, [0, 1], ['119px', getTargetPosition().width + 'px']);
-  const height = useTransform(scrollYProgress, [0, 1], ['169px', getTargetPosition().height + 'px']);
+  const width = useTransform(scrollYProgress, [0, 1], ['199px', getTargetPosition().width + 'px']);
+  const height = useTransform(scrollYProgress, [0, 1], ['269px', getTargetPosition().height + 'px']);
   const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0]);
 
 
@@ -378,7 +381,7 @@ const Hero = () => {
                       alt={currentSlide.bottle.alt}
                       width={173}
                       height={223}
-                      className="h-auto w-full object-contain drop-shadow-2xl"
+                      className="h-auto mt-[-200px] w-full object-contain drop-shadow-2xl"
                       priority
                     />
                   </motion.div>
