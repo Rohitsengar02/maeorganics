@@ -19,7 +19,7 @@ export function BackgroundImage() {
 
   return (
     <motion.div 
-        className="absolute right-[-20%] top-0 w-[400px] h-[600px] mt-[90vh]"
+        className="absolute right-[20%] top-0 w-[400px] h-[600px] mt-[90vh]"
         style={{ y, x, rotate, scale, zIndex }}
     >
     <Image
