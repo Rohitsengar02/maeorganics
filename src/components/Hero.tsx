@@ -127,7 +127,7 @@ const Hero = () => {
       </AnimatePresence>
 
       {/* Accent Panel */}
-      <div className="absolute inset-y-0 right-0 z-0 hidden w-[30%] md:block">
+      <div className="absolute inset-y-0 right-0 z-0 hidden w-[25%] md:block">
         <AnimatePresence>
           <motion.div
             key={`accent-${currentSlide.id}`}
@@ -160,7 +160,7 @@ const Hero = () => {
         />
       </AnimatePresence>
 
-      <div className="relative z-10 w-full max-w-7xl px-4 pt-4 pb-24 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-7xl px-4 pt-2 pb-24 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
@@ -210,7 +210,7 @@ const Hero = () => {
         </motion.header>
 
         {/* Main Content */}
-        <div className="mt-4 flex flex-col items-center gap-8 text-center lg:mt-12 lg:flex-row lg:items-center lg:gap-12 lg:text-left">
+        <div className="mt-4 flex flex-col items-center gap-8 text-center lg:mt-8 lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
           <div className="flex-1 space-y-6 lg:space-y-8">
             <AnimatePresence mode="wait" custom={direction}>
@@ -235,7 +235,7 @@ const Hero = () => {
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.7, duration: 0.6, ease: "easeOut" } }}
-                  className="font-headline text-5xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-6xl lg:text-7xl xl:text-8xl"
+                  className="font-headline text-5xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-6xl lg:text-7xl"
                 >
                   {currentSlide.title.split(" ")[0]} <br />
                   <span className="bg-gradient-to-r from-[#1a1815] to-[#4a4844] bg-clip-text text-transparent">
@@ -313,7 +313,7 @@ const Hero = () => {
               </div>
 
               {/* Bottle */}
-              <div className="relative flex h-[400px] w-[280px] items-center justify-center sm:h-[550px] sm:w-[380px]">
+              <div className="relative flex h-[500px] w-[350px] items-center justify-center sm:h-[650px] sm:w-[450px]">
                 <AnimatePresence>
                   <motion.div
                     key={`halo-${currentSlide.id}`}
@@ -335,13 +335,14 @@ const Hero = () => {
                     exit="exit"
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative z-10"
+                    style={{ rotate: 0 }}
                   >
                     <Image
                       src={currentSlide.bottle.src}
                       alt={currentSlide.bottle.alt}
-                      width={380}
-                      height={580}
-                      className="h-auto w-[320px] object-contain drop-shadow-2xl sm:w-[420px]"
+                      width={420}
+                      height={620}
+                      className="h-auto w-[380px] object-contain drop-shadow-2xl sm:w-[480px]"
                       priority
                     />
                   </motion.div>
@@ -419,5 +420,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
-    
