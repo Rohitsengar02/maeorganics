@@ -11,7 +11,7 @@ export function BackgroundImage() {
   const x = useTransform(
     scrollYProgress, 
     [0.1, 0.7], 
-    isMobile ? ['10%', '-100%'] : ['-10%', '-200%']
+    isMobile ? ['0%', '0%'] : ['-10%', '-200%']
   );
   const rotate = useTransform(scrollYProgress, [0.1, 0.7], [-5, 5]);
   const scale = useTransform(scrollYProgress, [0.1, 0.7], [1.2, 0.8]);
@@ -20,9 +20,12 @@ export function BackgroundImage() {
   const mobileMarginTop = '100vh';
   const desktopMarginTop = '230vh';
 
+  const mobileClassName = "absolute left-1/2 -translate-x-1/2 top-0 w-[300px] h-[500px] z-0";
+  const desktopClassName = "absolute right-[-10%] top-0 w-[300px] h-[500px] md:w-[400px] md:h-[700px] z-0";
+
   return (
     <motion.div 
-        className="absolute right-[-10%] top-0 w-[300px] h-[500px] md:w-[400px] md:h-[700px] z-0"
+        className={isMobile ? mobileClassName : desktopClassName}
         style={{ 
           y, 
           x, 
