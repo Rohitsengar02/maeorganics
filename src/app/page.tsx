@@ -11,10 +11,8 @@ export default function Home() {
       <main className="relative">
         <Hero />
         <Marquee />
-        <div className="relative z-0">
-          <BackgroundImage />
-          <FeaturedProducts />
-        </div>
+        <BackgroundImage />
+        <FeaturedProducts />
         <WhyChooseUs />
       </main>
     </div>
