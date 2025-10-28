@@ -4,7 +4,6 @@ import FeaturedProducts from '@/components/FeaturedProducts';
 import Hero from '@/components/Hero';
 import Marquee from '@/components/Marquee';
 import WhyChooseUs from '@/components/WhyChooseUs';
-import { BackgroundImage } from '@/components/BackgroundImage';
 import { Preloader } from '@/components/Preloader';
 import { AnimatePresence } from 'framer-motion';
 import CategoriesCarousel from '@/components/CategoriesCarousel';
@@ -35,11 +34,22 @@ export default function Home() {
         <main className="relative">
           <Hero />
           <Marquee />
-          <BackgroundImage />
           <FeaturedProducts />
           <WhyChooseUs />
           <CategoriesCarousel />
-          <ProductGrid />
+          <section className="py-24 bg-[#fdf8e8] relative z-10">
+            <div className="container mx-auto max-w-7xl px-4">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-headline font-black text-[#2d2b28]">
+                  Our Collection
+                </h2>
+                <p className="max-w-2xl mx-auto mt-4 text-[#5a5854]">
+                  Discover our full range of delicious and healthy smoothies, crafted with the finest ingredients.
+                </p>
+              </div>
+              <ProductGrid />
+            </div>
+          </section>
           <ShopFeatures />
           <Footer />
         </main>
