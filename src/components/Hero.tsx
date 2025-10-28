@@ -223,7 +223,7 @@ const Hero = () => {
         {/* Main Content */}
         <div className="mt-8 flex flex-col items-center gap-8 text-center lg:mt-[-20px] lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
-          <div className="flex-1 space-y-6 lg:space-y-8 mt-[-2rem]">
+          <div className="flex-1 space-y-6 lg:space-y-8 lg:mt-[-2rem]">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={`content-${currentSlide.id}`}
@@ -290,7 +290,7 @@ const Hero = () => {
   initial={{ opacity: 0, y: 50 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
-  className="mt-10 space-y-5"
+  className="mt-10 space-y-5 hidden lg:block"
 >
   <h3 className="text-lg font-semibold text-[#1a1815] tracking-wide">
     You might also like :
@@ -486,3 +486,5 @@ const Hero = () => {
 };
 
 export default Hero;
+
+    
