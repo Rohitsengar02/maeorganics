@@ -116,7 +116,7 @@ const WhyChooseUs = () => {
                     src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png"
                     alt="Smoothie Bottle"
                     fill
-                    className="object-contain opacity-0 drop-shadow-2xl"
+                    className="object-contain drop-shadow-2xl"
                     data-ai-hint="orange smoothie bottle"
                 />
             </div>
