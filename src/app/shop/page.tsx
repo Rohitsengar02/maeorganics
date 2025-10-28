@@ -28,7 +28,7 @@ export default function ShopPage() {
         {/* Page Header */}
         <div className="relative h-64 w-full">
           <Image
-            src="https://images.unsplash.com/photo-1516594798947-7b7a67b5a1a7?q=80&w=2070&auto=format&fit=crop"
+            src="https://t4.ftcdn.net/jpg/08/15/42/15/360_F_815421533_7wb1K0sqW5dG8yQVtd9T9tYDLP4qLzwj.jpg"
             alt="Fresh ingredients for smoothies"
             fill
             className="object-cover"
