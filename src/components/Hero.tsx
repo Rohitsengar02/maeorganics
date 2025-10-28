@@ -66,13 +66,14 @@ const slides = [
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [target, setTarget] = useState<HTMLElement | null>(null)
   
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   });
+  
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 200]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -83,32 +84,7 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    setTarget(document.getElementById('featured-product-image-0'));
-  }, []);
-
   const currentSlide = slides[currentIndex];
-
-  const getTargetPosition = () => {
-    if (target && heroRef.current) {
-      const heroRect = heroRef.current.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      return {
-        x: targetRect.left - heroRect.left,
-        y: targetRect.top - heroRect.top,
-        width: targetRect.width,
-        height: targetRect.height,
-      };
-    }
-    return { x: 0, y: 0, width: '100%', height: '100%' };
-  };
-
-  const x = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().x + 'px']);
-  const y = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().y + 'px']);
-  const width = useTransform(scrollYProgress, [0, 1], ['199px', getTargetPosition().width + 'px']);
-  const height = useTransform(scrollYProgress, [0, 1], ['269px', getTargetPosition().height + 'px']);
-  const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0]);
-
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -372,8 +348,7 @@ const Hero = () => {
                     className="relative z-10 mt-24"
                     style={{ 
                       rotate: 0,
-                      // @ts-ignore
-                      x, y, width, height, opacity
+                      y: imageY
                     }}
                   >
                     <Image
