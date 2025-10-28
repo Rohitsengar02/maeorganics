@@ -7,7 +7,7 @@ export function BackgroundImage() {
   const { scrollYProgress } = useScroll();
   const isMobile = useIsMobile();
 
-  const y = useTransform(scrollYProgress, [0.1, 0.7], ['-150vh', '150vh']);
+  const y = useTransform(scrollYProgress, [0.15, 0.6], isMobile ? ['-20vh', '100vh'] : ['-150vh', '150vh']);
   const x = useTransform(
     scrollYProgress, 
     [0.1, 0.7], 
@@ -15,7 +15,7 @@ export function BackgroundImage() {
   );
   const rotate = useTransform(scrollYProgress, [0.1, 0.7], [-5, 5]);
   const scale = useTransform(scrollYProgress, [0.1, 0.7], [1.2, 0.8]);
-  const opacity = useTransform(scrollYProgress, [0.05, 0.15], [0, 1]);
+  const opacity = useTransform(scrollYProgress, [0.1, 0.2], [0, 1]);
   
   const mobileMarginTop = '100vh';
   const desktopMarginTop = '230vh';
