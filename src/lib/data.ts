@@ -97,3 +97,15 @@ export const smoothieCategories = [
     hint: "berry smoothie"
   },
 ];
+
+const baseProducts = featuredSmoothies;
+
+export const allProducts: Smoothie[] = Array.from({ length: 16 }, (_, i) => {
+    const baseProduct = baseProducts[i % baseProducts.length];
+    return {
+        ...baseProduct,
+        id: `prod-${i + 1}`,
+        name: `${baseProduct.name} #${Math.floor(i / baseProducts.length) + 1}`,
+        price: parseFloat((baseProduct.price * (1 + (i % 4) * 0.1)).toFixed(2)),
+    };
+});
