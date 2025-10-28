@@ -173,13 +173,13 @@ const Hero = () => {
         />
       </AnimatePresence>
 
-      <div className="relative z-10 w-full max-w-7xl px-4 pt-2 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-7xl px-4 pt-2 sm:px-6 lg:px-2">
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.6, 0.01, 0.05, 0.95], delay: 0.5 }}
-          className="flex items-center justify-between"
+          className="flex items-center mt-0 pb-0 lg:pb-[5rem] justify-between"
         >
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -247,7 +247,7 @@ const Hero = () => {
         {/* Main Content */}
         <div className="mt-8 flex flex-col items-center gap-8 text-center lg:mt-[-20px] lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
-          <div className="flex-1 space-y-6 lg:space-y-8 lg:mt-[-2rem]">
+          <div className="flex-1 space-y-6 lg:space-y-8 mt-[2rem] lg:mt-[-2rem]">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={`content-${currentSlide.id}`}
@@ -364,7 +364,7 @@ const Hero = () => {
           </div>
 
           {/* Bottle Showcase */}
-          <div className="relative mt-8 flex flex-1 items-center justify-center py-8 lg:mt-0 lg:py-0">
+          <div className="relative mt-4 sm:py-0 flex flex-1 items-center justify-center py-8 lg:mt-0 lg:py-0">
             <div className="relative flex w-full max-w-xs items-center justify-center sm:max-w-sm md:max-w-md lg:max-w-lg">
               {/* Desktop Ingredients - Left */}
               <div className="hidden min-w-[100px] flex-col items-end gap-8 pr-4 lg:flex">
@@ -432,7 +432,7 @@ const Hero = () => {
                       alt={currentSlide.bottle.alt}
                       width={173}
                       height={223}
-                      className="h-auto w-full object-contain drop-shadow-2xl"
+                      className="h-auto w-full mt-[-14rem] lg:mt-[-3rem] object-contain drop-shadow-2xl"
                       priority
                     />
                   </motion.div>
