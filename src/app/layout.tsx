@@ -3,12 +3,24 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ReactLenis } from "@studio-freight/react-lenis";
+import { Preloader } from '@/components/Preloader';
+import { useState, useEffect } from 'react';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); 
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
@@ -18,7 +30,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <ReactLenis root>
-          {children}
+          {isLoading ? <Preloader /> : children}
         </ReactLenis>
         <Toaster />
       </body>
