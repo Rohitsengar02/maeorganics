@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+      dropShadow: {
+        '5xl': '0 35px 35px rgba(0, 0, 0, 0.25)',
+      },
       fontFamily: {
         body: ["'Poppins'", 'sans-serif'],
         headline: ["'Caprasimo'", 'serif'],
