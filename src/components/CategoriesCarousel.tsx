@@ -1,7 +1,8 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import Image from 'next/image';
 import { smoothieCategories } from '@/lib/data';
+import { useEffect, useRef } from 'react';
 
 const duplicatedCategories = [...smoothieCategories, ...smoothieCategories];
 
@@ -20,6 +21,21 @@ const carouselVariants = {
 };
 
 const CategoriesCarousel = () => {
+  const controls = useAnimation();
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    controls.start('animate');
+  }, [controls]);
+
+  const handleHoverStart = () => {
+    controls.stop();
+  };
+
+  const handleHoverEnd = () => {
+    controls.start('animate');
+  };
+
   return (
     <section className="py-24 bg-[#fdf8e8] overflow-hidden">
       <div className="text-center mb-12">
@@ -28,11 +44,21 @@ const CategoriesCarousel = () => {
           Find the perfect blend to match your mood and health goals.
         </p>
       </div>
-      <div className="w-full overflow-hidden">
+      <div 
+        ref={carouselRef}
+        className="w-full overflow-hidden cursor-grab" 
+        onMouseEnter={handleHoverStart}
+        onMouseLeave={handleHoverEnd}
+      >
         <motion.div
           className="flex gap-8"
           variants={carouselVariants}
-          animate="animate"
+          animate={controls}
+          drag="x"
+          dragConstraints={{
+            left: -(2 * 300 * smoothieCategories.length + (smoothieCategories.length * 2 * 32) - (carouselRef.current?.clientWidth || 0)),
+            right: 0
+          }}
         >
           {duplicatedCategories.map((category, index) => (
             <div
