@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       whileHover={{ y: -5 }}
       data-smooth-cursor-hover
     >
-      <div className="relative w-full aspect-[3/4] mb-4">
+      <div className="relative w-full h-[350px] md:aspect-[3/4] md:h-auto mb-4">
         <Image
           src={product.image.imageUrl}
           alt={product.name}

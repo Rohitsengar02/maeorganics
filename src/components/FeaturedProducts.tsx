@@ -103,7 +103,7 @@ const FeaturedProducts = () => {
     isMobile ? ['15%', '-105%'] : ['5%', '-30%']
   );
   
-  const sectionHeight = isMobile ? '200vh' : '150vh';
+  const sectionHeight = isMobile ? '130vh' : '150vh';
 
   return (
     <section ref={targetRef} className="relative py-0" style={{ height: sectionHeight }} id="featured-products">
