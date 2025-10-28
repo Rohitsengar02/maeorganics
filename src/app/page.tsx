@@ -10,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import CategoriesCarousel from '@/components/CategoriesCarousel';
 import ShopFeatures from '@/components/ShopFeatures';
 import ProductGrid from '@/components/ProductGrid';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +41,7 @@ export default function Home() {
           <CategoriesCarousel />
           <ProductGrid />
           <ShopFeatures />
+          <Footer />
         </main>
       )}
     </div>
