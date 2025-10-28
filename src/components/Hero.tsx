@@ -183,7 +183,7 @@ const Hero = () => {
             whileHover={{ scale: 1.05 }}
             className="font-headline text-3xl font-black tracking-tight text-[#2d2b28] sm:text-4xl"
           >
-            Smoothie<span className="text-[#f3b315]">.</span>
+            Maeorganics<span className="text-[#f3b315]">.</span>
           </motion.div>
 
           <nav className="hidden items-center gap-6 text-sm font-medium text-[#4a4844] md:flex lg:gap-8">
@@ -223,7 +223,7 @@ const Hero = () => {
         {/* Main Content */}
         <div className="mt-8 flex flex-col items-center gap-8 text-center lg:mt-[-20px] lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
-          <div className="flex-1 space-y-6 lg:space-y-8">
+          <div className="flex-1 space-y-6 lg:space-y-8 mt-[-2rem]">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={`content-${currentSlide.id}`}
@@ -246,9 +246,9 @@ const Hero = () => {
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.7, duration: 0.6, ease: "easeOut" } }}
-                  className="font-headline text-5xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-6xl lg:text-7xl"
+                  className="font-headline text-5xl font-black text-[#1a1815] sm:text-6xl lg:text-6xl"
                 >
-                  {currentSlide.title.split(" ")[0]} <br />
+                  {currentSlide.title.split(" ")[0]} &nbsp;
                   <span className="bg-gradient-to-r from-[#1a1815] to-[#4a4844] bg-clip-text text-transparent">
                     {currentSlide.title.split(" ")[1]}
                   </span>
@@ -271,7 +271,7 @@ const Hero = () => {
                       </motion.span>
                     ))}
                   </div>
-                  <span className="text-4xl font-bold text-[#1a1815] sm:text-5xl">
+                  <span className="lg:text-3xl text-2xl font-bold text-[#1a1815] sm:text-5xl">
                     {currentSlide.price}
                   </span>
                 </motion.div>
@@ -279,12 +279,64 @@ const Hero = () => {
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.9, duration: 0.6, ease: "easeOut" } }}
-                  className="mx-auto max-w-md text-base leading-relaxed text-[#5a5854] sm:text-lg lg:mx-0 lg:max-w-xl"
+                  className="mx-auto lg:text-[16px] max-w-md text-base leading-relaxed text-[#5a5854] sm:text-lg lg:mx-0 lg:max-w-xl"
                 >
                   {currentSlide.description}
                 </motion.p>
               </motion.div>
             </AnimatePresence>
+            {/* Product Suggestions (Bottom Cards) */}
+<motion.div
+  initial={{ opacity: 0, y: 50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
+  className="mt-10 space-y-5"
+>
+  <h3 className="text-lg font-semibold text-[#1a1815] tracking-wide">
+    You might also like :
+  </h3>
+
+  <div className="flex flex-wrap gap-6">
+    {/* Card 1 */}
+    <motion.div
+      whileHover={{ y: -8, scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 250, damping: 18 }}
+      className="relative flex items-center justify-between w-[230px] rounded-2xl bg-[#fff8f0] shadow-md hover:shadow-xl transition-all duration-500 px-5 py-3 cursor-pointer"
+    >
+      <div className="flex flex-col">
+        <span className="text-[15px] font-semibold text-[#1a1815]">Apple Smoothie</span>
+        <span className="text-[#b8884d] text-sm font-medium">$79</span>
+      </div>
+      <div className="w-14 h-14 relative">
+        <img
+          src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png"
+          alt="Apple Smoothie"
+          className="object-contain w-full h-full"
+        />
+      </div>
+    </motion.div>
+
+    {/* Card 2 */}
+    <motion.div
+      whileHover={{ y: -8, scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 250, damping: 18 }}
+      className="relative flex items-center justify-between w-[230px] rounded-2xl bg-[#fff8f0] shadow-md hover:shadow-xl transition-all duration-500 px-5 py-3 cursor-pointer"
+    >
+      <div className="flex flex-col">
+        <span className="text-[15px] font-semibold text-[#1a1815]">Lemon Smoothie</span>
+        <span className="text-[#b8884d] text-sm font-medium">$49</span>
+      </div>
+      <div className="w-14 h-14 relative">
+        <img
+          src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png"
+          alt="Lemon Smoothie"
+          className="object-contain w-full h-full"
+        />
+      </div>
+    </motion.div>
+  </div>
+</motion.div>
+
           </div>
 
           {/* Bottle Showcase */}
