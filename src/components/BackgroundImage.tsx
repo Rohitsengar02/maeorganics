@@ -17,7 +17,7 @@ export function BackgroundImage() {
   const scale = useTransform(scrollYProgress, [0.1, 0.7], [1.2, 0.8]);
   const opacity = useTransform(scrollYProgress, [0.05, 0.15], [0, 1]);
   
-  const mobileMarginTop = '180vh';
+  const mobileMarginTop = '100vh';
   const desktopMarginTop = '230vh';
 
   return (
