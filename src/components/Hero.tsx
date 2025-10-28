@@ -123,7 +123,7 @@ const Hero = () => {
   };
 
   return (
-    <section ref={heroRef} className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
+    <section ref={heroRef} className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
       {/* Animated Background */}
       <AnimatePresence>
         <motion.div

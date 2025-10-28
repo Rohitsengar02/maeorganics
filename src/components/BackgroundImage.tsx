@@ -8,13 +8,13 @@ export function BackgroundImage() {
 
   // Animate from behind Marquee to WhyChooseUs section
   // Y position: Start at top of FeaturedProducts, end in WhyChooseUs
-  const y = useTransform(scrollYProgress, [0.3, 0.6], ['-20vh', '180vh']); 
-  const rotate = useTransform(scrollYProgress, [0.3, 0.6], [-15, 15]);
-  const scale = useTransform(scrollYProgress, [0.3, 0.6], [0.8, 1.2]);
+  const y = useTransform(scrollYProgress, [0.1, 0.7], ['-50vh', '250vh']); 
+  const rotate = useTransform(scrollYProgress, [0.1, 0.7], [-15, 15]);
+  const scale = useTransform(scrollYProgress, [0.1, 0.7], [0.8, 1.2]);
   
   // Z-index: Start behind, then move to front
   const zIndex = useTransform(scrollYProgress, (pos) => {
-    return pos > 0.31 && pos < 0.65 ? 40 : 0;
+    return pos > 0.15 && pos < 0.75 ? 40 : 0;
   });
 
   return (
