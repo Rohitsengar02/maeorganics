@@ -102,8 +102,8 @@ const Hero = () => {
 
   const x = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().x + 'px']);
   const y = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().y + 'px']);
-  const width = useTransform(scrollYProgress, [0, 1], ['480px', getTargetPosition().width + 'px']);
-  const height = useTransform(scrollYProgress, [0, 1], ['620px', getTargetPosition().height + 'px']);
+  const width = useTransform(scrollYProgress, [0, 1], ['288px', getTargetPosition().width + 'px']);
+  const height = useTransform(scrollYProgress, [0, 1], ['372px', getTargetPosition().height + 'px']);
   const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0]);
 
 
@@ -376,8 +376,8 @@ const Hero = () => {
                     <Image
                       src={currentSlide.bottle.src}
                       alt={currentSlide.bottle.alt}
-                      width={480}
-                      height={620}
+                      width={288}
+                      height={372}
                       className="h-auto w-full object-contain drop-shadow-2xl"
                       priority
                     />
