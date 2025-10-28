@@ -8,7 +8,7 @@ export function BackgroundImage() {
 
   // Animate from behind Marquee to WhyChooseUs section
   const y = useTransform(scrollYProgress, [0.3, 0.8], ['-50vh', '150vh']);
-  const x = useTransform(scrollYProgress, [0.3, 0.8], ['10%', '-15%']);
+  const x = useTransform(scrollYProgress, [0.3, 0.8], ['-10%', '-15%']);
   const rotate = useTransform(scrollYProgress, [0.3, 0.8], [-5, 5]);
   const scale = useTransform(scrollYProgress, [0.3, 0.8], [1.2, 0.8]);
   
