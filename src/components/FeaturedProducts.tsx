@@ -37,12 +37,17 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
         rotateX,
         rotateY,
       }}
+      whileHover={{
+        scale: 1.02,
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+      }}
       className="relative flex-shrink-0 w-[300px] h-[420px] rounded-3xl bg-white/90 p-6 shadow-lg backdrop-blur-lg"
     >
       <div style={{ transform: 'translateZ(75px)' }} className="absolute inset-4 flex flex-col items-center text-center">
         <motion.div
-            style={{ transform: 'translateZ(80px)' }}
-            className="relative w-36 h-52 drop-shadow-2xl"
+            whileHover={{ rotate: 0, scale: 1.1 }}
+            style={{ transform: 'translateZ(80px)', rotate: '30deg' }}
+            className="relative w-36 h-52 drop-shadow-2xl transition-transform duration-300"
         >
           <Image
             src={smoothie.image.imageUrl}
