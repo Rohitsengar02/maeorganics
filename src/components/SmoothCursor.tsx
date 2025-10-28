@@ -34,14 +34,16 @@ export function SmoothCursor() {
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
 
-    document.querySelectorAll("a, button, [role='button']").forEach((el) => {
+    const hoverables = document.querySelectorAll("a, button, [role='button'], [data-smooth-cursor-hover]");
+    
+    hoverables.forEach((el) => {
       el.addEventListener("mouseover", handleMouseOver);
       el.addEventListener("mouseout", handleMouseOut);
     });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      document.querySelectorAll("a, button, [role='button']").forEach((el) => {
+      hoverables.forEach((el) => {
         el.removeEventListener("mouseover", handleMouseOver);
         el.removeEventListener("mouseout", handleMouseOut);
       });

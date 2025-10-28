@@ -1,13 +1,16 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion, useMotionValue, useTransform, useScroll } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useScroll, useAnimate } from 'framer-motion';
 import { featuredSmoothies } from '@/lib/data';
 import { Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [scope, animate] = useAnimate();
   
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -22,15 +25,23 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
     mouseY.set(e.clientY - rect.top - rect.height / 2);
   };
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    animate(scope.current, { backgroundColor: 'hsl(var(--primary))' }, { duration: 0.3 });
+  };
+
   const handleMouseLeave = () => {
+    setIsHovered(false);
     mouseX.set(0);
     mouseY.set(0);
+    animate(scope.current, { backgroundColor: 'rgb(255 255 255 / 0.9)' }, { duration: 0.3 });
   };
 
   return (
     <motion.div
-      ref={cardRef}
+      ref={scope}
       onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
         transformStyle: 'preserve-3d',
@@ -42,8 +53,9 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
         boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
       }}
       className="relative flex-shrink-0 w-[300px] h-[420px] rounded-3xl bg-white/90 p-6 shadow-lg backdrop-blur-lg"
+      data-smooth-cursor-hover
     >
-      <div style={{ transform: 'translateZ(75px)' }} className="absolute inset-4 flex flex-col items-center text-center">
+      <div style={{ transform: 'translateZ(75px)' }} className={cn("absolute inset-4 flex flex-col items-center text-center transition-colors duration-300", isHovered && "text-primary-foreground")}>
         <motion.div
             whileHover={{ rotate: 0, scale: 1.1 }}
             style={{ transform: 'translateZ(80px)', rotate: '30deg' }}
@@ -57,18 +69,18 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
           />
         </motion.div>
         
-        <h3 className="text-2xl font-bold mt-4 text-[#2d2b28]" style={{ transform: 'translateZ(60px)' }}>{smoothie.name}</h3>
+        <h3 className={cn("text-2xl font-bold mt-4 text-[#2d2b28] transition-colors duration-300", isHovered && "text-primary-foreground")} style={{ transform: 'translateZ(60px)' }}>{smoothie.name}</h3>
         
         <div className="flex items-center gap-2 mt-2" style={{ transform: 'translateZ(50px)' }}>
-            <div className="flex text-yellow-400">
+            <div className={cn("flex text-yellow-400 transition-colors duration-300", isHovered && "text-white/80")}>
                 {[...Array(5)].map((_, i) => (
                     <Star key={i} fill={i < smoothie.rating ? 'currentColor' : 'none'} strokeWidth={1} className="w-5 h-5"/>
                 ))}
             </div>
-            <span className="text-sm text-foreground/70 font-medium">{smoothie.ratingCount.toFixed(1)}</span>
+            <span className={cn("text-sm text-foreground/70 font-medium transition-colors duration-300", isHovered && "text-primary-foreground/70")}>{smoothie.ratingCount.toFixed(1)}</span>
         </div>
 
-        <p className="text-3xl font-black text-[#1a1815] mt-4" style={{ transform: 'translateZ(40px)' }}>
+        <p className={cn("text-3xl font-black text-[#1a1815] mt-4 transition-colors duration-300", isHovered && "text-white")} style={{ transform: 'translateZ(40px)' }}>
             ${smoothie.price.toFixed(2)}
         </p>
       </div>
