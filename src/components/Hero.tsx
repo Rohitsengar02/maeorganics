@@ -73,7 +73,7 @@ const Hero = () => {
     offset: ['start start', 'end start'],
   });
   
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 400]);
 
   useEffect(() => {
     const interval = setInterval(() => {
