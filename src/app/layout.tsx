@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ReactLenis } from "@studio-freight/react-lenis";
 import { MobileBottomNav } from '@/components/MobileBottomNav';
+import { SmoothCursor } from '@/components/SmoothCursor';
 
 export default function RootLayout({
   children,
@@ -21,6 +22,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased scrollbar-hide" suppressHydrationWarning={true}>
         <ReactLenis root>
+          <SmoothCursor />
           {children}
         </ReactLenis>
         <Toaster />
