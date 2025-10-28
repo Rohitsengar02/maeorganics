@@ -180,7 +180,7 @@ const Hero = () => {
         >
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="text-2xl font-black tracking-tight text-[#2d2b28] sm:text-3xl"
+            className="font-headline text-3xl font-black tracking-tight text-[#2d2b28] sm:text-4xl"
           >
             Smoothie<span className="text-[#f3b315]">.</span>
           </motion.div>
@@ -220,7 +220,7 @@ const Hero = () => {
         </motion.header>
 
         {/* Main Content */}
-        <div className="mt-8 flex flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:gap-12 lg:text-left">
+        <div className="mt-8 flex flex-col items-center gap-8 text-center lg:mt-16 lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
           <div className="flex-1 space-y-6 lg:space-y-8">
             <AnimatePresence mode="wait" custom={direction}>
@@ -237,7 +237,7 @@ const Hero = () => {
                 <motion.span
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.6, duration: 0.6, ease: "easeOut" } }}
-                  className="inline-block text-xs font-bold uppercase tracking-[0.3em] text-[#b8884d] sm:text-sm"
+                  className="inline-block text-sm font-bold uppercase tracking-[0.3em] text-[#b8884d] sm:text-base"
                 >
                   {currentSlide.subtitle}
                 </motion.span>
@@ -245,7 +245,7 @@ const Hero = () => {
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.7, duration: 0.6, ease: "easeOut" } }}
-                  className="text-4xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-5xl lg:text-6xl xl:text-7xl"
+                  className="font-headline text-5xl font-black leading-tight tracking-tight text-[#1a1815] sm:text-6xl lg:text-7xl xl:text-8xl"
                 >
                   {currentSlide.title.split(" ")[0]} <br />
                   <span className="bg-gradient-to-r from-[#1a1815] to-[#4a4844] bg-clip-text text-transparent">
@@ -258,7 +258,7 @@ const Hero = () => {
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.8, duration: 0.6, ease: "easeOut" } }}
                   className="flex items-center justify-center gap-4 lg:justify-start"
                 >
-                  <div className="flex text-lg text-[#ffb627] sm:text-xl">
+                  <div className="flex text-xl text-[#ffb627] sm:text-2xl">
                     {[...Array(currentSlide.rating)].map((_, i) => (
                       <motion.span
                         key={i}
@@ -270,7 +270,7 @@ const Hero = () => {
                       </motion.span>
                     ))}
                   </div>
-                  <span className="text-2xl font-bold text-[#1a1815] sm:text-3xl">
+                  <span className="text-3xl font-bold text-[#1a1815] sm:text-4xl">
                     {currentSlide.price}
                   </span>
                 </motion.div>
@@ -278,7 +278,7 @@ const Hero = () => {
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.9, duration: 0.6, ease: "easeOut" } }}
-                  className="mx-auto max-w-md text-sm leading-relaxed text-[#5a5854] sm:text-base lg:mx-0 lg:max-w-xl"
+                  className="mx-auto max-w-md text-base leading-relaxed text-[#5a5854] sm:text-lg lg:mx-0 lg:max-w-xl"
                 >
                   {currentSlide.description}
                 </motion.p>
@@ -323,7 +323,7 @@ const Hero = () => {
               </div>
 
               {/* Bottle */}
-              <div className="relative flex h-[350px] w-[220px] items-center justify-center sm:h-[450px] sm:w-[280px]">
+              <div className="relative flex h-[400px] w-[250px] items-center justify-center sm:h-[550px] sm:w-[340px]">
                 <AnimatePresence>
                   <motion.div
                     key={`halo-${currentSlide.id}`}
@@ -345,13 +345,14 @@ const Hero = () => {
                     exit="exit"
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative z-10"
+                    style={{ rotate: 0 }} 
                   >
                     <Image
                       src={currentSlide.bottle.src}
                       alt={currentSlide.bottle.alt}
-                      width={250}
-                      height={420}
-                      className="h-[350px] w-auto object-contain drop-shadow-2xl sm:h-[450px]"
+                      width={280}
+                      height={480}
+                      className="h-auto w-[250px] object-contain drop-shadow-2xl sm:w-[340px]"
                       priority
                     />
                   </motion.div>
