@@ -64,7 +64,7 @@ const WhyChooseUs = () => {
 
 
   return (
-    <section className="py-24 bg-[#fdf8e8] overflow-hidden">
+    <section className="py-2 mt-[-18rem] lg:mt-[1rem] sm:py-[-10rem] bg-[#fdf8e8] overflow-hidden">
       <div className="container max-w-7xl mx-auto px-4">
         <motion.div 
           className="text-center mb-16"
@@ -116,13 +116,11 @@ const WhyChooseUs = () => {
                     src="https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png"
                     alt="Smoothie Bottle"
                     fill
-                    className="object-contain drop-shadow-2xl"
+                    className="object-contain opacity-0 drop-shadow-2xl"
                     data-ai-hint="orange smoothie bottle"
                 />
             </div>
-            <Button className="mt-8 rounded-full bg-[#f3b315] hover:bg-[#e0a30b] text-primary-foreground font-bold">
-                Learn More
-            </Button>
+          
           </motion.div>
 
           {/* Right Column */}

@@ -59,8 +59,8 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
       <div style={{ transform: 'translateZ(75px)' }} className={cn("absolute inset-4 flex flex-col items-center text-center transition-colors duration-300", isHovered && "text-primary-foreground")}>
         <motion.div
             whileHover={{ rotate: 0, scale: 1.1 }}
-            style={{ transform: 'translateZ(80px)', rotate: '30deg' }}
-            className="relative w-36 h-52 drop-shadow-2xl transition-transform duration-300"
+            style={{ transform: 'translateZ(100px)', rotate: '30deg' }}
+            className="absolute -top-16 w-48 h-64 drop-shadow-2xl transition-transform duration-300"
         >
           <Image
             src={smoothie.image.imageUrl}
@@ -70,7 +70,7 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
           />
         </motion.div>
         
-        <h3 className={cn("text-2xl font-bold mt-4 text-[#2d2b28] transition-colors duration-300", isHovered && "text-primary-foreground")} style={{ transform: 'translateZ(60px)' }}>{smoothie.name}</h3>
+        <h3 className={cn("text-2xl font-bold mt-48 text-[#2d2b28] transition-colors duration-300", isHovered && "text-primary-foreground")} style={{ transform: 'translateZ(60px)' }}>{smoothie.name}</h3>
         
         <div className="flex items-center gap-2 mt-2" style={{ transform: 'translateZ(50px)' }}>
             <div className={cn("flex text-yellow-400 transition-colors duration-300", isHovered && "text-white/80")}>
@@ -111,7 +111,15 @@ const FeaturedProducts = () => {
         <div className="container max-w-7xl mx-auto px-4 absolute top-24 left-1/2 -translate-x-1/2 z-10">
            <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Smoothies</h2>
         </div>
-        <motion.div style={{ x }} className="flex gap-8 pl-[20%] mt-36">
+        <motion.div 
+            style={{ x }} 
+            className="flex gap-8 pl-[20%] mt-36 cursor-grab"
+            drag="x"
+            dragConstraints={{
+                left: -(300 * featuredSmoothies.length + (featuredSmoothies.length * 32)),
+                right: 0
+            }}
+        >
             {featuredSmoothies.map((smoothie) => (
               <SmoothieCard key={smoothie.id} smoothie={smoothie} />
             ))}
