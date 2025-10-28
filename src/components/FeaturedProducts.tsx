@@ -54,6 +54,7 @@ const SmoothieCard = ({ smoothie, index }: { smoothie: any; index: number }) => 
         <motion.div
             style={{ transform: 'translateZ(50px)' }}
             className="relative w-40 h-52 drop-shadow-2xl"
+            id={index === 0 ? 'featured-product-image-0' : ''}
         >
           <Image
             src={smoothie.image.imageUrl}
@@ -110,7 +111,7 @@ const FeaturedProducts = () => {
   }, []);
 
   return (
-    <section className="py-24">
+    <section className="py-24" id="featured-products">
       <div className="container max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between mb-12">
             <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Smoothies</h2>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { ShoppingBag, User } from "lucide-react";
 
@@ -63,6 +63,13 @@ const slides = [
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [target, setTarget] = useState<HTMLElement | null>(null)
+  
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -73,7 +80,32 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    setTarget(document.getElementById('featured-product-image-0'));
+  }, []);
+
   const currentSlide = slides[currentIndex];
+
+  const getTargetPosition = () => {
+    if (target && heroRef.current) {
+      const heroRect = heroRef.current.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      return {
+        x: targetRect.left - heroRect.left,
+        y: targetRect.top - heroRect.top,
+        width: targetRect.width,
+        height: targetRect.height,
+      };
+    }
+    return { x: 0, y: 0, width: '100%', height: '100%' };
+  };
+
+  const x = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().x + 'px']);
+  const y = useTransform(scrollYProgress, [0, 1], ['0', getTargetPosition().y + 'px']);
+  const width = useTransform(scrollYProgress, [0, 1], ['480px', getTargetPosition().width + 'px']);
+  const height = useTransform(scrollYProgress, [0, 1], ['620px', getTargetPosition().height + 'px']);
+  const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0]);
+
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -112,7 +144,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
+    <section ref={heroRef} className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
       {/* Animated Background */}
       <AnimatePresence>
         <motion.div
@@ -160,7 +192,7 @@ const Hero = () => {
         />
       </AnimatePresence>
 
-      <div className="relative z-10 w-full max-w-7xl px-4 pt-2 pb-24 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-7xl px-4 pt-2 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
@@ -210,7 +242,7 @@ const Hero = () => {
         </motion.header>
 
         {/* Main Content */}
-        <div className="mt-4 flex flex-col items-center gap-8 text-center lg:mt-8 lg:flex-row lg:items-center lg:gap-12 lg:text-left">
+        <div className="mt-8 flex flex-col items-center gap-8 text-center lg:mt-[-20px] lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
           <div className="flex-1 space-y-6 lg:space-y-8">
             <AnimatePresence mode="wait" custom={direction}>
@@ -335,14 +367,18 @@ const Hero = () => {
                     exit="exit"
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                     className="relative z-10"
-                    style={{ rotate: 0 }}
+                    style={{ 
+                      rotate: 0,
+                      // @ts-ignore
+                      x, y, width, height, opacity
+                    }}
                   >
                     <Image
                       src={currentSlide.bottle.src}
                       alt={currentSlide.bottle.alt}
-                      width={420}
+                      width={480}
                       height={620}
-                      className="h-auto w-[380px] object-contain drop-shadow-2xl sm:w-[480px]"
+                      className="h-auto w-full object-contain drop-shadow-2xl"
                       priority
                     />
                   </motion.div>
