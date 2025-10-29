@@ -12,6 +12,7 @@ import ProductGrid from '@/components/ProductGrid';
 import Footer from '@/components/Footer';
 import { BackgroundImage } from '@/components/BackgroundImage';
 import PromoBanner from '@/components/PromoBanner';
+import { BackgroundImage2 } from '@/components/BackgroundImage2';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +37,7 @@ export default function Home() {
         <main className="relative">
           <Hero />
           <BackgroundImage />
+          <BackgroundImage2 />
           <Marquee />
           <FeaturedProducts />
           <WhyChooseUs />
