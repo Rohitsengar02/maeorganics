@@ -65,7 +65,7 @@ const WhyChooseUs = () => {
 
 
   return (
-    <section className="py-2 mt-[-18rem] lg:mt-[1rem] sm:py-[-10rem] bg-[#fdf8e8] overflow-hidden relative z-10">
+    <section className="py-2 mt-[-18rem] lg:mt-[1rem] sm:py-[-10rem] bg-[#fdf8e8] overflow-hidden relative">
       <div className="container max-w-7xl mx-auto px-4">
         <motion.div 
           className="text-center mb-12 md:mb-16"

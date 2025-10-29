@@ -37,7 +37,7 @@ const CategoriesCarousel = () => {
   };
 
   return (
-    <section className="py-24 bg-[#fdf8e8] overflow-hidden relative z-10">
+    <section className="py-24 bg-[#fdf8e8] overflow-hidden relative">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Explore Our Categories</h2>
         <p className="max-w-2xl mx-auto mt-4 text-[#5a5854]">

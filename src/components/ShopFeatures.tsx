@@ -56,7 +56,7 @@ const itemVariants = {
 
 const ShopFeatures = () => {
   return (
-    <section className="py-24 bg-[#fdf8e8] relative z-10">
+    <section className="py-24 bg-[#fdf8e8] relative">
       <motion.div 
         className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8"
         initial="hidden"
