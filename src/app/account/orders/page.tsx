@@ -1,10 +1,13 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, FileDown } from 'lucide-react';
+import Image from 'next/image';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Header } from '@/components/header';
 import Footer from '@/components/Footer';
 import { orders } from '@/lib/data';
@@ -45,28 +48,53 @@ export default function OrdersPage() {
             {orders.map((order) => (
               <Card
                 key={order.id}
-                className="cursor-pointer transition-all hover:shadow-lg"
-                onClick={() => router.push(`/account/orders/${order.id}`)}
+                className="transition-all hover:shadow-lg rounded-2xl"
               >
                 <CardContent className="p-6">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                    <div className="mb-4 sm:mb-0">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
                       <p className="font-bold text-lg text-[#2d2b28]">Order #{order.id}</p>
                       <p className="text-sm text-gray-500">
-                        Date: {new Date(order.date).toLocaleDateString()}
+                        {new Date(order.date).toLocaleDateString()}
                       </p>
+                       <Badge className={cn("text-xs mt-2", getStatusVariant(order.status))}>
+                          {order.status}
+                      </Badge>
+                    </div>
+                    <div className="flex -space-x-4">
+                      {order.items.slice(0, 3).map((item, index) => (
+                        <div key={index} className="relative h-12 w-12 rounded-full border-2 border-white bg-white overflow-hidden shadow-sm">
+                          <Image
+                            src={item.product.image.imageUrl}
+                            alt={item.product.name}
+                            fill
+                            className="object-contain p-1"
+                          />
+                        </div>
+                      ))}
+                      {order.items.length > 3 && (
+                        <div className="relative h-12 w-12 flex items-center justify-center rounded-full border-2 border-white bg-gray-100 text-xs font-semibold text-gray-600">
+                          +{order.items.length - 3}
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center gap-4 w-full sm:w-auto">
-                        <div className='flex-1'>
-                            <Badge className={cn("text-xs", getStatusVariant(order.status))}>
-                                {order.status}
-                            </Badge>
-                            <p className="font-bold text-lg text-right sm:text-left mt-2 sm:mt-0">
+                        <div className='flex-1 text-right'>
+                            <p className="font-bold text-xl text-[#2d2b28]">
                                 ${order.total.toFixed(2)}
                             </p>
                         </div>
-                        <ChevronRight className="h-5 w-5 text-gray-400" />
                     </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <Button variant="outline" size="sm">
+                        <FileDown className='mr-2 h-4 w-4' />
+                        Download Invoice
+                    </Button>
+                    <Button onClick={() => router.push(`/account/orders/${order.id}`)}>
+                        View Details
+                        <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -78,3 +106,4 @@ export default function OrdersPage() {
     </div>
   );
 }
+
