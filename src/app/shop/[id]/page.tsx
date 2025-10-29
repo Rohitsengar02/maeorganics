@@ -182,15 +182,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
               {/* Quantity and Actions */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                <div className="flex h-12 items-center justify-between rounded-full border bg-white px-4">
-                  <Button variant="ghost" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}>
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="w-8 text-center font-bold">{quantity}</span>
-                  <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)}>
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+               
                 <div className="hidden sm:flex flex-grow gap-4">
                     <Button size="lg" className="h-12 flex-grow rounded-full" onClick={handleAddToCart}>
                         <ShoppingCart className="mr-2 h-5 w-5" />

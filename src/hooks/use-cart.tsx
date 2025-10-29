@@ -50,12 +50,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return [...prevItems, { ...product, quantity }];
     });
-    toast({
-        title: "Added to cart!",
-        description: `${product.name} is now in your cart.`,
-    })
     openCart();
-  }, [openCart, toast]);
+  }, [openCart]);
 
   const removeFromCart = useCallback((productId: string) => {
     setCartItems((prevItems) =>
@@ -63,7 +59,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   }, []);
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
+  const updateQuantity = useCallback((quantity: number, productId: string) => {
     if (quantity <= 0) {
       removeFromCart(productId);
     } else {
