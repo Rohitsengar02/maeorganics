@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Mail, MapPin, Phone } from 'lucide-react';
@@ -17,7 +18,6 @@ const helpLinks = [
     "Affiliate Program",
     "Our Suppliers",
     "Accessibility",
-    "Advertise With Us",
 ];
 
 export default function Footer() {
@@ -83,12 +83,23 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+               <li>
+                  <Link href="/admin" className="hover:text-white transition-colors hover:underline">
+                    Admin Panel
+                  </Link>
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-16 border-t border-white/10 pt-8 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} Maeorganics. All Rights Reserved.</p>
+          <p className="mt-2">
+            Developed by{' '}
+            <Link href="/developer" className="font-semibold text-primary hover:underline">
+              Rohit Sengar
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
