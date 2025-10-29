@@ -46,10 +46,14 @@ export function Header() {
             <ShoppingBag className="h-6 w-6" />
             <span className="sr-only">Shopping Bag</span>
           </Button>
-          <Button variant="ghost" size="icon">
-            <UserCircle className="h-6 w-6" />
-            <span className="sr-only">User Profile</span>
-          </Button>
+          <Link href="/account" passHref>
+            <Button variant="ghost" size="icon" asChild>
+                <div>
+                    <UserCircle className="h-6 w-6" />
+                    <span className="sr-only">User Profile</span>
+                </div>
+            </Button>
+          </Link>
 
           <Sheet>
             <SheetTrigger asChild>
