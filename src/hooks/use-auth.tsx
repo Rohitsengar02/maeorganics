@@ -55,7 +55,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (userDoc.exists()) {
       const userProfile = { ...userDoc.data(), uid: fbUser.uid, emailVerified: fbUser.emailVerified } as UserProfile;
       
-      if(fbUser.emailVerified) {
+      const isAdmin = fbUser.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+      if(fbUser.emailVerified || isAdmin) {
         setUser(userProfile);
       } else {
         setUser(null);
@@ -68,7 +70,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
          });
       }
     } else {
-      setUser(null); // No profile found in firestore
+       // If user exists in Auth but not in Firestore DB, it's likely the admin.
+      if (fbUser.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        const adminProfile: UserProfile = {
+          uid: fbUser.uid,
+          email: fbUser.email,
+          fullName: 'Admin',
+          imageUrl: '',
+          emailVerified: true, // Always treat admin as verified
+        };
+        setUser(adminProfile);
+      } else {
+        setUser(null); // No profile found in firestore for non-admin user
+      }
     }
   }
 
@@ -104,7 +118,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    if (!userCredential.user.emailVerified) {
+
+    const isAdmin = userCredential.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+    if (!isAdmin && !userCredential.user.emailVerified) {
       await firebaseSignOut(auth);
       const error: any = new Error("Email not verified. Please check your inbox.");
       error.code = "auth/email-not-verified";
@@ -113,8 +129,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    const isAdminPage = window.location.pathname.startsWith('/admin');
     await firebaseSignOut(auth);
-    router.push('/login');
+    router.push(isAdminPage ? '/admin/login' : '/login');
   };
 
   const sendVerificationEmail = async (email: string, password: string) => {
