@@ -22,31 +22,36 @@ const itemVariants = {
 };
 
 interface ProductGridProps {
-    isGridView?: boolean;
+  isGridView?: boolean;
 }
 
-const ProductGrid = forwardRef<HTMLDivElement, ProductGridProps>(({ isGridView = true }, ref) => {
-  return (
-    <motion.div
+const ProductGrid = forwardRef<HTMLDivElement, ProductGridProps>(
+  ({ isGridView = true }, ref) => {
+    return (
+      <motion.div
         ref={ref}
         className={cn(
-            "grid gap-4 sm:gap-8 ",
-            isGridView ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+          'grid gap-4 sm:gap-8 relative',
+          isGridView ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'
         )}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
         variants={containerVariants}
-        >
+      >
         {allProducts.map((product) => (
-            <motion.div key={product.id} variants={itemVariants}>
+          <motion.div
+            key={product.id}
+            variants={itemVariants}
+            className="relative z-30"
+          >
             <ProductCard product={product} isGridView={isGridView} />
-            </motion.div>
+          </motion.div>
         ))}
-    </motion.div>
-  );
-});
+      </motion.div>
+    );
+  }
+);
 
 ProductGrid.displayName = 'ProductGrid';
-
 export default ProductGrid;
