@@ -77,7 +77,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               <div className="grid grid-cols-4 gap-4">
                 {galleryImages.map((img, index) => (
                   <button
-                    key={img.id}
+                    key={`${img.id}-${index}`}
                     onClick={() => setSelectedImage(index)}
                     className={cn(
                       'relative aspect-square w-full overflow-hidden rounded-lg border-2 transition-all',
