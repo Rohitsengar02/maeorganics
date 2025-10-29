@@ -19,7 +19,7 @@ export default function DeveloperPage() {
             <CardHeader className="bg-muted/30 p-8">
               <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
                 <Avatar className="h-24 w-24 border-4 border-white shadow-md">
-                  <AvatarImage src="https://avatars.githubusercontent.com/u/1089233?v=4" alt="Rohit Sengar" />
+                  <AvatarImage src="https://res.cloudinary.com/dntayojln/image/upload/v1761745755/WhatsApp_Image_2025-10-29_at_19.18.35_5ecdead7_jqaohc.jpg" alt="Rohit Sengar" />
                   <AvatarFallback>RS</AvatarFallback>
                 </Avatar>
                 <div>
@@ -51,9 +51,9 @@ export default function DeveloperPage() {
                 <div className="border-t pt-6">
                     <h3 className="mb-4 text-lg font-semibold text-foreground">Connect with me:</h3>
                     <div className="space-y-3">
-                        <Link href="mailto:contact@cyberlim.com" className="flex items-center gap-3 transition-colors hover:text-primary">
+                        <Link href="mailto:rohitsengar02@gmail.com" className="flex items-center gap-3 transition-colors hover:text-primary">
                             <Mail className="h-5 w-5" />
-                            <span>contact@cyberlim.com</span>
+                            <span>rohitsengar02@gmail.com</span>
                         </Link>
                          <Link href="https://www.cyberlim.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-primary">
                             <Globe className="h-5 w-5" />
@@ -61,7 +61,11 @@ export default function DeveloperPage() {
                         </Link>
                          <Link href="https://linkedin.com/in/rohitsengar" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-primary">
                             <Linkedin className="h-5 w-5" />
-                            <span>linkedin.com/in/rohitsengar</span>
+                            <span>linkedin.com/in/therohitsengar/</span>
+                        </Link>
+                        <Link href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-primary">
+                            
+                            <span>Mobile :- 9411800280</span>
                         </Link>
                     </div>
                 </div>
