@@ -2,18 +2,64 @@
 import { useRouter } from 'next/navigation';
 import PageHeader from '../../components/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PlusCircle, Trash2, Upload } from 'lucide-react';
+import { PlusCircle, Trash2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { Textarea } from '@/components/ui/textarea';
 
 const heroSlides = [
-    { title: 'Citrus Glow', subtitle: 'VITAMIN BURST', image: 'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png' },
-    { title: 'Green Essence', subtitle: 'HERBAL FRESH', image: 'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png' },
+    { 
+        id: 1,
+        title: 'Citrus Glow', 
+        subtitle: 'VITAMIN BURST', 
+        image: 'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png',
+        description: "Awaken your senses with EcoBless Citrus Glow Handwash — enriched with orange peel, lemon, and honey extracts. Its vitamin-rich formula deeply cleanses and refreshes, leaving your hands bright, smooth, and energized.",
+        price: "₹299.00",
+        rating: 5,
+        baseBackground: "#fff7e6",
+        accentBackground: "#ffb84d",
+        baseIngredients: [
+            { name: "Orange Peel", icon: "🍊" },
+            { name: "Lemon Extract", icon: "🍋" },
+            { name: "Honey", icon: "🍯" }
+        ],
+        extras: [
+            { name: "Turmeric", icon: "🌻" },
+            { name: "Papaya", icon: "🥭" },
+            { name: "Vitamin C", icon: "💊" }
+        ],
+    },
+    { 
+        id: 2,
+        title: 'Green Essence', 
+        subtitle: 'HERBAL FRESH', 
+        image: 'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png',
+        description: "Experience the purity of nature with our EcoBless Green Essence Handwash. Infused with aloe vera, mint, and lemon for a refreshing and gentle cleanse that leaves hands soft, clean, and naturally fragrant.",
+        price: "₹299.00",
+        rating: 5,
+        baseBackground: "#f0f9f0",
+        accentBackground: "#90cc7f",
+        baseIngredients: [
+          { name: "Aloe Vera", icon: "🪴" },
+          { name: "Mint Leaves", icon: "🍃" },
+          { name: "Lemon Extract", icon: "🍋" }
+        ],
+        extras: [
+          { name: "Green Apple", icon: "🍏" },
+          { name: "Cucumber", icon: "🥒" },
+          { name: "Tea Tree Oil", icon: "🌿" }
+        ],
+    },
 ];
 
 const navLinks = [
@@ -73,34 +119,100 @@ export default function HomePageSettings() {
                                 <h3 className="font-semibold">Hero Slides</h3>
                                 <Button variant="outline" size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Add Slide</Button>
                             </div>
-                            <div className="rounded-md border">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Image</TableHead>
-                                            <TableHead>Title</TableHead>
-                                            <TableHead>Subtitle</TableHead>
-                                            <TableHead className="w-[100px] text-right">Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {heroSlides.map((slide) => (
-                                            <TableRow key={slide.title}>
-                                                <TableCell>
-                                                    <div className="relative h-12 w-12 rounded-md bg-muted">
-                                                        <Image src={slide.image} alt={slide.title} fill className="object-contain" />
+                            <Accordion type="single" collapsible className="w-full">
+                                {heroSlides.map((slide, slideIndex) => (
+                                    <AccordionItem value={`item-${slideIndex}`} key={slide.id}>
+                                        <AccordionTrigger className='font-semibold'>Slide {slideIndex + 1}: {slide.title}</AccordionTrigger>
+                                        <AccordionContent className="p-2">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                {/* Left Column: Text Content */}
+                                                <div className="space-y-4">
+                                                    <h4 className="font-medium text-md mb-2 border-b pb-2">Slide Content</h4>
+                                                    <div>
+                                                        <Label>Title</Label>
+                                                        <Input defaultValue={slide.title} />
                                                     </div>
-                                                </TableCell>
-                                                <TableCell className="font-medium">{slide.title}</TableCell>
-                                                <TableCell>{slide.subtitle}</TableCell>
-                                                <TableCell className="text-right">
-                                                    <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4" /></Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </div>
+                                                    <div>
+                                                        <Label>Subtitle</Label>
+                                                        <Input defaultValue={slide.subtitle} />
+                                                    </div>
+                                                    <div>
+                                                        <Label>Description</Label>
+                                                        <Textarea defaultValue={slide.description} />
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <Label>Price</Label>
+                                                            <Input defaultValue={slide.price} />
+                                                        </div>
+                                                        <div>
+                                                            <Label>Rating (1-5)</Label>
+                                                            <Input type="number" defaultValue={slide.rating} />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
+                                                {/* Right Column: Images & Ingredients */}
+                                                <div className="space-y-4">
+                                                    <h4 className="font-medium text-md mb-2 border-b pb-2">Visuals</h4>
+                                                    <div>
+                                                        <Label>Bottle Image URL</Label>
+                                                        <Input defaultValue={slide.image} />
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <Label>Base Background</Label>
+                                                            <Input defaultValue={slide.baseBackground} />
+                                                        </div>
+                                                        <div>
+                                                            <Label>Accent Background</Label>
+                                                            <Input defaultValue={slide.accentBackground} />
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Base Ingredients */}
+                                                    <div className="space-y-2">
+                                                        <div className="flex items-center justify-between">
+                                                            <Label>Base Ingredients (Left)</Label>
+                                                            <Button variant="outline" size="xs"><PlusCircle className="mr-1 h-3 w-3"/>Add</Button>
+                                                        </div>
+                                                        <div className="space-y-2 rounded-md border p-3">
+                                                            {slide.baseIngredients.map((ing, index) => (
+                                                                <div key={index} className="flex items-center gap-2">
+                                                                    <Input placeholder="Icon (e.g. 🍊)" defaultValue={ing.icon} className="w-20" />
+                                                                    <Input placeholder="Name" defaultValue={ing.name} />
+                                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground"><Trash2 className="h-4 w-4" /></Button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Extra Ingredients */}
+                                                    <div className="space-y-2">
+                                                         <div className="flex items-center justify-between">
+                                                            <Label>Extra Ingredients (Right)</Label>
+                                                            <Button variant="outline" size="xs"><PlusCircle className="mr-1 h-3 w-3"/>Add</Button>
+                                                        </div>
+                                                        <div className="space-y-2 rounded-md border p-3">
+                                                            {slide.extras.map((ing, index) => (
+                                                                <div key={index} className="flex items-center gap-2">
+                                                                    <Input placeholder="Icon (e.g. 🌻)" defaultValue={ing.icon} className="w-20" />
+                                                                    <Input placeholder="Name" defaultValue={ing.name} />
+                                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground"><Trash2 className="h-4 w-4" /></Button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-end mt-4">
+                                                <Button variant="destructive">Delete Slide</Button>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
                         </div>
 
                          <div>
