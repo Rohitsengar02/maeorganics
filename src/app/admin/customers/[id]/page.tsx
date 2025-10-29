@@ -39,6 +39,7 @@ import { Separator } from "@/components/ui/separator"
 import PageHeader from "../../components/PageHeader"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function CustomerDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -54,7 +55,11 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             
             <Card>
-              <CardHeader className="flex flex-row items-start bg-muted/50">
+              <CardHeader className="flex flex-row items-center gap-4 bg-muted/50">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src="https://github.com/shadcn.png" alt="Liam Johnson" />
+                  <AvatarFallback>LJ</AvatarFallback>
+                </Avatar>
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
                     Liam Johnson
