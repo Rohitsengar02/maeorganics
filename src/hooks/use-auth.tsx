@@ -25,7 +25,7 @@ interface AuthContextType {
   user: UserProfile | null;
   firebaseUser: FirebaseUser | null;
   loading: boolean;
-  signUp: (userData: Omit<UserProfile, 'uid'>, password: string) => Promise<FirebaseUser>;
+  signUp: (userData: Omit<UserProfile, 'uid' | 'emailVerified'>, password: string) => Promise<FirebaseUser>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
@@ -54,7 +54,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setFirebaseUser(fbUser);
         const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
         if (userDoc.exists()) {
-          setUser({ ...userDoc.data(), uid: fbUser.uid } as UserProfile);
+          const userProfile = { ...userDoc.data(), uid: fbUser.uid, emailVerified: fbUser.emailVerified } as UserProfile;
+          setUser(userProfile);
+          
+          // Sync firestore if firebase auth state is different
+          if (userDoc.data().emailVerified !== fbUser.emailVerified) {
+             await updateDoc(doc(db, 'users', fbUser.uid), {
+                emailVerified: fbUser.emailVerified
+             });
+          }
         } else {
             setUser(null); // No profile found in firestore
         }
@@ -68,11 +76,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const signUp = async (userData: Omit<UserProfile, 'uid'>, password: string) => {
+  const signUp = async (userData: Omit<UserProfile, 'uid' | 'emailVerified'>, password: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, userData.email, password);
     const { uid } = userCredential.user;
     
-    const userProfileData: UserProfile = { ...userData, uid };
+    const userProfileData: UserProfile = { ...userData, uid, emailVerified: false };
     
     await setDoc(doc(db, 'users', uid), userProfileData);
     

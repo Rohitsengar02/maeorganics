@@ -72,8 +72,11 @@ export default function RegisterPage() {
       
       await signUp(userData, password);
       
-      toast({ title: 'Registration Successful', description: 'Redirecting to verification...' });
-      router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+      toast({ 
+        title: 'Registration Successful', 
+        description: 'Please check your email to verify your account.' 
+      });
+      router.push('/login');
 
     } catch (error: any) {
       toast({
