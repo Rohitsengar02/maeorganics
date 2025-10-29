@@ -17,10 +17,8 @@ export interface UserProfile {
   uid: string;
   email: string;
   fullName: string;
-  phone: string;
   imageUrl: string;
   emailVerified: boolean;
-  mobileVerified: boolean;
 }
 
 interface AuthContextType {
@@ -31,7 +29,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
-  updateUserVerificationStatus: (uid: string, type: 'email' | 'mobile', status: boolean) => Promise<void>;
+  updateUserVerificationStatus: (uid: string, type: 'email', status: boolean) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -78,9 +76,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     await setDoc(doc(db, 'users', uid), userProfileData);
     
-    // This doesn't send OTP, but a verification link.
-    // For OTP, a third-party service like Twilio is needed.
-    // We will simulate the OTP flow.
     await sendEmailVerification(userCredential.user);
     
     return userCredential.user;
@@ -103,12 +98,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
   
-  const updateUserVerificationStatus = async (uid: string, type: 'email' | 'mobile', status: boolean) => {
+  const updateUserVerificationStatus = async (uid: string, type: 'email', status: boolean) => {
     const userDocRef = doc(db, 'users', uid);
     if(type === 'email'){
         await updateDoc(userDocRef, { emailVerified: status });
-    } else {
-        await updateDoc(userDocRef, { mobileVerified: status });
     }
   };
 

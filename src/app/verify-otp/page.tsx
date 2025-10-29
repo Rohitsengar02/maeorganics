@@ -18,14 +18,12 @@ function VerifyOTPComponent() {
   const { firebaseUser, updateUserVerificationStatus } = useAuth();
   
   const [emailOtp, setEmailOtp] = useState('');
-  const [phoneOtp, setPhoneOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
   const email = searchParams.get('email');
-  const phone = searchParams.get('phone');
 
   useEffect(() => {
-    if (!email || !phone) {
+    if (!email) {
         toast({
             variant: 'destructive',
             title: 'Error',
@@ -33,22 +31,18 @@ function VerifyOTPComponent() {
         });
         router.push('/register');
     }
-  }, [email, phone, router, toast])
+  }, [email, router, toast])
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // In a real app, you'd verify the OTPs against a backend service (e.g., Firebase Functions + Twilio)
-    // For this prototype, we'll simulate a successful verification.
-    const isEmailOtpValid = emailOtp === '123456'; // Dummy OTP
-    const isPhoneOtpValid = phoneOtp === '123456'; // Dummy OTP
+    const isEmailOtpValid = emailOtp === '123456'; 
 
-    if (isEmailOtpValid && isPhoneOtpValid) {
+    if (isEmailOtpValid) {
         try {
             if (firebaseUser) {
                 await updateUserVerificationStatus(firebaseUser.uid, 'email', true);
-                await updateUserVerificationStatus(firebaseUser.uid, 'mobile', true);
                 toast({ title: 'Verification Successful', description: 'Your account is now fully active.' });
                 router.push('/');
             } else {
@@ -65,7 +59,7 @@ function VerifyOTPComponent() {
       toast({
         variant: 'destructive',
         title: 'Invalid OTP',
-        description: 'One or both of the OTPs are incorrect. Please try again.',
+        description: 'The OTP is incorrect. Please try again.',
       });
     }
 
@@ -86,7 +80,7 @@ function VerifyOTPComponent() {
 
           <div className="rounded-2xl border bg-white/60 p-8 shadow-lg">
             <p className="mb-6 text-center text-sm text-gray-600">
-              We've sent verification codes to your email ({email}) and your phone ({phone}). For this demo, please use `123456` for both.
+              We've sent a verification code to your email ({email}). For this demo, please use `123456`.
             </p>
             <form className="space-y-6" onSubmit={handleVerify}>
               <div>
@@ -97,18 +91,6 @@ function VerifyOTPComponent() {
                   placeholder="Enter 6-digit code" 
                   value={emailOtp}
                   onChange={(e) => setEmailOtp(e.target.value)}
-                  maxLength={6}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone-otp">Phone OTP</Label>
-                <Input 
-                  id="phone-otp" 
-                  type="text" 
-                  placeholder="Enter 6-digit code" 
-                  value={phoneOtp}
-                  onChange={(e) => setPhoneOtp(e.target.value)}
                   maxLength={6}
                   required
                 />

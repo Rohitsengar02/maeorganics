@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Camera, KeyRound, Mail, Phone, User } from 'lucide-react';
+import { ArrowLeft, Camera, KeyRound, Mail, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,7 +21,6 @@ export default function RegisterPage() {
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -69,14 +68,12 @@ export default function RegisterPage() {
         imageUrl = await uploadToCloudinary(profileImage);
       }
 
-      const userData = { fullName, email, phone, imageUrl, emailVerified: false, mobileVerified: false };
+      const userData = { fullName, email, imageUrl, emailVerified: false };
       
-      // We pass the password separately to the signUp function
       await signUp(userData, password);
       
       toast({ title: 'Registration Successful', description: 'Redirecting to verification...' });
-      // Redirect to a verification page, passing user info
-      router.push(`/verify-otp?email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`);
+      router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
 
     } catch (error: any) {
       toast({
@@ -142,14 +139,6 @@ export default function RegisterPage() {
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input id="email" type="email" placeholder="you@example.com" className="pl-10" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="phone">Mobile Number</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <Input id="phone" type="tel" placeholder="+1 (555) 000-0000" className="pl-10" value={phone} onChange={(e) => setPhone(e.target.value)} required />
                 </div>
               </div>
 
