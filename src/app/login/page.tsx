@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -11,14 +12,24 @@ import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/use-auth';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const { signIn, sendVerificationEmail } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +39,34 @@ export default function LoginPage() {
       toast({ title: 'Login Successful', description: "Welcome back!" });
       router.push('/');
     } catch (error: any) {
+      if (error.code === 'auth/email-not-verified') {
+        setShowVerificationDialog(true);
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: error.message || 'An unexpected error occurred.',
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setIsLoading(true);
+    setShowVerificationDialog(false);
+    try {
+      await sendVerificationEmail(email, password);
+      toast({
+        title: 'Verification Email Sent',
+        description: 'Please check your inbox (and spam folder) for the verification link.',
+      });
+    } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Login Failed',
-        description: error.message || 'An unexpected error occurred.',
+        title: 'Failed to Send Email',
+        description: error.message || 'Could not send verification email. Please try again.',
       });
     } finally {
       setIsLoading(false);
@@ -106,6 +141,22 @@ export default function LoginPage() {
         </div>
       </main>
       <Footer />
+      <AlertDialog open={showVerificationDialog} onOpenChange={setShowVerificationDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Email Verification Required</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your email address has not been verified yet. Please check your inbox for the verification link, or we can send you a new one.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button variant="outline" onClick={() => setShowVerificationDialog(false)}>Cancel</Button>
+            <AlertDialogAction onClick={handleResendVerification}>
+              Resend Verification Email
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

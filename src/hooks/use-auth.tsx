@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -28,7 +29,7 @@ interface AuthContextType {
   signUp: (userData: Omit<UserProfile, 'uid' | 'emailVerified'>, password: string) => Promise<FirebaseUser>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  sendVerificationEmail: () => Promise<void>;
+  sendVerificationEmail: (email: string, password: string) => Promise<void>;
   updateUserVerificationStatus: (uid: string, type: 'email', status: boolean) => Promise<void>;
 }
 
@@ -55,7 +56,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
         if (userDoc.exists()) {
           const userProfile = { ...userDoc.data(), uid: fbUser.uid, emailVerified: fbUser.emailVerified } as UserProfile;
-          setUser(userProfile);
+          
+          if(fbUser.emailVerified) {
+            setUser(userProfile);
+          } else {
+            setUser(null);
+          }
           
           // Sync firestore if firebase auth state is different
           if (userDoc.data().emailVerified !== fbUser.emailVerified) {
@@ -80,7 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const userCredential = await createUserWithEmailAndPassword(auth, userData.email, password);
     const { uid } = userCredential.user;
     
-    const userProfileData: UserProfile = { ...userData, uid, emailVerified: false };
+    const userProfileData: Omit<UserProfile, 'emailVerified'> & { emailVerified: boolean } = { ...userData, uid, emailVerified: false };
     
     await setDoc(doc(db, 'users', uid), userProfileData);
     
@@ -90,7 +96,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    if (!userCredential.user.emailVerified) {
+      await firebaseSignOut(auth);
+      const error: any = new Error("Email not verified. Please check your inbox.");
+      error.code = "auth/email-not-verified";
+      throw error;
+    }
   };
 
   const signOut = async () => {
@@ -98,11 +110,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     router.push('/login');
   };
 
-  const sendVerificationEmail = async () => {
-    if (auth.currentUser) {
-      await sendEmailVerification(auth.currentUser);
-    } else {
-      throw new Error("No user is currently signed in.");
+  const sendVerificationEmail = async (email: string, password: string) => {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (userCredential.user) {
+            await sendEmailVerification(userCredential.user);
+            await firebaseSignOut(auth); // Sign out immediately after sending email
+        }
+    } catch (error) {
+        // If sign-in fails, we still want to let the user know.
+        // The calling function will handle the toast.
+        throw error;
     }
   };
   
