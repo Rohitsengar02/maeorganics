@@ -16,7 +16,7 @@ export function BackgroundImage2({ startRef, endRef }: { startRef: RefObject<HTM
   });
 
   const x = useTransform(scrollYProgress, [0.3, 1], ['-40vw', '50vw']);
-  const y = useTransform(scrollYProgress, [0.3, 1], ['0vh', '150vh']);
+  const y = useTransform(scrollYProgress, [0.3, 1], ['0vh', '468vh']);
   
   const finalY = useTransform(endScrollYProgress, [0, 1], [y.get(), 100]);
   const finalX = useTransform(endScrollYProgress, [0, 1], [x.get(), 20]);
