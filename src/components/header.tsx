@@ -36,9 +36,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-           <Link href="/checkout" passHref>
-             <Button>Checkout</Button>
-           </Link>
+          
            <Button variant="ghost" size="icon" className="relative" onClick={openCart}>
             {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">

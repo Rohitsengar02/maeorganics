@@ -10,6 +10,7 @@ import CheckoutSteps from '@/components/checkout/CheckoutSteps';
 import CartSummary from '@/components/checkout/CartSummary';
 import AddressStep from '@/components/checkout/AddressStep';
 import PaymentStep from '@/components/checkout/PaymentStep';
+import { Button } from '@/components/ui/button';
 
 const steps = ['Cart', 'Address', 'Payment'];
 
