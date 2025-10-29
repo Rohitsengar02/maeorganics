@@ -226,13 +226,15 @@ const Hero = () => {
               )}
               <ShoppingBag size={24} className="text-[#2d2b28]" />
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="hidden sm:flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/50 bg-white/70 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
-            >
-              <User size={24} className="text-[#2d2b28]" />
-            </motion.button>
+            <Link href="/account" passHref>
+              <motion.button
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="hidden sm:flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/50 bg-white/70 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
+              >
+                <User size={24} className="text-[#2d2b28]" />
+              </motion.button>
+            </Link>
              <div className="md:hidden">
                 <Sheet>
                     <SheetTrigger asChild>
