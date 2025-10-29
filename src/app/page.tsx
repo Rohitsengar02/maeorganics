@@ -17,6 +17,7 @@ import { BackgroundImage2 } from '@/components/BackgroundImage2';
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const productGridRef = useRef<HTMLDivElement>(null);
+  const promoBannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -38,7 +39,7 @@ export default function Home() {
         <main className="relative">
           <Hero />
           <BackgroundImage />
-          <BackgroundImage2 scrollRef={productGridRef} />
+          <BackgroundImage2 startRef={productGridRef} endRef={promoBannerRef} />
           <Marquee />
           <FeaturedProducts />
           <WhyChooseUs />
@@ -57,7 +58,7 @@ export default function Home() {
             </div>
           </section>
           <ShopFeatures />
-          <PromoBanner />
+          <PromoBanner ref={promoBannerRef} />
           <Footer />
         </main>
       )}
