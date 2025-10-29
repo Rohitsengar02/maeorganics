@@ -21,7 +21,6 @@ import {
   Users,
   BarChart,
   Settings,
-  LogOut,
   ChevronDown,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
@@ -85,8 +84,8 @@ export default function AdminSidebar() {
               <Link href={item.href} passHref>
                 <SidebarMenuButton
                   isActive={
-                    pathname.startsWith(item.href) &&
-                    (item.href !== '/admin' || pathname === '/admin')
+                    // Special handling for the dashboard route to avoid matching all sub-routes
+                    item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)
                   }
                   icon={<item.icon />}
                   tooltip={item.label}
