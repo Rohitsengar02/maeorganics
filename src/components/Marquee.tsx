@@ -14,7 +14,7 @@ const Marquee = () => {
   const x2 = useTransform(scrollYProgress, [0, 1], ['20%', '-20%']);
 
   return (
-    <section ref={marqueeRef} className="py-0 bg-[#fdf8e8] relative z-20">
+    <section ref={marqueeRef} className="py-0 bg-[#fdf8e8] relative z-10">
       <div className="relative flex flex-col overflow-hidden py-8 px-4 gap-4">
         <motion.div
           className="flex gap-8 whitespace-nowrap"

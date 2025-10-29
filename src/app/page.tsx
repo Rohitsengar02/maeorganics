@@ -39,7 +39,7 @@ export default function Home() {
           <FeaturedProducts />
           <WhyChooseUs />
           <CategoriesCarousel />
-          <section className="py-24 bg-[#fdf8e8] relative">
+          <section className="py-24 bg-[#fdf8e8] relative z-10">
             <div className="container mx-auto max-w-7xl px-4">
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-headline font-black text-[#2d2b28]">
