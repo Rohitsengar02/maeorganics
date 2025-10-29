@@ -15,9 +15,13 @@ const navItems = [
 
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const isProductPage = pathname.startsWith('/shop/');
 
   return (
-    <nav className="sm:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/80 backdrop-blur-lg border-t border-gray-200/80 flex justify-around items-center z-50">
+    <nav className={cn(
+        "sm:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/80 backdrop-blur-lg border-t border-gray-200/80 flex justify-around items-center z-50",
+        isProductPage && "pb-20" // Add padding to push nav up when product bar is visible
+    )}>
       {navItems.map((item) => {
         const isActive = pathname === item.href;
         return (
