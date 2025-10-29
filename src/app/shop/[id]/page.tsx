@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import {
@@ -16,7 +16,6 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  ChevronLeft,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -37,6 +36,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import type { EmblaCarouselType } from 'embla-carousel-react';
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const product = allProducts.find((p) => p.id === params.id);
@@ -44,21 +44,45 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('Orange');
+  const [api, setApi] = useState<EmblaCarouselType>();
+  const [selectedThumb, setSelectedThumb] = useState(0);
 
   if (!product) {
     notFound();
   }
+  
+  const galleryImages = [
+    product.image,
+    ...featuredSmoothies.slice(1, 4).map(s => s.image)
+  ];
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    const onSelect = () => {
+      setSelectedThumb(api.selectedScrollSnap());
+    };
+
+    api.on('select', onSelect);
+
+    return () => {
+      api.off('select', onSelect);
+    };
+  }, [api]);
+
+  const handleThumbClick = (index: number) => {
+    api?.scrollTo(index);
+    setSelectedThumb(index);
+  };
+
 
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
     }
   };
-
-  const galleryImages = [
-    product.image,
-    ...featuredSmoothies.slice(1, 4).map(s => s.image)
-  ];
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fdf8e8]">
@@ -80,8 +104,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             {/* Image Gallery */}
-            <div>
-              <Carousel className="w-full">
+            <div className="space-y-4">
+              <Carousel className="w-full" setApi={setApi}>
                 <CarouselContent>
                   {galleryImages.map((img, index) => (
                     <CarouselItem key={`${img.id}-${index}`}>
@@ -99,6 +123,25 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 <CarouselPrevious className="absolute left-4" />
                 <CarouselNext className="absolute right-4" />
               </Carousel>
+              <div className="grid grid-cols-4 gap-4">
+                {galleryImages.map((img, index) => (
+                    <button
+                        key={`${img.id}-thumb-${index}`}
+                        onClick={() => handleThumbClick(index)}
+                        className={cn(
+                            "relative aspect-square w-full overflow-hidden rounded-lg border-2 bg-white/60 transition-all",
+                            selectedThumb === index ? 'border-primary' : 'border-transparent'
+                        )}
+                    >
+                        <Image
+                            src={img.imageUrl}
+                            alt={img.description}
+                            fill
+                            className="object-contain p-2"
+                        />
+                    </button>
+                ))}
+              </div>
             </div>
 
             {/* Product Info */}
@@ -148,14 +191,16 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button size="lg" className="h-12 flex-grow rounded-full" onClick={handleAddToCart}>
-                    <ShoppingCart className="mr-2 h-5 w-5" />
-                    Add to Cart
-                </Button>
-                 <Button variant="outline" size="lg" className="h-12 rounded-full">
-                    <Heart className="mr-2 h-5 w-5" />
-                    Add to Wishlist
-                </Button>
+                <div className="hidden sm:flex flex-grow gap-4">
+                    <Button size="lg" className="h-12 flex-grow rounded-full" onClick={handleAddToCart}>
+                        <ShoppingCart className="mr-2 h-5 w-5" />
+                        Add to Cart
+                    </Button>
+                     <Button variant="outline" size="lg" className="h-12 rounded-full">
+                        <Heart className="mr-2 h-5 w-5" />
+                        Add to Wishlist
+                    </Button>
+                </div>
               </div>
 
               <Separator />
@@ -211,3 +256,5 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     </div>
   );
 }
+
+    
