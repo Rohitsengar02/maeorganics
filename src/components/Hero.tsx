@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { ShoppingBag, User, Menu, LogOut } from "lucide-react";
+import { ShoppingBag, User, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import Link from "next/link";
@@ -242,14 +242,6 @@ const Hero = () => {
                     </Avatar>
                   </motion.div>
                 </Link>
-                 <motion.button
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={signOut}
-                  className="hidden sm:flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/50 bg-white/70 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
-                >
-                  <LogOut size={22} className="text-[#2d2b28]" />
-                </motion.button>
               </>
             ) : (
               <Link href="/login" passHref>

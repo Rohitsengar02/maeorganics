@@ -1,6 +1,6 @@
 'use client';
 
-import { ShoppingBag, UserCircle, Menu, LogIn, LogOut } from "lucide-react";
+import { ShoppingBag, UserCircle, Menu, LogIn } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
@@ -64,10 +64,6 @@ export function Header() {
                   </div>
                 </Button>
               </Link>
-              <Button variant="ghost" size="icon" onClick={signOut}>
-                <LogOut className="h-6 w-6" />
-                <span className="sr-only">Log Out</span>
-              </Button>
             </>
           ) : (
             <Link href="/login" passHref>
