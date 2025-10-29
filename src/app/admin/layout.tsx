@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useAuth } from '@/hooks/use-auth';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import AdminSidebar from './components/Sidebar';
@@ -16,6 +17,12 @@ export default function AdminLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // The login page should not be protected by this layout
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   useEffect(() => {
     if (!loading && (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) {
