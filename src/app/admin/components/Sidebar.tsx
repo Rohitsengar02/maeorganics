@@ -1,17 +1,15 @@
+
 'use client';
 
 import {
   Sidebar as BaseSidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarMenuSub,
   SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarFooter
+  SidebarFooter,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import {
@@ -25,18 +23,14 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { useState } from 'react';
-
+import { UserNav } from './user-nav';
+import { Separator } from '@/components/ui/separator';
 
 const menuItems = [
   {
@@ -68,16 +62,18 @@ const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(pathname.startsWith('/admin/settings'));
+  const [isSettingsOpen, setIsSettingsOpen] = useState(
+    pathname.startsWith('/admin/settings')
+  );
 
   return (
     <BaseSidebar>
       <SidebarHeader>
         <Link href="/admin" className="flex items-center gap-2">
-            <span className="flex items-center justify-center h-8 w-8 bg-primary rounded-full text-primary-foreground font-bold text-lg">
-                M
-            </span>
-            <span className="font-bold text-lg">Maeorganics</span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-lg text-primary-foreground">
+            M
+          </span>
+          <span className="font-bold text-lg">Maeorganics</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -86,7 +82,10 @@ export default function AdminSidebar() {
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} passHref>
                 <SidebarMenuButton
-                  isActive={pathname.startsWith(item.href) && (item.href !== '/admin' || pathname === '/admin')}
+                  isActive={
+                    pathname.startsWith(item.href) &&
+                    (item.href !== '/admin' || pathname === '/admin')
+                  }
                   icon={<item.icon />}
                   tooltip={item.label}
                 >
@@ -95,47 +94,52 @@ export default function AdminSidebar() {
               </Link>
             </SidebarMenuItem>
           ))}
-           <Collapsible open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+          <Collapsible open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
             <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                    <SidebarMenuButton
-                      icon={<Settings />}
-                      tooltip="Settings"
-                      isActive={pathname.startsWith('/admin/settings')}
-                      className='w-full'
-                    >
-                      Settings
-                      <ChevronDown className='ml-auto h-4 w-4 transition-transform data-[state=open]:rotate-180' />
-                    </SidebarMenuButton>
-                </CollapsibleTrigger>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton
+                  icon={<Settings />}
+                  tooltip="Settings"
+                  isActive={pathname.startsWith('/admin/settings')}
+                  className="w-full"
+                >
+                  Settings
+                  <ChevronDown className="ml-auto h-4 w-4 transition-transform data-[state=open]:rotate-180" />
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
             </SidebarMenuItem>
-             <CollapsibleContent asChild>
-                <SidebarMenuSub>
-                    <SidebarMenuSubItem>
-                        <Link href="/admin/settings" passHref>
-                            <SidebarMenuSubButton isActive={pathname === '/admin/settings'}>Store</SidebarMenuSubButton>
-                        </Link>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                        <Link href="/admin/settings/home" passHref>
-                            <SidebarMenuSubButton isActive={pathname === '/admin/settings/home'}>Home Page</SidebarMenuSubButton>
-                        </Link>
-                    </SidebarMenuSubItem>
-                </SidebarMenuSub>
+            <CollapsibleContent asChild>
+              <SidebarMenuSub>
+                <SidebarMenuSubItem>
+                  <Link href="/admin/settings" passHref>
+                    <SidebarMenuSubButton
+                      isActive={pathname === '/admin/settings'}
+                    >
+                      Store
+                    </SidebarMenuSubButton>
+                  </Link>
+                </SidebarMenuSubItem>
+                <SidebarMenuSubItem>
+                  <Link href="/admin/settings/home" passHref>
+                    <SidebarMenuSubButton
+                      isActive={pathname === '/admin/settings/home'}
+                    >
+                      Home Page
+                    </SidebarMenuSubButton>
+                  </Link>
+                </SidebarMenuSubItem>
+              </SidebarMenuSub>
             </CollapsibleContent>
           </Collapsible>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-            <SidebarMenuItem>
-                <Link href="/" passHref>
-                    <SidebarMenuButton icon={<LogOut />} tooltip="Logout">
-                        Logout
-                    </SidebarMenuButton>
-                </Link>
-            </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="group-data-[collapsible=icon]:hidden">
+          <Separator className="my-2" />
+          <div className="p-2">
+            <UserNav />
+          </div>
+        </div>
       </SidebarFooter>
     </BaseSidebar>
   );
