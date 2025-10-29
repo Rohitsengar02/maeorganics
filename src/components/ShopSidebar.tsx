@@ -8,6 +8,7 @@ import { Label } from './ui/label';
 import { Button } from './ui/button';
 import { featuredSmoothies, smoothieCategories } from '@/lib/data';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 const tags = [
@@ -67,7 +68,7 @@ const ShopSidebar = () => {
         <ul className="space-y-2 text-sm">
           {smoothieCategories.map((cat) => (
             <li key={cat.id} className="flex justify-between items-center">
-              <a href="#" className="hover:text-primary transition-colors">{cat.name}</a>
+              <Link href={`/category/${cat.slug}`} className="hover:text-primary transition-colors">{cat.name}</Link>
               <span className="text-gray-400">({Math.floor(Math.random() * 10)})</span>
             </li>
           ))}

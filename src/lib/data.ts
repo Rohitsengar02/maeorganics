@@ -1,4 +1,4 @@
-import type { Smoothie, SavedAddress } from '@/lib/types';
+import type { Smoothie, SavedAddress, Order } from '@/lib/types';
 
 export const featuredSmoothies: Smoothie[] = [
     {
@@ -62,36 +62,42 @@ export const featuredSmoothies: Smoothie[] = [
 export const smoothieCategories = [
   {
     id: "cat-1",
+    slug: "energizing-blends",
     name: "Energizing Blends",
     image: "https://picsum.photos/seed/cat1/400/500",
     hint: "citrus smoothie"
   },
   {
     id: "cat-2",
+    slug: "immunity-boosters",
     name: "Immunity Boosters",
     image: "https://picsum.photos/seed/cat2/400/500",
     hint: "green smoothie"
   },
   {
     id: "cat-3",
+    slug: "detox-smoothies",
     name: "Detox Smoothies",
     image: "https://picsum.photos/seed/cat3/400/500",
     hint: "vegetable smoothie"
   },
   {
     id: "cat-4",
+    slug: "protein-power",
     name: "Protein Power",
     image: "https://picsum.photos/seed/cat4/400/500",
     hint: "protein shake"
   },
   {
     id: "cat-5",
+    slug: "green-goodness",
     name: "Green Goodness",
     image: "https://picsum.photos/seed/cat5/400/500",
     hint: "kale smoothie"
   },
   {
     id: "cat-6",
+    slug: "berry-classics",
     name: "Berry Classics",
     image: "https://picsum.photos/seed/cat6/400/500",
     hint: "berry smoothie"
@@ -130,5 +136,53 @@ export const savedAddresses: SavedAddress[] = [
       zip: '10001',
       country: 'USA',
       isDefault: false,
+    },
+  ];
+
+  export const orders: Order[] = [
+    {
+      id: 'ORD-12345',
+      date: '2024-07-28',
+      status: 'Delivered',
+      items: [
+        { product: allProducts[0], quantity: 2 },
+        { product: allProducts[3], quantity: 1 },
+      ],
+      shippingAddress: savedAddresses[0],
+      billingAddress: savedAddresses[0],
+      subtotal: 23.47,
+      shipping: 5.00,
+      tax: 1.88,
+      total: 30.35,
+    },
+    {
+      id: 'ORD-67890',
+      date: '2024-07-25',
+      status: 'Shipped',
+      items: [
+        { product: allProducts[1], quantity: 1 },
+      ],
+      shippingAddress: savedAddresses[1],
+      billingAddress: savedAddresses[1],
+      subtotal: 8.49,
+      shipping: 5.00,
+      tax: 0.68,
+      total: 14.17,
+    },
+    {
+      id: 'ORD-54321',
+      date: '2024-06-15',
+      status: 'Delivered',
+      items: [
+        { product: allProducts[2], quantity: 3 },
+        { product: allProducts[5], quantity: 1 },
+        { product: allProducts[8], quantity: 2 },
+      ],
+      shippingAddress: savedAddresses[0],
+      billingAddress: savedAddresses[0],
+      subtotal: 61.42,
+      shipping: 0.00,
+      tax: 4.91,
+      total: 66.33,
     },
   ];

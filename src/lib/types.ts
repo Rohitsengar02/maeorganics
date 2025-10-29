@@ -25,3 +25,21 @@ export type SavedAddress = {
     country: string;
     isDefault: boolean;
 };
+
+export type OrderItem = {
+    product: Smoothie;
+    quantity: number;
+}
+
+export type Order = {
+    id: string;
+    date: string;
+    status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+    items: OrderItem[];
+    shippingAddress: SavedAddress;
+    billingAddress: SavedAddress;
+    subtotal: number;
+    shipping: number;
+    tax: number;
+    total: number;
+};

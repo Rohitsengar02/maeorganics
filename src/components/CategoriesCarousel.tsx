@@ -1,6 +1,7 @@
 'use client';
 import { motion, useAnimation } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { smoothieCategories } from '@/lib/data';
 import { useEffect, useRef } from 'react';
 
@@ -13,7 +14,7 @@ const carouselVariants = {
       x: {
         repeat: Infinity,
         repeatType: 'loop',
-        duration: 10,
+        duration: 20,
         ease: 'linear',
       },
     },
@@ -44,9 +45,9 @@ const CategoriesCarousel = () => {
           Find the perfect blend to match your mood and health goals.
         </p>
       </div>
-      <div 
+      <div
         ref={carouselRef}
-        className="w-full overflow-hidden cursor-grab" 
+        className="w-full overflow-hidden cursor-grab"
         onMouseEnter={handleHoverStart}
         onMouseLeave={handleHoverEnd}
       >
@@ -56,30 +57,31 @@ const CategoriesCarousel = () => {
           animate={controls}
           drag="x"
           dragConstraints={{
-            left: -(2 * 300 * smoothieCategories.length + (smoothieCategories.length * 2 * 32) - (carouselRef.current?.clientWidth || 0)),
-            right: 0
+            left: -(300 * smoothieCategories.length + (smoothieCategories.length -1) * 32),
+            right: 0,
           }}
         >
           {duplicatedCategories.map((category, index) => (
-            <div
-              key={index}
-              className="relative flex-shrink-0 w-[300px] h-[400px] rounded-3xl overflow-hidden group"
-              data-smooth-cursor-hover
-            >
-              <Image
-                src={category.image}
-                alt={category.name}
-                fill
-                className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-                data-ai-hint={category.hint}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-6">
-                <h3 className="text-2xl font-bold text-white tracking-wide">
-                  {category.name}
-                </h3>
-              </div>
-            </div>
+            <Link href={`/category/${category.slug}`} key={`${category.id}-${index}`} passHref>
+                <div
+                className="relative flex-shrink-0 w-[300px] h-[400px] rounded-3xl overflow-hidden group"
+                data-smooth-cursor-hover
+                >
+                <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    data-ai-hint={category.hint}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-6">
+                    <h3 className="text-2xl font-bold text-white tracking-wide">
+                    {category.name}
+                    </h3>
+                </div>
+                </div>
+            </Link>
           ))}
         </motion.div>
       </div>
