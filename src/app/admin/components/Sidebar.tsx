@@ -34,6 +34,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useState } from 'react';
 
 
 const menuItems = [
@@ -66,6 +68,7 @@ const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(pathname.startsWith('/admin/settings'));
 
   return (
     <BaseSidebar>
@@ -92,17 +95,39 @@ export default function AdminSidebar() {
               </Link>
             </SidebarMenuItem>
           ))}
+           <Collapsible open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+            <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      icon={<Settings />}
+                      tooltip="Settings"
+                      isActive={pathname.startsWith('/admin/settings')}
+                      className='w-full'
+                    >
+                      Settings
+                      <ChevronDown className='ml-auto h-4 w-4 transition-transform data-[state=open]:rotate-180' />
+                    </SidebarMenuButton>
+                </CollapsibleTrigger>
+            </SidebarMenuItem>
+             <CollapsibleContent asChild>
+                <SidebarMenuSub>
+                    <SidebarMenuSubItem>
+                        <Link href="/admin/settings" passHref>
+                            <SidebarMenuSubButton isActive={pathname === '/admin/settings'}>Store</SidebarMenuSubButton>
+                        </Link>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                        <Link href="/admin/settings/home" passHref>
+                            <SidebarMenuSubButton isActive={pathname === '/admin/settings/home'}>Home Page</SidebarMenuSubButton>
+                        </Link>
+                    </SidebarMenuSubItem>
+                </SidebarMenuSub>
+            </CollapsibleContent>
+          </Collapsible>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-            <SidebarMenuItem>
-                <Link href="/admin/settings" passHref>
-                    <SidebarMenuButton icon={<Settings />} tooltip="Settings" isActive={pathname.startsWith('/admin/settings')}>
-                        Settings
-                    </SidebarMenuButton>
-                </Link>
-            </SidebarMenuItem>
             <SidebarMenuItem>
                 <Link href="/" passHref>
                     <SidebarMenuButton icon={<LogOut />} tooltip="Logout">

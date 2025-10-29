@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import PageHeader from '../components/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,15 +16,18 @@ import {
 } from "@/components/ui/select"
         
 export default function SettingsPage() {
+    const router = useRouter();
+
     return (
         <div>
             <PageHeader
                 title="Settings"
                 description="Manage your store's settings and preferences."
             />
-            <Tabs defaultValue="store" className="space-y-4">
+            <Tabs defaultValue="store" onValueChange={(value) => router.push(`/admin/settings/${value === 'store' ? '' : value}`)} className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="store">Store Details</TabsTrigger>
+                    <TabsTrigger value="home">Home Page</TabsTrigger>
                     <TabsTrigger value="shipping">Shipping</TabsTrigger>
                     <TabsTrigger value="payments">Payments</TabsTrigger>
                     <TabsTrigger value="notifications">Notifications</TabsTrigger>
