@@ -1,7 +1,9 @@
-import { ShoppingBag, UserCircle, Menu, Store } from "lucide-react";
+import { ShoppingBag, UserCircle, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { useCart } from "@/hooks/use-cart";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "#about", label: "About" },
@@ -11,6 +13,7 @@ const navLinks = [
 ];
 
 export function Header() {
+  const { openCart, cartCount } = useCart();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sm:px-6 lg:px-8">
       <div className="container flex h-20 max-w-7xl items-center justify-between">
@@ -31,7 +34,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-           <Button variant="ghost" size="icon">
+           <Button variant="ghost" size="icon" className="relative" onClick={openCart}>
+            {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                    {cartCount}
+                </span>
+            )}
             <ShoppingBag className="h-6 w-6" />
             <span className="sr-only">Shopping Bag</span>
           </Button>

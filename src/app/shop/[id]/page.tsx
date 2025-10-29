@@ -28,9 +28,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductCard from '@/components/ProductCard';
 import { cn } from '@/lib/utils';
 import ProductMobileBar from '@/components/ProductMobileBar';
+import { useCart } from '@/hooks/use-cart';
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const product = allProducts.find((p) => p.id === params.id);
+  const { addToCart } = useCart();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -39,6 +41,12 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   if (!product) {
     notFound();
   }
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, quantity);
+    }
+  };
 
   const galleryImages = [
     product.image,
@@ -142,7 +150,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button size="lg" className="h-12 flex-grow rounded-full">
+                <Button size="lg" className="h-12 flex-grow rounded-full" onClick={handleAddToCart}>
                     <ShoppingCart className="mr-2 h-5 w-5" />
                     Add to Cart
                 </Button>

@@ -7,6 +7,7 @@ import { ShoppingBag, User, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { useCart } from "@/hooks/use-cart";
 
 const navLinks = [
   {label: "About", href: "#about"}, 
@@ -74,6 +75,7 @@ const slides = [
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const { openCart, cartCount } = useCart();
   
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -214,8 +216,14 @@ const Hero = () => {
              <motion.button
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="hidden sm:flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
+              onClick={openCart}
+              className="hidden relative sm:flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-lg shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl sm:h-12 sm:w-12"
             >
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                    {cartCount}
+                </span>
+              )}
               <ShoppingBag size={24} className="text-[#2d2b28]" />
             </motion.button>
             <motion.button

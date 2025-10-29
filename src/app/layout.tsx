@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ReactLenis } from "@studio-freight/react-lenis";
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { SmoothCursor } from '@/components/SmoothCursor';
+import { CartProvider } from '@/hooks/use-cart';
+import CartSidebar from '@/components/CartSidebar';
 
 export default function RootLayout({
   children,
@@ -21,12 +23,15 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Caprasimo&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased scrollbar-hide" suppressHydrationWarning={true}>
-        <ReactLenis root>
-          <SmoothCursor />
-          {children}
-        </ReactLenis>
-        <Toaster />
-        <MobileBottomNav />
+        <CartProvider>
+          <ReactLenis root>
+            <SmoothCursor />
+            {children}
+            <CartSidebar />
+          </ReactLenis>
+          <Toaster />
+          <MobileBottomNav />
+        </CartProvider>
       </body>
     </html>
   );
