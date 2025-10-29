@@ -1,4 +1,4 @@
-import type { Smoothie } from '@/lib/types';
+import type { Smoothie, SavedAddress } from '@/lib/types';
 
 export const featuredSmoothies: Smoothie[] = [
     {
@@ -109,3 +109,26 @@ export const allProducts: Smoothie[] = Array.from({ length: 16 }, (_, i) => {
         price: parseFloat((baseProduct.price * (1 + (i % 4) * 0.1)).toFixed(2)),
     };
 });
+
+export const savedAddresses: SavedAddress[] = [
+    {
+      id: 'addr-1',
+      name: 'John Doe',
+      street: '123 Smoothie Street',
+      city: 'Flavor Town',
+      state: 'CA',
+      zip: '90210',
+      country: 'USA',
+      isDefault: true,
+    },
+    {
+      id: 'addr-2',
+      name: 'John Doe',
+      street: '456 Wellness Ave, Apt 5B',
+      city: 'Vibrant City',
+      state: 'NY',
+      zip: '10001',
+      country: 'USA',
+      isDefault: false,
+    },
+  ];

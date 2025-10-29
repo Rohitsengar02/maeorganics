@@ -13,6 +13,7 @@ import {
   SheetTitle,
 } from './ui/sheet';
 import { useCart } from '@/hooks/use-cart';
+import Link from 'next/link';
 
 const CartSidebar = () => {
   const {
@@ -113,9 +114,11 @@ const CartSidebar = () => {
                 <span>Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
-              <Button size="lg" className="w-full h-12 rounded-full">
-                Proceed to Checkout
-              </Button>
+              <Link href="/checkout" passHref>
+                <Button size="lg" className="w-full h-12 rounded-full" onClick={closeCart}>
+                  Proceed to Checkout
+                </Button>
+              </Link>
             </div>
           </>
         ) : (
