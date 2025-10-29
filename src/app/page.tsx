@@ -11,6 +11,7 @@ import ShopFeatures from '@/components/ShopFeatures';
 import ProductGrid from '@/components/ProductGrid';
 import Footer from '@/components/Footer';
 import { BackgroundImage } from '@/components/BackgroundImage';
+import PromoBanner from '@/components/PromoBanner';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -53,6 +54,7 @@ export default function Home() {
             </div>
           </section>
           <ShopFeatures />
+          <PromoBanner />
           <Footer />
         </main>
       )}
