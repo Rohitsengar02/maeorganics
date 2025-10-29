@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import Hero from '@/components/Hero';
 import Marquee from '@/components/Marquee';
@@ -16,6 +16,7 @@ import { BackgroundImage2 } from '@/components/BackgroundImage2';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const productGridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,7 +38,7 @@ export default function Home() {
         <main className="relative">
           <Hero />
           <BackgroundImage />
-          <BackgroundImage2 />
+          <BackgroundImage2 scrollRef={productGridRef} />
           <Marquee />
           <FeaturedProducts />
           <WhyChooseUs />
@@ -52,7 +53,7 @@ export default function Home() {
                   Discover our full range of delicious and healthy smoothies, crafted with the finest ingredients.
                 </p>
               </div>
-              <ProductGrid />
+              <ProductGrid ref={productGridRef} />
             </div>
           </section>
           <ShopFeatures />
