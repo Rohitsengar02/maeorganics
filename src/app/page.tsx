@@ -10,6 +10,7 @@ import CategoriesCarousel from '@/components/CategoriesCarousel';
 import ShopFeatures from '@/components/ShopFeatures';
 import ProductGrid from '@/components/ProductGrid';
 import Footer from '@/components/Footer';
+import { BackgroundImage } from '@/components/BackgroundImage';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -33,6 +34,7 @@ export default function Home() {
       {!isLoading && (
         <main className="relative">
           <Hero />
+          <BackgroundImage />
           <Marquee />
           <FeaturedProducts />
           <WhyChooseUs />
