@@ -4,6 +4,7 @@
 import {
   Sidebar as BaseSidebar,
   SidebarContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
