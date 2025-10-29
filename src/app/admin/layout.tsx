@@ -40,18 +40,20 @@ export default function AdminLayout({
 
   return (
     <SidebarProvider>
-      <Sidebar>
-        <AdminSidebar />
-      </Sidebar>
-      <div className='flex flex-1 flex-col'>
-        <AdminHeader />
-        <SidebarInset>
-            <div className="p-4 sm:p-6 lg:p-8">
-             {children}
-            </div>
-        </SidebarInset>
+      <div className="flex min-h-screen">
+        <Sidebar>
+          <AdminSidebar />
+        </Sidebar>
+        <div className="flex flex-1 flex-col">
+          <AdminHeader />
+          <SidebarInset>
+            <main className="flex-1 p-4 sm:p-6 lg:p-8">
+              {children}
+            </main>
+          </SidebarInset>
+        </div>
+        <MobileBottomNav />
       </div>
-      <MobileBottomNav />
     </SidebarProvider>
   );
 }
