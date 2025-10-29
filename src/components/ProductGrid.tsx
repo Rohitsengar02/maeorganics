@@ -24,7 +24,7 @@ const ProductGrid = ({ isGridView = true }: { isGridView?: boolean }) => {
   return (
     <motion.div
         className={cn(
-            "grid gap-4 sm:gap-8",
+            "grid gap-4 sm:gap-8 ",
             isGridView ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
         )}
         initial="hidden"

@@ -6,15 +6,15 @@ export function BackgroundImage() {
   const { scrollYProgress } = useScroll();
 
   // Animate from behind Marquee to WhyChooseUs section
-  const y = useTransform(scrollYProgress, [0.15, 0.8], ['-377vh', '240vh']);
-  const x = useTransform(scrollYProgress, [0.15, 0.8], ['-160%', '-205%']);
-  const rotate = useTransform(scrollYProgress, [0.15, 0.8], [-5, 5]);
-  const scale = useTransform(scrollYProgress, [0.15, 0.8], [1.2, 0.8]);
+  const y = useTransform(scrollYProgress, [0.15, 0.8], ['-260vh', '300vh']);
+  const x = useTransform(scrollYProgress, [0.15, 0.8], ['30%', '-675%']);
+  const rotate = useTransform(scrollYProgress, [0.15, 0.8], [5, -5]);
+  const scale = useTransform(scrollYProgress, [0.15, 0.5], [1.2, 0.8]);
   const opacity = useTransform(scrollYProgress, [0.15, 0.2], [0, 1]);
   
   return (
     <motion.div 
-        className="absolute right-[-10%] top-0 w-[400px] h-[700px] mt-[520vh] z-20"
+        className="absolute left-[-10%] top-0 w-[400px] h-[700px] mt-[430vh] z-20"
         style={{ y, x, rotate, scale, opacity }}
     >
     <Image
