@@ -16,6 +16,7 @@ import {
   Facebook,
   Twitter,
   Instagram,
+  ChevronLeft,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -29,13 +30,19 @@ import ProductCard from '@/components/ProductCard';
 import { cn } from '@/lib/utils';
 import ProductMobileBar from '@/components/ProductMobileBar';
 import { useCart } from '@/hooks/use-cart';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const product = allProducts.find((p) => p.id === params.id);
   const { addToCart } = useCart();
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState('Orange');
 
   if (!product) {
@@ -74,33 +81,24 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             {/* Image Gallery */}
             <div>
-              <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-xl border bg-white/60">
-                <Image
-                  src={galleryImages[selectedImage].imageUrl}
-                  alt={product.name}
-                  fill
-                  className="object-contain p-8 transition-all duration-300"
-                />
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                {galleryImages.map((img, index) => (
-                  <button
-                    key={`${img.id}-${index}`}
-                    onClick={() => setSelectedImage(index)}
-                    className={cn(
-                      'relative aspect-square w-full overflow-hidden rounded-lg border-2 transition-all',
-                      selectedImage === index ? 'border-primary' : 'border-transparent'
-                    )}
-                  >
-                    <Image
-                      src={img.imageUrl}
-                      alt={img.description}
-                      fill
-                      className="object-contain p-2"
-                    />
-                  </button>
-                ))}
-              </div>
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {galleryImages.map((img, index) => (
+                    <CarouselItem key={`${img.id}-${index}`}>
+                      <div className="relative aspect-square w-full overflow-hidden rounded-xl border bg-white/60">
+                        <Image
+                          src={img.imageUrl}
+                          alt={img.description}
+                          fill
+                          className="object-contain p-8"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-4" />
+                <CarouselNext className="absolute right-4" />
+              </Carousel>
             </div>
 
             {/* Product Info */}
