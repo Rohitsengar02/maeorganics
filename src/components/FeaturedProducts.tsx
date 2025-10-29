@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRef, useState } from 'react';
@@ -106,7 +107,7 @@ const FeaturedProducts = () => {
   const sectionHeight = isMobile ? '130vh' : '150vh';
 
   return (
-    <section ref={targetRef} className="relative py-0 z-10" style={{ height: sectionHeight }} id="featured-products">
+    <section ref={targetRef} className="relative py-0 z-30" style={{ height: sectionHeight }} id="featured-products">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <div className="container max-w-7xl mx-auto px-4 absolute top-24 left-1/2 -translate-x-1/2 z-10">
            <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Smoothies</h2>
