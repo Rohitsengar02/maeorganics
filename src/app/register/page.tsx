@@ -24,7 +24,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState('https://github.com/shadcn.png');
+  const [avatarPreview, setAvatarPreview] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +60,10 @@ export default function RegisterPage() {
       toast({ variant: 'destructive', title: 'Error', description: 'Passwords do not match.' });
       return;
     }
+    if (!profileImage) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Please upload a profile picture.' });
+        return;
+    }
     setIsLoading(true);
 
     try {
@@ -68,7 +72,7 @@ export default function RegisterPage() {
         imageUrl = await uploadToCloudinary(profileImage);
       }
 
-      const userData = { fullName, email, imageUrl, emailVerified: false };
+      const userData = { fullName, email, imageUrl };
       
       await signUp(userData, password);
       

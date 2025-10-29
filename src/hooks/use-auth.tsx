@@ -19,6 +19,7 @@ export interface UserProfile {
   email: string;
   fullName: string;
   imageUrl: string;
+  phone?: string;
   emailVerified: boolean;
 }
 
@@ -30,7 +31,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   sendVerificationEmail: (email: string, password: string) => Promise<void>;
-  updateUserVerificationStatus: (uid: string, type: 'email', status: boolean) => Promise<void>;
+  updateProfile: (data: Partial<Pick<UserProfile, 'fullName' | 'phone' | 'imageUrl'>>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -49,29 +50,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const fetchUserProfile = async (fbUser: FirebaseUser) => {
+    const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
+    if (userDoc.exists()) {
+      const userProfile = { ...userDoc.data(), uid: fbUser.uid, emailVerified: fbUser.emailVerified } as UserProfile;
+      
+      if(fbUser.emailVerified) {
+        setUser(userProfile);
+      } else {
+        setUser(null);
+      }
+      
+      // Sync firestore if firebase auth state is different
+      if (userDoc.data().emailVerified !== fbUser.emailVerified) {
+         await updateDoc(doc(db, 'users', fbUser.uid), {
+            emailVerified: fbUser.emailVerified
+         });
+      }
+    } else {
+      setUser(null); // No profile found in firestore
+    }
+  }
+
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+      setLoading(true);
       if (fbUser) {
         setFirebaseUser(fbUser);
-        const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
-        if (userDoc.exists()) {
-          const userProfile = { ...userDoc.data(), uid: fbUser.uid, emailVerified: fbUser.emailVerified } as UserProfile;
-          
-          if(fbUser.emailVerified) {
-            setUser(userProfile);
-          } else {
-            setUser(null);
-          }
-          
-          // Sync firestore if firebase auth state is different
-          if (userDoc.data().emailVerified !== fbUser.emailVerified) {
-             await updateDoc(doc(db, 'users', fbUser.uid), {
-                emailVerified: fbUser.emailVerified
-             });
-          }
-        } else {
-            setUser(null); // No profile found in firestore
-        }
+        await fetchUserProfile(fbUser);
       } else {
         setFirebaseUser(null);
         setUser(null);
@@ -124,11 +131,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
   
-  const updateUserVerificationStatus = async (uid: string, type: 'email', status: boolean) => {
-    const userDocRef = doc(db, 'users', uid);
-    if(type === 'email'){
-        await updateDoc(userDocRef, { emailVerified: status });
-    }
+  const updateProfile = async (data: Partial<Pick<UserProfile, 'fullName' | 'phone' | 'imageUrl'>>) => {
+    if (!firebaseUser) throw new Error("No user is currently signed in.");
+
+    const userDocRef = doc(db, 'users', firebaseUser.uid);
+    await updateDoc(userDocRef, data);
+    // Re-fetch user profile to update context state
+    await fetchUserProfile(firebaseUser);
   };
 
 
@@ -140,7 +149,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     signIn,
     signOut,
     sendVerificationEmail,
-    updateUserVerificationStatus
+    updateProfile
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
