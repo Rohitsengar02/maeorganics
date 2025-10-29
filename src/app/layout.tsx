@@ -6,6 +6,7 @@ import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { SmoothCursor } from '@/components/SmoothCursor';
 import { CartProvider } from '@/hooks/use-cart';
 import CartSidebar from '@/components/CartSidebar';
+import { AuthProvider } from '@/hooks/use-auth';
 
 export default function RootLayout({
   children,
@@ -23,15 +24,17 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Caprasimo&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased scrollbar-hide" suppressHydrationWarning={true}>
-        <CartProvider>
-          <ReactLenis root>
-            <SmoothCursor />
-            {children}
-            <CartSidebar />
-          </ReactLenis>
-          <Toaster />
-          <MobileBottomNav />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <ReactLenis root>
+              <SmoothCursor />
+              {children}
+              <CartSidebar />
+            </ReactLenis>
+            <Toaster />
+            <MobileBottomNav />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

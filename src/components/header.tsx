@@ -1,11 +1,12 @@
 'use client';
 
-import { ShoppingBag, UserCircle, Menu, LogIn } from "lucide-react";
+import { ShoppingBag, UserCircle, Menu, LogIn, LogOut } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useCart } from "@/hooks/use-cart";
-import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const navLinks = [
   { href: "#about", label: "About" },
@@ -16,6 +17,8 @@ const navLinks = [
 
 export function Header() {
   const { openCart, cartCount } = useCart();
+  const { user, loading, signOut } = useAuth();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sm:px-6 lg:px-8">
       <div className="container flex h-20 max-w-7xl items-center justify-between">
@@ -46,14 +49,36 @@ export function Header() {
             <ShoppingBag className="h-6 w-6" />
             <span className="sr-only">Shopping Bag</span>
           </Button>
-          <Link href="/login" passHref>
-            <Button variant="ghost" size="icon" asChild>
-                <div>
-                    <UserCircle className="h-6 w-6" />
-                    <span className="sr-only">User Profile</span>
-                </div>
-            </Button>
-          </Link>
+
+          {loading ? (
+            <div className="h-9 w-9 rounded-full bg-gray-200 animate-pulse" />
+          ) : user ? (
+            <>
+              <Link href="/account" passHref>
+                <Button variant="ghost" size="icon" asChild>
+                  <div className="cursor-pointer">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={user.imageUrl} alt={user.fullName} />
+                      <AvatarFallback>{user.fullName?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </Button>
+              </Link>
+              <Button variant="ghost" size="icon" onClick={signOut}>
+                <LogOut className="h-6 w-6" />
+                <span className="sr-only">Log Out</span>
+              </Button>
+            </>
+          ) : (
+            <Link href="/login" passHref>
+              <Button variant="ghost" size="icon" asChild>
+                  <div>
+                      <UserCircle className="h-6 w-6" />
+                      <span className="sr-only">User Profile</span>
+                  </div>
+              </Button>
+            </Link>
+          )}
 
           <Sheet>
             <SheetTrigger asChild>
