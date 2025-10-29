@@ -71,8 +71,10 @@ export default function AdminSidebar() {
     <BaseSidebar>
       <SidebarHeader>
         <Link href="/admin" className="flex items-center gap-2">
-            <span className="h-8 w-8 bg-primary rounded-full" />
-            <span className="font-bold text-lg">Acme Inc</span>
+            <span className="flex items-center justify-center h-8 w-8 bg-primary rounded-full text-primary-foreground font-bold text-lg">
+                M
+            </span>
+            <span className="font-bold text-lg">Maeorganics</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -81,7 +83,7 @@ export default function AdminSidebar() {
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} passHref>
                 <SidebarMenuButton
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href) && (item.href !== '/admin' || pathname === '/admin')}
                   icon={<item.icon />}
                   tooltip={item.label}
                 >
@@ -96,7 +98,7 @@ export default function AdminSidebar() {
         <SidebarMenu>
             <SidebarMenuItem>
                 <Link href="/admin/settings" passHref>
-                    <SidebarMenuButton icon={<Settings />} tooltip="Settings" isActive={pathname === '/admin/settings'}>
+                    <SidebarMenuButton icon={<Settings />} tooltip="Settings" isActive={pathname.startsWith('/admin/settings')}>
                         Settings
                     </SidebarMenuButton>
                 </Link>

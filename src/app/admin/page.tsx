@@ -5,6 +5,8 @@ import {
     DollarSign,
     Download,
     Users,
+    Bell,
+    LineChart
   } from "lucide-react"
   
   import { Button } from "@/components/ui/button"
@@ -22,12 +24,9 @@ import {
     TabsTrigger,
   } from "@/components/ui/tabs"
 import { CalendarDateRangePicker } from "./components/date-range-picker";
-import { MainNav } from "./components/main-nav";
 import { Overview } from "./components/overview";
 import { RecentSales } from "./components/recent-sales";
-import { Search } from "./components/search";
-import TeamSwitcher from "./components/team-switcher";
-import { UserNav } from "./components/user-nav";
+import { SalesChart, UsersChart } from "./analytics/components/charts";
 
   
   export default function DashboardPage() {
@@ -48,13 +47,13 @@ import { UserNav } from "./components/user-nav";
             <Tabs defaultValue="overview" className="space-y-4">
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="analytics" disabled>
+                <TabsTrigger value="analytics">
                   Analytics
                 </TabsTrigger>
-                <TabsTrigger value="reports" disabled>
+                <TabsTrigger value="reports">
                   Reports
                 </TabsTrigger>
-                <TabsTrigger value="notifications" disabled>
+                <TabsTrigger value="notifications">
                   Notifications
                 </TabsTrigger>
               </TabsList>
@@ -68,7 +67,7 @@ import { UserNav } from "./components/user-nav";
                       <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">$45,231.89</div>
+                      <div className="text-2xl font-bold">₹45,231.89</div>
                       <p className="text-xs text-muted-foreground">
                         +20.1% from last month
                       </p>
@@ -135,6 +134,48 @@ import { UserNav } from "./components/user-nav";
                       <RecentSales />
                     </CardContent>
                   </Card>
+                </div>
+              </TabsContent>
+               <TabsContent value="analytics" className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Sales Over Time</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <SalesChart />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>New Users Over Time</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <UsersChart />
+                        </CardContent>
+                    </Card>
+                </div>
+              </TabsContent>
+              <TabsContent value="reports" className="space-y-4">
+                <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
+                  <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
+                    <LineChart className="h-10 w-10 text-muted-foreground" />
+                    <h3 className="mt-4 text-lg font-semibold">No reports yet</h3>
+                    <p className="mb-4 mt-2 text-sm text-muted-foreground">
+                      You have no reports to display. Reports will be generated based on your store's activity.
+                    </p>
+                  </div>
+                </div>
+              </TabsContent>
+               <TabsContent value="notifications" className="space-y-4">
+                <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
+                  <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
+                    <Bell className="h-10 w-10 text-muted-foreground" />
+                    <h3 className="mt-4 text-lg font-semibold">No notifications yet</h3>
+                    <p className="mb-4 mt-2 text-sm text-muted-foreground">
+                      You have no new notifications. We'll let you know when something new comes up.
+                    </p>
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>
