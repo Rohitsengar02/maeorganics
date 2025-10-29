@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar';
