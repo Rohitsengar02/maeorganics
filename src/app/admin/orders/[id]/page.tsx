@@ -39,6 +39,12 @@ import { Separator } from "@/components/ui/separator"
 import PageHeader from "../../components/PageHeader"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image"
+
+const orderItems = [
+    { name: 'Sunshine Orange', quantity: 2, price: '₹1198.00', image: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/True_fruits_-_Smoothie_yellow.png' },
+    { name: 'Green Vitality', quantity: 1, price: '₹649.00', image: 'https://pepelasalonline.com/wp-content/uploads/2023/02/33721-TRUE-FRUITS-SMOOTHIE-LIGHT-GREEN-25CL.png' },
+];
 
 export default function OrderDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -95,18 +101,19 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
                 <div className="grid gap-3">
                   <div className="font-semibold">Order Details</div>
                   <ul className="grid gap-3">
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Sunshine Orange <span>× 2</span>
-                      </span>
-                      <span>₹1198.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Green Vitality <span>× 1</span>
-                      </span>
-                      <span>₹649.00</span>
-                    </li>
+                    {orderItems.map((item, index) => (
+                        <li key={index} className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="relative h-12 w-12 rounded-md bg-muted">
+                                    <Image src={item.image} alt={item.name} fill className="object-contain p-1" />
+                                </div>
+                                <span className="text-muted-foreground">
+                                    {item.name} <span>× {item.quantity}</span>
+                                </span>
+                            </div>
+                            <span>{item.price}</span>
+                        </li>
+                    ))}
                   </ul>
                   <Separator className="my-2" />
                   <ul className="grid gap-3">
@@ -194,7 +201,7 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
                 <CardTitle>Order Status</CardTitle>
               </CardHeader>
               <CardContent>
-                <Badge variant="success">Fulfilled</Badge>
+                <Badge variant="default">Fulfilled</Badge>
               </CardContent>
             </Card>
             <Card className="overflow-hidden">
