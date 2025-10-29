@@ -46,7 +46,7 @@ export function Header() {
             <ShoppingBag className="h-6 w-6" />
             <span className="sr-only">Shopping Bag</span>
           </Button>
-          <Link href="/account" passHref>
+          <Link href="/login" passHref>
             <Button variant="ghost" size="icon" asChild>
                 <div>
                     <UserCircle className="h-6 w-6" />

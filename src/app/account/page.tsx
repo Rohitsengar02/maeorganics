@@ -99,7 +99,7 @@ export default function AccountPage() {
             <Separator className="my-8" />
 
             <div className="flex justify-center">
-                <Button variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hover:border-red-300">
+                <Button variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hover:border-red-300" onClick={() => router.push('/login')}>
                     <LogOut className="mr-2 h-4 w-4" />
                     Log Out
                 </Button>
