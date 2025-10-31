@@ -2,10 +2,9 @@
 import { motion, useAnimation } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { smoothieCategories } from '@/lib/data';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getCategories } from '@/lib/categories-api';
 
-const duplicatedCategories = [...smoothieCategories, ...smoothieCategories];
 
 const carouselVariants = {
   animate: {
@@ -22,12 +21,32 @@ const carouselVariants = {
 };
 
 const CategoriesCarousel = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const controls = useAnimation();
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    controls.start('animate');
-  }, [controls]);
+    const fetchCategories = async () => {
+      try {
+        const response = await getCategories();
+        if (response.success) {
+          setCategories(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      controls.start('animate');
+    }
+  }, [categories, controls]);
 
   const handleHoverStart = () => {
     controls.stop();
@@ -57,12 +76,12 @@ const CategoriesCarousel = () => {
           animate={controls}
           drag="x"
           dragConstraints={{
-            left: -(300 * smoothieCategories.length + (smoothieCategories.length -1) * 32),
+            left: -(300 * categories.length + (categories.length - 1) * 32),
             right: 0,
           }}
         >
-          {duplicatedCategories.map((category, index) => (
-            <Link href={`/category/${category.slug}`} key={`${category.id}-${index}`} passHref>
+          {[...categories, ...categories].map((category, index) => (
+            <Link href={`/category/${category.slug}`} key={`${category._id}-${index}`} passHref>
                 <div
                 className="relative flex-shrink-0 w-[300px] h-[400px] rounded-3xl overflow-hidden group"
                 data-smooth-cursor-hover

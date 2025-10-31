@@ -1,29 +1,53 @@
 'use client';
 
 import { ShoppingBag, UserCircle, Menu, LogIn } from "lucide-react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-
-const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "/shop", label: "Smoothies" },
-  { href: "#delivery", label: "Delivery" },
-  { href: "#contact", label: "Contact" },
-];
+import { getHomePageSettings } from "@/lib/homepage-settings-api";
 
 export function Header() {
+  const [navLinks, setNavLinks] = useState<any[]>([]);
+  const [logo, setLogo] = useState<string>("");
+  const [loadingSettings, setLoadingSettings] = useState(true);
   const { openCart, cartCount } = useCart();
   const { user, loading, signOut } = useAuth();
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await getHomePageSettings();
+        if (response.success && response.data) {
+          setNavLinks(response.data.navLinks || []);
+          setLogo(response.data.logo || "");
+        }
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+      } finally {
+        setLoadingSettings(false);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sm:px-6 lg:px-8">
       <div className="container flex h-20 max-w-7xl items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-2xl font-bold font-headline text-[#2d2b28]">
-          Maeorganics<span className="text-primary">.</span>
+        <Link href="/" className="flex items-center gap-2">
+          {logo ? (
+            <div className="relative h-10 w-28 sm:h-12 sm:w-32">
+              <Image src={logo} alt="Maeorganics logo" fill className="object-contain" />
+            </div>
+          ) : (
+            <span className="text-2xl font-bold font-headline text-[#2d2b28]">
+              Maeorganics<span className="text-primary">.</span>
+            </span>
+          )}
         </Link>
         
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">

@@ -13,18 +13,52 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-  
-
-const orders = [
-    { id: 'ORD001', customer: 'Liam Johnson', date: '2023-11-23', status: 'Fulfilled', total: '₹250.00', images: ['https://upload.wikimedia.org/wikipedia/commons/8/8d/True_fruits_-_Smoothie_yellow.png'] },
-    { id: 'ORD002', customer: 'Olivia Smith', date: '2023-11-22', status: 'Fulfilled', total: '₹150.00', images: ['https://pepelasalonline.com/wp-content/uploads/2023/02/33721-TRUE-FRUITS-SMOOTHIE-LIGHT-GREEN-25CL.png', 'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png'] },
-    { id: 'ORD003', customer: 'Noah Williams', date: '2023-11-21', status: 'Unfulfilled', total: '₹350.00', images: ['https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png'] },
-    { id: 'ORD004', customer: 'Emma Brown', date: '2023-11-20', status: 'Fulfilled', total: '₹450.00', images: ['https://upload.wikimedia.org/wikipedia/commons/8/8d/True_fruits_-_Smoothie_yellow.png'] },
-    { id: 'ORD005', customer: 'Liam Johnson', date: '2023-11-19', status: 'Unfulfilled', total: '₹550.00', images: ['https://pepelasalonline.com/wp-content/uploads/2023/02/33721-TRUE-FRUITS-SMOOTHIE-LIGHT-GREEN-25CL.png'] },
-]
+import { useEffect, useState } from 'react';
+import { adminGetAllOrders, adminUpdateOrderStatus } from '@/lib/orders-api';
+import { getOfflineOrders } from '@/lib/offline-orders-api';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function OrdersPage() {
   const router = useRouter();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [onlineRes, offlineRes] = await Promise.all([
+          adminGetAllOrders(),
+          getOfflineOrders(),
+        ]);
+        const online = onlineRes.success ? onlineRes.data.map((o: any) => ({ ...o, __type: 'online' })) : [];
+        const offline = offlineRes.success ? offlineRes.data.map((o: any) => ({ ...o, __type: 'offline' })) : [];
+        // Normalize for table
+        const merged = [
+          ...online,
+          ...offline,
+        ].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setOrders(merged);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  const fmt = (v: number) => `₹${v.toFixed(2)}`;
+
+  const handleStatusChange = async (id: string, status: string) => {
+    setUpdatingId(id);
+    try {
+      const res = await adminUpdateOrderStatus(id, status);
+      if (res.success) {
+        setOrders(prev => prev.map(o => o._id === id ? res.data : o));
+      }
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   return (
     <div>
@@ -32,7 +66,7 @@ export default function OrdersPage() {
         title="Orders"
         description="Manage your store's orders."
       >
-        <Button>
+        <Button onClick={() => router.push('/admin/orders/create')}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Create Order
         </Button>
@@ -47,34 +81,69 @@ export default function OrdersPage() {
                 <TableHead>Items</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead className="text-right">Total</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
             </TableRow>
             </TableHeader>
             <TableBody>
             {orders.map((order) => (
-                <TableRow key={order.id} className="cursor-pointer" onClick={() => router.push(`/admin/orders/${order.id}`)}>
-                <TableCell className="font-medium">{order.id}</TableCell>
-                <TableCell>{order.customer}</TableCell>
+                <TableRow key={order._id} className="hover:bg-muted/40">
+                <TableCell className="font-medium">{order._id.slice(-6)}</TableCell>
+                <TableCell>{(order.__type === 'offline' ? order.customer?.fullName : order.address?.fullName) || '—'}</TableCell>
                 <TableCell>
                     <div className="flex -space-x-4">
-                        {order.images.map((src, index) => (
+                        {order.items.slice(0,3).map((it: any, index: number) => (
                             <div key={index} className="relative h-8 w-8 rounded-full border-2 border-white bg-white overflow-hidden shadow-sm">
-                                <Image
-                                    src={src}
-                                    alt={`Product image ${index + 1}`}
-                                    fill
-                                    className="object-contain p-1"
-                                />
+                              {it.imageUrl ? (
+                                <Image src={it.imageUrl} alt={it.name} fill className="object-contain p-1" />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center text-[10px] text-gray-500">IMG</div>
+                              )}
                             </div>
                         ))}
+                        {order.items.length > 3 && (
+                          <div className="relative h-8 w-8 flex items-center justify-center rounded-full border-2 border-white bg-gray-100 text-[10px] text-gray-600">+{order.items.length-3}</div>
+                        )}
                     </div>
                 </TableCell>
-                <TableCell>{order.date}</TableCell>
-                <TableCell><Badge variant={order.status === 'Fulfilled' ? 'default' : 'secondary'}>{order.status}</Badge></TableCell>
-                <TableCell className="text-right">{order.total}</TableCell>
+                <TableCell>{new Date(order.createdAt).toLocaleString()}</TableCell>
                 <TableCell>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2">
+                    <Badge variant={order.status === 'delivered' ? 'default' : order.status === 'cancelled' ? 'destructive' : 'secondary'} className="capitalize">{order.status}</Badge>
+                    <Select onValueChange={(v) => handleStatusChange(order._id, v)}>
+                      <SelectTrigger className="h-8 w-[140px]">
+                        <SelectValue placeholder="Update status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="created">Created</SelectItem>
+                        <SelectItem value="processing">Processing</SelectItem>
+                        <SelectItem value="shipped">Shipped</SelectItem>
+                        <SelectItem value="delivered">Delivered</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant={order.__type === 'offline' ? 'secondary' : 'default'}>{order.__type === 'offline' ? 'Offline' : 'Online'}</Badge>
+                </TableCell>
+                <TableCell className="text-right">{fmt((order.amounts?.total) || 0)}</TableCell>
+                <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => router.push(order.__type === 'offline' ? `/admin/offline-orders/${order._id}?print=1` : `/admin/orders/${order._id}?print=1`)}
+                      >Invoice</Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => router.push(order.__type === 'offline' ? `/admin/offline-orders/${order._id}` : `/admin/orders/${order._id}`)}
+                      >
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    </div>
                 </TableCell>
                 </TableRow>
             ))}

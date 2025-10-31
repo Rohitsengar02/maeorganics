@@ -13,11 +13,12 @@ const usefulLinks = [
 ];
 
 const helpLinks = [
-    "Help Center",
-    "Sell On Farmart",
-    "Affiliate Program",
-    "Our Suppliers",
-    "Accessibility",
+  { label: "Help Center", href: "/help" },
+  { label: "Privacy & Policy", href: "/privacy-policy" },
+  { label: "Sell On Farmart", href: "#" },
+  { label: "Affiliate Program", href: "#" },
+  { label: "Our Suppliers", href: "#" },
+  { label: "Accessibility", href: "#" },
 ];
 
 export default function Footer() {
@@ -77,13 +78,13 @@ export default function Footer() {
             <h4 className="text-lg font-bold text-white mb-4">Help</h4>
             <ul className="space-y-2 text-sm">
               {helpLinks.map((link) => (
-                <li key={link}>
-                  <Link href="#" className="hover:text-white transition-colors hover:underline">
-                    {link}
+                <li key={link.label}>
+                  <Link href={link.href} className="hover:text-white transition-colors hover:underline">
+                    {link.label}
                   </Link>
                 </li>
               ))}
-               <li>
+              <li>
                   <Link href="/admin" className="hover:text-white transition-colors hover:underline">
                     Admin Panel
                   </Link>

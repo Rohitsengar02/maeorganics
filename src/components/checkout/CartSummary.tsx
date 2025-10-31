@@ -1,20 +1,59 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useCart } from '@/hooks/use-cart';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '../ui/scroll-area';
+import CouponPopup from './CouponPopup';
+import { X } from 'lucide-react';
 
 interface CartSummaryProps {
   onNext: () => void;
 }
 
+interface Coupon {
+  _id: string;
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  minPurchase?: number;
+  expiryDate?: string;
+  isActive: boolean;
+}
+
 export default function CartSummary({ onNext }: CartSummaryProps) {
   const { cartItems, subtotal, cartCount } = useCart();
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  
   const shippingCost = subtotal > 50 ? 0 : 10;
-  const total = subtotal + shippingCost;
+  
+  // Calculate discount
+  let discount = 0;
+  if (appliedCoupon) {
+    if (appliedCoupon.discountType === 'percentage') {
+      discount = (subtotal * appliedCoupon.discountValue) / 100;
+    } else {
+      discount = Math.min(appliedCoupon.discountValue, subtotal);
+    }
+  }
+  
+  const total = subtotal + shippingCost - discount;
+  
+  const handleApplyCoupon = (coupon: Coupon) => {
+    setAppliedCoupon(coupon);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('appliedCoupon', JSON.stringify(coupon));
+    }
+  };
+  
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('appliedCoupon');
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -50,11 +89,29 @@ export default function CartSummary({ onNext }: CartSummaryProps) {
             <h2 className="text-2xl font-bold text-[#2d2b28]">Order Summary</h2>
             
             <div>
-                <label htmlFor="coupon" className="text-sm font-semibold mb-2 block">Coupon Code</label>
-                <div className="flex gap-2">
-                    <Input id="coupon" placeholder="Enter coupon" />
-                    <Button variant="outline">Apply</Button>
-                </div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-semibold">Coupon Code</label>
+                {appliedCoupon && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-green-600 font-medium">
+                      {appliedCoupon.code} Applied
+                    </span>
+                    <button 
+                      onClick={handleRemoveCoupon}
+                      className="text-gray-400 hover:text-gray-600"
+                      aria-label="Remove coupon"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+              {!appliedCoupon && (
+                <CouponPopup 
+                  onApplyCoupon={handleApplyCoupon} 
+                  appliedCoupon={appliedCoupon} 
+                />
+              )}
             </div>
 
             <Separator />
@@ -68,10 +125,16 @@ export default function CartSummary({ onNext }: CartSummaryProps) {
                     <span className="text-gray-600">Shipping</span>
                     <span className="font-semibold">{shippingCost > 0 ? `$${shippingCost.toFixed(2)}` : 'Free'}</span>
                 </div>
-                <div className="flex justify-between">
-                    <span className="text-gray-600">Discount</span>
-                    <span className="font-semibold text-green-600">-$0.00</span>
-                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">
+                      Discount {appliedCoupon?.discountType === 'percentage' 
+                        ? `(${appliedCoupon?.discountValue}%)` 
+                        : ''}
+                    </span>
+                    <span className="font-semibold text-green-600">-₹{discount.toFixed(2)}</span>
+                  </div>
+                )}
             </div>
 
             <Separator />

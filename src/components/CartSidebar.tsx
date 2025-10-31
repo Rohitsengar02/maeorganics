@@ -67,7 +67,7 @@ const CartSidebar = () => {
                           {item.name}
                         </p>
                         <p className="text-sm text-gray-500">
-                          ${item.price.toFixed(2)}
+                          ₹{(item.price || 0).toFixed(2)}
                         </p>
                         <div className="mt-2 flex h-8 items-center justify-between rounded-full border bg-white px-2">
                           <Button
@@ -112,7 +112,7 @@ const CartSidebar = () => {
             <div className="p-6">
               <div className="mb-4 flex justify-between font-bold text-lg">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₹{subtotal.toFixed(2)}</span>
               </div>
               <Link href="/checkout" passHref>
                 <Button size="lg" className="w-full h-12 rounded-full" onClick={closeCart}>

@@ -10,75 +10,32 @@ import Link from "next/link";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { getHomePageSettings } from "@/lib/homepage-settings-api";
 
-const navLinks = [
-  {label: "About", href: "#about"}, 
-  {label: "Smoothies", href: "/shop"}, 
-  {label: "Delivery", href: "#delivery"}, 
-  {label: "Contact", href: "#contact"}
-];
+// Default gradient patterns for ingredients based on color
+const getDefaultAccent = (baseBackground: string) => {
+  // Generate accent gradient based on base background color
+  if (baseBackground.includes('ff')) return "from-[#fff0cc] to-[#ffd580]";
+  if (baseBackground.includes('f0')) return "from-[#e6f9d8] to-[#b8e986]";
+  return "from-[#f0f0f0] to-[#d0d0d0]";
+};
 
-const slides = [
-  {
-    id: 1,
-    bottle: {
-      src: "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761643874/ChatGPT_Image_Oct_28_2025_02_57_54_PM_1_tys6ek.png",
-      alt: "EcoBless Citrus Glow Handwash Bottle",
-    },
-    title: "Citrus Glow",
-    subtitle: "VITAMIN BURST",
-    description:
-      "Awaken your senses with EcoBless Citrus Glow Handwash — enriched with orange peel, lemon, and honey extracts. Its vitamin-rich formula deeply cleanses and refreshes, leaving your hands bright, smooth, and energized.",
-    price: "₹299.00",
-    rating: 5,
-    baseBackground: "#fff7e6",
-    accentBackground: "#ffb84d",
-    haloGradient: "from-[#ffb84d] via-[#ffd580] to-[#fff0b3]",
-    baseIngredients: [
-      { name: "Orange Peel", icon: "🍊", accent: "from-[#fff0cc] to-[#ffd580]" },
-      { name: "Lemon Extract", icon: "🍋", accent: "from-[#fff7d6] to-[#ffe680]" },
-      { name: "Honey", icon: "🍯", accent: "from-[#fff5cc] to-[#ffd633]" }
-    ],
-    extras: [
-      { name: "Turmeric", icon: "🌻", accent: "from-[#fff5cc] to-[#ffcc33]" },
-      { name: "Papaya", icon: "🥭", accent: "from-[#fff0cc] to-[#ffb366]" },
-      { name: "Vitamin C", icon: "💊", accent: "from-[#fff7e0] to-[#ffe680]" }
-    ],
-  },
-  {
-    id: 2,
-    bottle: {
-      src: "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1761644760/ChatGPT_Image_Oct_28_2025_03_14_30_PM_1_hgd95d.png",
-      alt: "EcoBless Green Essence Handwash Bottle",
-    },
-    title: "Green Essence",
-    subtitle: "HERBAL FRESH",
-    description:
-      "Experience the purity of nature with our EcoBless Green Essence Handwash. Infused with aloe vera, mint, and lemon for a refreshing and gentle cleanse that leaves hands soft, clean, and naturally fragrant.",
-    price: "₹299.00",
-    rating: 5,
-    baseBackground: "#f0f9f0",
-    accentBackground: "#90cc7f",
-    haloGradient: "from-[#6fba5c] via-[#8fd67d] to-[#c8f4b8]",
-    baseIngredients: [
-      { name: "Aloe Vera", icon: "🪴", accent: "from-[#e6f9d8] to-[#b8e986]" },
-      { name: "Mint Leaves", icon: "🍃", accent: "from-[#dff5d3] to-[#95d183]" },
-      { name: "Lemon Extract", icon: "🍋", accent: "from-[#dff9d4] to-[#a8e68d]" }
-    ],
-    extras: [
-      { name: "Green Apple", icon: "🍏", accent: "from-[#f5fae8] to-[#d4e8a8]" },
-      { name: "Cucumber", icon: "🥒", accent: "from-[#ddf5d2] to-[#a3d89a]" },
-      { name: "Tea Tree Oil", icon: "🌿", accent: "from-[#faf3e0] to-[#e8d3a0]" }
-    ],
-  }
-  
-];
+const getDefaultHaloGradient = (accentBackground: string) => {
+  // Generate halo gradient based on accent background
+  if (accentBackground.includes('ffb')) return "from-[#ffb84d] via-[#ffd580] to-[#fff0b3]";
+  if (accentBackground.includes('90c')) return "from-[#6fba5c] via-[#8fd67d] to-[#c8f4b8]";
+  return "from-[#888] via-[#aaa] to-[#ccc]";
+};
 
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [slides, setSlides] = useState<any[]>([]);
+  const [navLinks, setNavLinks] = useState<any[]>([]);
+  const [logo, setLogo] = useState<string>("");
+  const [loading, setLoading] = useState(true);
   const { openCart, cartCount } = useCart();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -86,16 +43,84 @@ const Hero = () => {
     offset: ['start start', 'end start'],
   });
   
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 800]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 3200]); // Reduced from 800 to 400 to make it scroll faster
+
+  // Fetch home page settings from database
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await getHomePageSettings();
+        if (response.success && response.data) {
+          const { heroSlides, navLinks: links, logo: siteLogo } = response.data;
+          
+          // Transform slides to match component structure with default gradients
+          const transformedSlides = heroSlides.map((slide: any, index: number) => ({
+            id: slide._id || index + 1,
+            bottle: {
+              src: slide.image,
+              alt: `${slide.title} Bottle`,
+            },
+            title: slide.title,
+            subtitle: slide.subtitle,
+            description: slide.description,
+            price: slide.price,
+            rating: slide.rating,
+            baseBackground: slide.baseBackground,
+            accentBackground: slide.accentBackground,
+            haloGradient: getDefaultHaloGradient(slide.accentBackground),
+            baseIngredients: slide.baseIngredients?.map((ing: any) => ({
+              name: ing.name,
+              icon: ing.icon || '🌿',
+              image: ing.image,
+              accent: getDefaultAccent(slide.baseBackground),
+            })) || [],
+            extras: slide.extras?.map((ing: any) => ({
+              name: ing.name,
+              icon: ing.icon || '🌿',
+              image: ing.image,
+              accent: getDefaultAccent(slide.baseBackground),
+            })) || [],
+          }));
+
+          setSlides(transformedSlides);
+          setNavLinks(links || []);
+          setLogo(siteLogo || "");
+        }
+      } catch (error) {
+        console.error('Error fetching home page settings:', error);
+        // Fallback to empty arrays
+        setSlides([]);
+        setNavLinks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
   useEffect(() => {
+    if (slides.length === 0) return;
+    
     const interval = setInterval(() => {
       setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]);
+
+  // Show loading state
+  if (loading || slides.length === 0) {
+    return (
+      <section className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#fff7e6]">
+        <div className="text-center">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#ffb84d] border-t-transparent mx-auto mb-4"></div>
+          <p className="text-lg text-[#4a4844]">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
   const currentSlide = slides[currentIndex];
 
@@ -192,26 +217,34 @@ const Hero = () => {
           transition={{ duration: 0.8, ease: [0.6, 0.01, 0.05, 0.95], delay: 0.5 }}
           className="flex items-center mt-0 pb-0 lg:pb-[5rem] justify-between"
         >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="font-headline text-3xl font-black tracking-tight text-[#2d2b28] sm:text-4xl"
-          >
-            Maeorganics<span className="text-[#f3b315]">.</span>
-          </motion.div>
+          <Link href="/" className="flex items-center gap-2">
+            {logo ? (
+              <div className="relative h-10 w-28 sm:h-12 sm:w-32">
+                <Image src={logo} alt="Maeorganics logo" fill className="object-contain" />
+              </div>
+            ) : (
+              <motion.div whileHover={{ scale: 1.05 }} className="font-headline text-3xl font-black tracking-tight text-[#2d2b28] sm:text-4xl">
+                Maeorganics<span className="text-[#f3b315]">.</span>
+              </motion.div>
+            )}
+          </Link>
 
           <nav className="hidden items-center gap-6 text-sm font-medium text-[#4a4844] md:flex lg:gap-8">
-            {navLinks.map((item, i) => (
-              <motion.a
-                key={item.label}
-                href={item.href}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + i * 0.1, ease: "easeOut" }}
-                whileHover={{ y: -2, color: "#000" }}
+            {navLinks.map((item: any, i: number) => (
+              <Link
+                key={item.label || item.href}
+                href={item.href || "/"}
                 className="transition-all duration-200"
               >
-                {item.label}
-              </motion.a>
+                <motion.span
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + i * 0.1, ease: "easeOut" }}
+                  whileHover={{ y: -2, color: "#000" }}
+                >
+                  {item.label || item.href}
+                </motion.span>
+              </Link>
             ))}
           </nav>
 
@@ -231,6 +264,8 @@ const Hero = () => {
             </motion.button>
             
             {loading ? (
+               <div className="h-12 w-12 rounded-full bg-gray-200 animate-pulse" />
+            ) : authLoading ? (
                <div className="h-12 w-12 rounded-full bg-gray-200 animate-pulse" />
             ) : user ? (
               <>
@@ -413,7 +448,7 @@ const Hero = () => {
                     transition={{ duration: 0.4 }}
                     className="flex flex-col gap-8"
                   >
-                    {currentSlide.baseIngredients.map((item, i) => (
+                    {currentSlide.baseIngredients.map((item: any, i: number) => (
                       <motion.div
                         key={item.name}
                         initial={{ opacity: 0, x: 40 }}
@@ -422,13 +457,22 @@ const Hero = () => {
                         className="flex items-center gap-3"
                       >
                         <span className="text-sm font-semibold text-[#2f2a23]">{item.name}</span>
-                        <motion.span
-                          whileHover={{ scale: 1.2, rotate: 15 }}
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: 0 }}
                           transition={{ type: "spring", stiffness: 300 }}
-                          className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-lg shadow-xl`}
+                          className="relative h-12 w-12 rounded-full overflow-hidden"
                         >
-                          {item.icon}
-                        </motion.span>
+                          {item.image ? (
+                            <Image 
+                              src={item.image} 
+                              alt={item.name} 
+                              fill 
+                              className="object-cover"
+                            />
+                          ) : (
+                            <span className="flex h-full w-full items-center justify-center text-lg">{item.icon}</span>
+                          )}
+                        </motion.div>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -484,7 +528,7 @@ const Hero = () => {
                         exit={{ opacity: 0 }}
                         className="relative h-full w-full"
                         >
-                        {currentSlide.baseIngredients.map((item, i) => (
+                        {currentSlide.baseIngredients.map((item: any, i: number) => (
                             <motion.div
                             key={item.name}
                             initial={{ opacity: 0, scale: 0 }}
@@ -497,9 +541,18 @@ const Hero = () => {
                             }}
                             >
                             <motion.div
-                                className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-lg shadow-xl`}
+                                className="relative h-12 w-12 rounded-full overflow-hidden"
                             >
-                                {item.icon}
+                                {item.image ? (
+                                  <Image 
+                                    src={item.image} 
+                                    alt={item.name} 
+                                    fill 
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <span className="flex h-full w-full items-center justify-center text-lg">{item.icon}</span>
+                                )}
                             </motion.div>
                             </motion.div>
                         ))}
@@ -519,7 +572,7 @@ const Hero = () => {
                     transition={{ duration: 0.4 }}
                     className="flex flex-col gap-8"
                   >
-                    {currentSlide.extras.map((item, i) => (
+                    {currentSlide.extras.map((item: any, i: number) => (
                       <motion.div
                         key={item.name}
                         initial={{ opacity: 0, x: -40 }}
@@ -527,13 +580,22 @@ const Hero = () => {
                         transition={{ delay: 1 + i * 0.1, duration: 0.5, ease: "easeOut" }}
                         className="flex items-center gap-3"
                       >
-                        <motion.span
-                          whileHover={{ scale: 1.2, rotate: -15 }}
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: 0 }}
                           transition={{ type: "spring", stiffness: 300 }}
-                          className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-lg shadow-xl`}
+                          className="relative h-12 w-12 rounded-full overflow-hidden"
                         >
-                          {item.icon}
-                        </motion.span>
+                          {item.image ? (
+                            <Image 
+                              src={item.image} 
+                              alt={item.name} 
+                              fill 
+                              className="object-cover"
+                            />
+                          ) : (
+                            <span className="flex h-full w-full items-center justify-center text-lg">{item.icon}</span>
+                          )}
+                        </motion.div>
                         <span className="text-sm font-semibold text-[#2f2a23]">{item.name}</span>
                       </motion.div>
                     ))}
@@ -554,7 +616,7 @@ const Hero = () => {
               exit={{ opacity: 0 }}
               className="flex justify-center gap-4"
             >
-              {[...currentSlide.extras].slice(0, 3).map((item, i) => (
+              {[...currentSlide.extras].slice(0, 3).map((item: any, i: number) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, y: 20 }}
@@ -562,11 +624,20 @@ const Hero = () => {
                   transition={{ delay: 0.5 + i * 0.1, duration: 0.5, ease: "easeOut" }}
                   className="flex flex-col items-center gap-2"
                 >
-                  <motion.span
-                    className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${item.accent} text-xl shadow-lg`}
+                  <motion.div
+                    className="relative h-14 w-14 rounded-full overflow-hidden"
                   >
-                    {item.icon}
-                  </motion.span>
+                    {item.image ? (
+                      <Image 
+                        src={item.image} 
+                        alt={item.name} 
+                        fill 
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-full w-full items-center justify-center text-xl">{item.icon}</span>
+                    )}
+                  </motion.div>
                   <span className="text-xs font-semibold text-[#2f2a23]">{item.name}</span>
                 </motion.div>
               ))}

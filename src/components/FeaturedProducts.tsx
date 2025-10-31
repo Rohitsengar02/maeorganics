@@ -1,13 +1,14 @@
 
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useMotionValue, useTransform, useScroll, useAnimate } from 'framer-motion';
-import { featuredSmoothies } from '@/lib/data';
 import { Star } from 'lucide-react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { getHomePageSettings } from '@/lib/homepage-settings-api';
 
 const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -54,7 +55,7 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
         scale: 1.02,
         boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
       }}
-      className="relative flex-shrink-0 w-[300px] h-[420px] rounded-3xl bg-white/90 p-6 shadow-lg backdrop-blur-lg"
+      className="relative flex-shrink-0 w-[300px] h-[320px] rounded-3xl bg-white/90 p-6 shadow-lg backdrop-blur-lg"
       data-smooth-cursor-hover
     >
       <div style={{ transform: 'translateZ(75px)' }} className={cn("absolute inset-4 flex flex-col items-center text-center transition-colors duration-300", isHovered && "text-primary-foreground")}>
@@ -64,7 +65,7 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
             className="absolute -top-16 w-48 h-64 drop-shadow-2xl transition-transform duration-300"
         >
           <Image
-            src={smoothie.image.imageUrl}
+            src={smoothie.images[0]}
             alt={smoothie.name}
             fill
             className="object-contain"
@@ -73,25 +74,34 @@ const SmoothieCard = ({ smoothie }: { smoothie: any }) => {
         
         <h3 className={cn("text-2xl font-bold mt-48 text-[#2d2b28] transition-colors duration-300", isHovered && "text-primary-foreground")} style={{ transform: 'translateZ(60px)' }}>{smoothie.name}</h3>
         
-        <div className="flex items-center gap-2 mt-2" style={{ transform: 'translateZ(50px)' }}>
-            <div className={cn("flex text-yellow-400 transition-colors duration-300", isHovered && "text-white/80")}>
-                {[...Array(5)].map((_, i) => (
-                    <Star key={i} fill={i < smoothie.rating ? 'currentColor' : 'none'} strokeWidth={1} className="w-5 h-5"/>
-                ))}
-            </div>
-            <span className={cn("text-sm text-foreground/70 font-medium transition-colors duration-300", isHovered && "text-primary-foreground/70")}>{smoothie.ratingCount.toFixed(1)}</span>
-        </div>
+       
 
-        <p className={cn("text-3xl font-black text-[#1a1815] mt-4 transition-colors duration-300", isHovered && "text-white")} style={{ transform: 'translateZ(40px)' }}>
-            ${smoothie.price.toFixed(2)}
-        </p>
+      
       </div>
     </motion.div>
   );
 };
 
 const FeaturedProducts = () => {
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await getHomePageSettings();
+        if (response.success && response.data) {
+          setFeaturedProducts(response.data.featuredProducts || []);
+        }
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFeaturedProducts();
+  }, []);
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -106,23 +116,44 @@ const FeaturedProducts = () => {
   
   const sectionHeight = isMobile ? '130vh' : '150vh';
 
+  if (loading) {
+    return (
+      <section className="relative py-24 z-30">
+        <div className="container max-w-7xl mx-auto px-4">
+          <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Smoothies</h2>
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="w-[300px] h-[420px] rounded-3xl bg-gray-200 animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (featuredProducts.length === 0) {
+    return null; // Don't render section if there are no featured products
+  }
+
   return (
     <section ref={targetRef} className="relative py-0 z-30" style={{ height: sectionHeight }} id="featured-products">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <div className="container max-w-7xl mx-auto px-4 absolute top-24 left-1/2 -translate-x-1/2 z-10">
-           <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Smoothies</h2>
+           <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Products</h2>
         </div>
         <motion.div 
             style={{ x }} 
             className="flex gap-8 pl-[20%] mt-36 cursor-grab"
             drag="x"
             dragConstraints={{
-                left: -(300 * featuredSmoothies.length + (featuredSmoothies.length * 32)),
+                left: -(300 * featuredProducts.length + (featuredProducts.length * 32)),
                 right: 0
             }}
         >
-            {featuredSmoothies.map((smoothie) => (
-              <SmoothieCard key={smoothie.id} smoothie={smoothie} />
+            {featuredProducts.map((smoothie) => (
+              <Link href={`/shop/${smoothie._id}`} key={smoothie._id}>
+                <SmoothieCard smoothie={smoothie} />
+              </Link>
             ))}
         </motion.div>
       </div>

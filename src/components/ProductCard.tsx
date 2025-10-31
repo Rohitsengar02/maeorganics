@@ -40,7 +40,7 @@ const ProductCard = ({ product, isGridView = true }: ProductCardProps) => {
                             <Star key={i} fill={i < product.rating ? 'currentColor' : 'none'} strokeWidth={1} className="w-5 h-5 text-yellow-400"/>
                         ))}
                     </div>
-                    <p className="text-xl font-black text-[#1a1815] mt-2">${product.price.toFixed(2)}</p>
+                    <p className="text-xl font-black text-[#1a1815] mt-2">₹{product.price.toFixed(2)}</p>
                     <p className="text-sm text-gray-500 mt-2 line-clamp-2">{product.description}</p>
                     <Button className="mt-4 w-fit">
                         <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
@@ -81,16 +81,9 @@ const ProductCard = ({ product, isGridView = true }: ProductCardProps) => {
               <Star key={i} fill={i < product.rating ? 'currentColor' : 'none'} strokeWidth={1} className="w-4 h-4 text-yellow-400"/>
           ))}
           </div>
-        <p className="text-xl font-black text-[#1a1815] mt-1">${product.price.toFixed(2)}</p>
+        <p className="text-xl font-black text-[#1a1815] mt-1">₹{product.price.toFixed(2)}</p>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-4 right-4 h-8 w-8 text-gray-400 hover:text-red-500 hover:bg-red-100/50 rounded-full"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsLiked(!isLiked); }}
-        >
-          <Heart className={cn('h-5 w-5', isLiked && 'fill-red-500 text-red-500')} />
-        </Button>
+       
 
         <motion.div
           className="absolute bottom-4 right-4"

@@ -1,234 +1,166 @@
 'use client';
 
-import {
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  CreditCard,
-  File,
-  ListFilter,
-  MoreVertical,
-  Truck,
-} from "lucide-react"
+import { ArrowLeft, FileDown, Package, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import PageHeader from '../../components/PageHeader';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { adminUpdateOrderStatus, getOrderById } from '@/lib/orders-api';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination"
-import { Separator } from "@/components/ui/separator"
-import PageHeader from "../../components/PageHeader"
-import { useRouter } from "next/navigation"
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image"
-
-const orderItems = [
-    { name: 'Sunshine Orange', quantity: 2, price: '₹1198.00', image: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/True_fruits_-_Smoothie_yellow.png' },
-    { name: 'Green Vitality', quantity: 1, price: '₹649.00', image: 'https://pepelasalonline.com/wp-content/uploads/2023/02/33721-TRUE-FRUITS-SMOOTHIE-LIGHT-GREEN-25CL.png' },
-];
-
-export default function OrderDetailPage({ params }: { params: { id: string } }) {
+export default function OrderDetailPage() {
   const router = useRouter();
-  
+  const params = useParams();
+  const id = params?.id as string;
+  const searchParams = useSearchParams();
+  const [order, setOrder] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await getOrderById(id);
+        if (res.success) setOrder(res.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [id]);
+
+  // Auto print when ?print=1 and order is loaded
+  useEffect(() => {
+    if (searchParams.get('print') === '1' && !loading && order) {
+      const t = setTimeout(() => window.print(), 250);
+      return () => clearTimeout(t);
+    }
+  }, [searchParams, loading, order]);
+
+  const fmt = (v: number) => `₹${v.toFixed(2)}`;
+
+  const handleStatusUpdate = async (status: string) => {
+    setUpdating(true);
+    try {
+      const res = await adminUpdateOrderStatus(order._id, status);
+      if (res.success) setOrder(res.data);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  if (loading) return <div className="p-6">Loading...</div>;
+  if (!order) return <div className="p-6">Order not found.</div>;
+
   return (
     <div>
-        <PageHeader title={`Order ${params.id}`} description="Details about a specific order.">
-            <Button variant="outline" size="icon" onClick={() => router.back()}>
-                <ArrowLeft className="h-4 w-4" />
-            </Button>
-        </PageHeader>
-        <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-            <Card>
-              <CardHeader className="flex flex-row items-start bg-muted/50">
-                <div className="grid gap-0.5">
-                  <CardTitle className="group flex items-center gap-2 text-lg">
-                    Order {params.id}
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                      <Copy className="h-3 w-3" />
-                      <span className="sr-only">Copy Order ID</span>
-                    </Button>
-                  </CardTitle>
-                  <CardDescription>Date: November 23, 2023</CardDescription>
-                </div>
-                <div className="ml-auto flex items-center gap-1">
-                  <Button size="sm" variant="outline" className="h-8 gap-1">
-                    <Truck className="h-3.5 w-3.5" />
-                    <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                      Track Order
-                    </span>
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="outline" className="h-8 w-8">
-                        <MoreVertical className="h-3.5 w-3.5" />
-                        <span className="sr-only">More</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Export</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Trash</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 text-sm">
-                <div className="grid gap-3">
-                  <div className="font-semibold">Order Details</div>
-                  <ul className="grid gap-3">
-                    {orderItems.map((item, index) => (
-                        <li key={index} className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="relative h-12 w-12 rounded-md bg-muted">
-                                    <Image src={item.image} alt={item.name} fill className="object-contain p-1" />
-                                </div>
-                                <span className="text-muted-foreground">
-                                    {item.name} <span>× {item.quantity}</span>
-                                </span>
-                            </div>
-                            <span>{item.price}</span>
-                        </li>
-                    ))}
-                  </ul>
-                  <Separator className="my-2" />
-                  <ul className="grid gap-3">
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Subtotal</span>
-                      <span>₹1847.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Shipping</span>
-                      <span>₹50.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Tax</span>
-                      <span>₹40.00</span>
-                    </li>
-                    <li className="flex items-center justify-between font-semibold">
-                      <span className="text-muted-foreground">Total</span>
-                      <span>₹1937.00</span>
-                    </li>
-                  </ul>
-                </div>
-                <Separator className="my-4" />
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-3">
-                    <div className="font-semibold">Shipping Information</div>
-                    <address className="grid gap-0.5 not-italic text-muted-foreground">
-                      <span>Liam Johnson</span>
-                      <span>1234 Main St.</span>
-                      <span>Anytown, CA 12345</span>
-                    </address>
-                  </div>
-                  <div className="grid auto-rows-max gap-3">
-                    <div className="font-semibold">Billing Information</div>
-                    <div className="text-muted-foreground">
-                      Same as shipping address
+      <style>{`@media print { body * { visibility: hidden; } #invoice-root, #invoice-root * { visibility: visible; } #invoice-root { position:absolute; left:0; top:0; width:100%; } }`}</style>
+      <PageHeader title={`Order ${order._id.slice(-6)}`} description="Manage and update order.">
+        <div className="flex gap-2">
+          <Button variant="outline" size="icon" onClick={() => router.back()}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" onClick={() => window.print()}><FileDown className="h-4 w-4 mr-2" /> Invoice</Button>
+        </div>
+      </PageHeader>
+
+      <main id="invoice-root" className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+        <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Order Items ({order.items.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {order.items.map((it: any, idx: number) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="relative h-12 w-12 rounded-md bg-muted overflow-hidden">
+                        {it.imageUrl ? (
+                          <Image src={it.imageUrl} alt={it.name} fill className="object-contain p-1" />
+                        ) : (
+                          <div className="h-full w-full flex items-center justify-center text-xs text-gray-500">IMG</div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium">{it.name}</p>
+                        <p className="text-sm text-gray-500">Qty: {it.quantity}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{fmt(it.price)} x {it.quantity}</p>
+                      <p className="text-sm text-gray-600">{fmt(it.price * it.quantity)}</p>
                     </div>
                   </div>
-                </div>
-                <Separator className="my-4" />
-                <div className="grid gap-3">
-                  <div className="font-semibold">Customer Information</div>
-                  <dl className="grid gap-3">
-                    <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Customer</dt>
-                      <dd>Liam Johnson</dd>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Email</dt>
-                      <dd>
-                        <a href="mailto:">liam@acme.com</a>
-                      </dd>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Phone</dt>
-                      <dd>
-                        <a href="tel:">+1 234 567 890</a>
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-                <Separator className="my-4" />
-                <div className="grid gap-3">
-                  <div className="font-semibold">Payment Information</div>
-                  <dl className="grid gap-3">
-                    <div className="flex items-center justify-between">
-                      <dt className="flex items-center gap-1 text-muted-foreground">
-                        <CreditCard className="h-4 w-4" />
-                        Visa
-                      </dt>
-                      <dd>**** **** **** 4532</dd>
-                    </div>
-                  </dl>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Updated <time dateTime="2023-11-23">November 23, 2023</time>
-                </div>
-              </CardFooter>
-            </Card>
-          </div>
-          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-1">
-             <Card>
-              <CardHeader>
-                <CardTitle>Order Status</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Badge variant="default">Fulfilled</Badge>
-              </CardContent>
-            </Card>
-            <Card className="overflow-hidden">
-              <CardHeader className="flex flex-row items-start bg-muted/50">
-                <div className="grid gap-0.5">
-                  <CardTitle className="group flex items-center gap-2 text-lg">
-                    Order Notes
-                  </CardTitle>
-                  <CardDescription>
-                    Internal notes or customer requests.
-                  </CardDescription>
-                </div>
-                <div className="ml-auto flex items-center gap-1">
-                  <Button size="sm" variant="outline" className="h-8 gap-1">
-                    <File className="h-3.5 w-3.5" />
-                    <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                      Add Note
-                    </span>
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 text-sm">
-                <p className="text-muted-foreground">No notes for this order yet.</p>
-              </CardContent>
-            </Card>
-          </div>
-        </main>
+                ))}
+              </div>
+              <Separator className="my-4" />
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between"><span>Subtotal</span><span>{fmt(order.amounts.subtotal)}</span></div>
+                {order.amounts.discount > 0 && (
+                  <div className="flex justify-between text-green-700"><span>Discount</span><span>- {fmt(order.amounts.discount)}</span></div>
+                )}
+                <div className="flex justify-between"><span>Delivery</span><span>{order.amounts.shipping === 0 ? 'Free' : fmt(order.amounts.shipping)}</span></div>
+                <div className="flex justify-between font-semibold"><span>Total</span><span>{fmt(order.amounts.total)}</span></div>
+              </div>
+            </CardContent>
+            <CardFooter className="text-xs text-muted-foreground">Created {new Date(order.createdAt).toLocaleString()}</CardFooter>
+          </Card>
+        </div>
+
+        <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-1">
+          <Card>
+            <CardHeader>
+              <CardTitle>Order Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Select onValueChange={handleStatusUpdate}>
+                <SelectTrigger className="h-9 w-full">
+                  <SelectValue placeholder={order.status} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created">Created</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="shipped">Shipped</SelectItem>
+                  <SelectItem value="delivered">Delivered</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-gray-500">Current: <span className="capitalize font-medium">{order.status}</span></p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-gray-700 space-y-1">
+              <p>Method: {order.payment?.method?.toUpperCase?.() || '—'}</p>
+              <p>Status: {order.payment?.status || '—'}</p>
+              {order.payment?.upiId && <p>UPI ID: {order.payment.upiId}</p>}
+              {order.payment?.transactionId && <p>Txn: {order.payment.transactionId}</p>}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Delivery Address</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-6 text-gray-700">
+              <p className="font-semibold">{order.address.fullName}</p>
+              <p>{order.address.addressLine1}</p>
+              {order.address.addressLine2 && <p>{order.address.addressLine2}</p>}
+              {order.address.landmark && <p>Landmark: {order.address.landmark}</p>}
+              <p>{order.address.city}, {order.address.state} - {order.address.pincode}</p>
+              <p>{order.address.country}</p>
+              <p className="text-gray-600">Phone: {order.address.phone}</p>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
-  )
+  );
 }
