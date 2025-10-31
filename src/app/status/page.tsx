@@ -37,24 +37,17 @@ export default function StatusPage() {
 
   const runChecks = async () => {
     setRunning(true);
-    const out: CheckResult[] = [];
-    for (const url of targets) {
-      const start = performance.now();
-      try {
-        const res = await fetch(url, { cache: "no-store" });
-        const ms = Math.round(performance.now() - start);
-        let bodySnippet = "";
-        try {
-          const text = await res.text();
-          bodySnippet = text.slice(0, 200);
-        } catch {}
-        out.push({ url, ok: res.ok, status: res.status, bodySnippet, ms });
-      } catch (e: any) {
-        const ms = Math.round(performance.now() - start);
-        out.push({ url, ok: false, error: e?.message || "Request failed", ms });
-      }
+    try {
+      const api = `/api/status?base=${encodeURIComponent(base)}`;
+      const res = await fetch(api, { cache: "no-store" });
+      const data = await res.json();
+      const out = (data.results || []) as CheckResult[];
+      setResults(out);
+    } catch (e: any) {
+      setResults([
+        { url: base, ok: false, error: e?.message || "Proxy failed" },
+      ]);
     }
-    setResults(out);
     setRunning(false);
   };
 
