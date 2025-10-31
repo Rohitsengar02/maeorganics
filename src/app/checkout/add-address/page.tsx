@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
@@ -34,6 +34,14 @@ interface AddressFormData {
 }
 
 export default function AddAddressPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+      <AddAddressPageInner />
+    </Suspense>
+  );
+}
+
+function AddAddressPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();

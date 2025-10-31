@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getOrderById } from '@/lib/orders-api';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 
-export default function ThankYouPage() {
+function ThankYouPageInner() {
   const params = useSearchParams();
   const router = useRouter();
   const orderId = params.get('orderId');
@@ -134,5 +134,13 @@ export default function ThankYouPage() {
       </div>
     </div>
     </div>
+  );
+}
+
+export default function ThankYouPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto max-w-4xl px-4 py-16">Loading...</div>}>
+      <ThankYouPageInner />
+    </Suspense>
   );
 }
