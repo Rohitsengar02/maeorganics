@@ -1,10 +1,6 @@
 import { getAuthHeaders } from './api-helpers';
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === 'production'
-    ? 'https://maeorganics-backend.vercel.app'
-    : 'http://localhost:5000');
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export const getAllUsers = async (): Promise<{ success: boolean; data: any[] }> => {
   const headers = await getAuthHeaders();

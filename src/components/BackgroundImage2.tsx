@@ -31,7 +31,7 @@ export function BackgroundImage2({
 
   // Original motion values
   const x = useTransform(scrollYProgress, [0.3, 1], ['-40vw', '50vw']);
-  const y = useTransform(scrollYProgress, [0.3, 1], ['0vh', '468vh']);
+  const y = useTransform(scrollYProgress, [0.3, 1], ['0vh', '432vh']);
   const opacity = useTransform(scrollYProgress, [0.3, 0.4, 0.9, 1], [0, 1, 1, 0]);
   const rotate = useTransform(scrollYProgress, [0.3, 1], [-15, 15]);
 

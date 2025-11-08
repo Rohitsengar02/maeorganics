@@ -13,11 +13,7 @@ type CheckResult = {
   ms?: number;
 };
 
-const fallbackBase =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://maeorganics-backend.vercel.app"
-    : "http://localhost:5000");
+const fallbackBase = process.env.NEXT_PUBLIC_API_URL || '';
 
 export default function StatusPage() {
   const [results, setResults] = useState<CheckResult[] | null>(null);

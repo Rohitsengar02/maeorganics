@@ -42,11 +42,7 @@ export default function AdminCreateOfflineOrderPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const API_BASE_URL =
-          process.env.NEXT_PUBLIC_API_URL ||
-          (process.env.NODE_ENV === 'production'
-            ? 'https://maeorganics.vercel.app'
-            : 'http://localhost:5000');
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
         const headers = await getAuthHeaders();
         const res = await fetch(`${API_BASE_URL}/api/products`, { headers });
         if (!res.ok) throw new Error('Failed to fetch products');

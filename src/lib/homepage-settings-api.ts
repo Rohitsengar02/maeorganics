@@ -1,8 +1,4 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === 'production'
-    ? 'https://maeorganics-backend.vercel.app'
-    : 'http://localhost:5000');
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // Helper function to get auth headers
 const getAuthHeaders = async (): Promise<Record<string, string>> => {
