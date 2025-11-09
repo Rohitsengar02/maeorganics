@@ -19,9 +19,6 @@ const FeaturedProducts = () => {
   const [maxOffset, setMaxOffset] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const touchStartX = useRef<number>(0);
-  const touchStartY = useRef<number>(0);
-  const [isTouching, setIsTouching] = useState(false);
 
   const recalculateBounds = useCallback(() => {
     if (!isDesktop) {
@@ -90,32 +87,6 @@ const FeaturedProducts = () => {
   const isPrevDisabled = offset === 0;
   const isNextDisabled = offset === maxOffset;
 
-  // Touch event handlers for mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (isDesktop) return;
-    setIsTouching(true);
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (isDesktop || !isTouching) return;
-    
-    const touchX = e.touches[0].clientX;
-    const touchY = e.touches[0].clientY;
-    const deltaX = Math.abs(touchX - touchStartX.current);
-    const deltaY = Math.abs(touchY - touchStartY.current);
-    
-    // If horizontal scroll is more pronounced than vertical, prevent page scroll
-    if (deltaX > deltaY && deltaX > 10) {
-      e.preventDefault();
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsTouching(false);
-  };
-
   if (loading) {
     return (
       <section className="relative py-24 z-30">
@@ -181,19 +152,19 @@ const FeaturedProducts = () => {
         <div className="relative">
           <div
             ref={carouselRef}
-            className="w-full overflow-x-auto lg:overflow-hidden scrollbar-hide"
+            className="w-full overflow-x-auto lg:overflow-hidden overflow-y-hidden scrollbar-hide"
             style={{ 
-              touchAction: 'pan-x',
               WebkitOverflowScrolling: 'touch',
               scrollbarWidth: 'none',
-              msOverflowStyle: 'none'
+              msOverflowStyle: 'none',
+              overscrollBehaviorX: 'contain',
+              overscrollBehaviorY: 'none',
+              touchAction: 'pan-x pinch-zoom'
             }}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
           >
             <motion.div
               className="flex gap-8"
+              style={{ touchAction: 'pan-x' }}
               animate={isDesktop ? { x: offset } : { x: 0 }}
               transition={{ type: 'spring', stiffness: 260, damping: 30 }}
             >

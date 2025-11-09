@@ -43,9 +43,7 @@ export default function ProductMobileBar({ product }: { product: Smoothie }) {
         <Button variant="outline" size="icon" className="rounded-full h-12 w-12 flex-shrink-0" onClick={handleAddToCart}>
           <ShoppingCart className="h-6 w-6" />
         </Button>
-        <Button size="lg" className="h-12 rounded-full flex-grow whitespace-nowrap">
-          Buy Now
-        </Button>
+      
       </div>
     </div>
   );

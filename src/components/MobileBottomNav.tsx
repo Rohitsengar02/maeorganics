@@ -11,7 +11,7 @@ const navItems = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/shop', icon: Store, label: 'Shop' },
   { href: '#cart', icon: ShoppingBag, label: 'Cart' },
-  { href: '#profile', icon: User, label: 'Profile' },
+  { href: '/account', icon: User, label: 'Profile' },
 ];
 
 export function MobileBottomNav() {

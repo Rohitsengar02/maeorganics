@@ -86,7 +86,17 @@ const CategoriesCarousel = () => {
   const isNextDisabled = offset === maxOffset;
 
   return (
-    <section className="py-24 px-4 bg-[#fdf8e8] overflow-hidden relative z-30">
+    <>
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+      <section className="py-24 px-4 bg-[#fdf8e8] overflow-hidden relative z-30">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Explore Our Categories</h2>
         <p className="max-w-2xl mx-auto mt-4 text-[#5a5854]">
@@ -96,10 +106,19 @@ const CategoriesCarousel = () => {
       <div className="relative">
         <div
           ref={carouselRef}
-          className="w-full overflow-x-auto lg:overflow-hidden touch-pan-x"
+          className="w-full overflow-x-auto lg:overflow-hidden overflow-y-hidden scrollbar-hide"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            overscrollBehaviorX: 'contain',
+            overscrollBehaviorY: 'none',
+            touchAction: 'pan-x pinch-zoom'
+          }}
         >
           <motion.div
             className="flex gap-8"
+            style={{ touchAction: 'pan-x' }}
             animate={isDesktop ? { x: offset } : { x: 0 }}
             transition={{ type: 'spring', stiffness: 260, damping: 30 }}
           >
@@ -153,6 +172,7 @@ const CategoriesCarousel = () => {
         )}
       </div>
     </section>
+    </>
   );
 };
 
