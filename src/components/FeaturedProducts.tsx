@@ -19,6 +19,9 @@ const FeaturedProducts = () => {
   const [maxOffset, setMaxOffset] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number>(0);
+  const touchStartY = useRef<number>(0);
+  const [isTouching, setIsTouching] = useState(false);
 
   const recalculateBounds = useCallback(() => {
     if (!isDesktop) {
@@ -87,6 +90,32 @@ const FeaturedProducts = () => {
   const isPrevDisabled = offset === 0;
   const isNextDisabled = offset === maxOffset;
 
+  // Touch event handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isDesktop) return;
+    setIsTouching(true);
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isDesktop || !isTouching) return;
+    
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    const deltaX = Math.abs(touchX - touchStartX.current);
+    const deltaY = Math.abs(touchY - touchStartY.current);
+    
+    // If horizontal scroll is more pronounced than vertical, prevent page scroll
+    if (deltaX > deltaY && deltaX > 10) {
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsTouching(false);
+  };
+
   if (loading) {
     return (
       <section className="relative py-24 z-30">
@@ -107,8 +136,18 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <section className="relative py-24 z-30 overflow-hidden" id="featured-products">
-      <div className="container max-w-7xl mx-auto px-4">
+    <>
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+      <section className="relative py-24 z-30 overflow-hidden" id="featured-products">
+        <div className="container max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between mb-12">
           <div>
             <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Featured Products</h2>
@@ -142,7 +181,16 @@ const FeaturedProducts = () => {
         <div className="relative">
           <div
             ref={carouselRef}
-            className="w-full overflow-x-auto lg:overflow-hidden touch-pan-x"
+            className="w-full overflow-x-auto lg:overflow-hidden scrollbar-hide"
+            style={{ 
+              touchAction: 'pan-x',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <motion.div
               className="flex gap-8"
@@ -205,6 +253,7 @@ const FeaturedProducts = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createCombo } from '@/lib/combos-api';
 import { getProducts } from '@/lib/products-api';
 import { getCoupons } from '@/lib/coupons-api';
+import { uploadToCloudinary } from '@/lib/categories-api';
 import Image from 'next/image';
 import { 
   Save, 
@@ -22,8 +23,13 @@ import {
 export default function CreateComboPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
   const [coupons, setCoupons] = useState<any[]>([]);
+  const [bannerImageFile, setBannerImageFile] = useState<File | null>(null);
+  const [bannerImagePreview, setBannerImagePreview] = useState<string>('');
+  const [additionalImageFiles, setAdditionalImageFiles] = useState<File[]>([]);
+  const [additionalImagePreviews, setAdditionalImagePreviews] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -99,19 +105,34 @@ export default function CreateComboPage() {
     setFormData({ ...formData, products: newProducts });
   };
 
-  const handleImageChange = (index: number, value: string) => {
-    const newImages = [...formData.images];
-    newImages[index] = value;
-    setFormData({ ...formData, images: newImages });
+  const handleBannerImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setBannerImageFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setBannerImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const addImage = () => {
-    setFormData({ ...formData, images: [...formData.images, ''] });
+  const handleAdditionalImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setAdditionalImageFiles(prev => [...prev, ...files]);
+
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAdditionalImagePreviews(prev => [...prev, e.target?.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
-  const removeImage = (index: number) => {
-    const newImages = formData.images.filter((_, i) => i !== index);
-    setFormData({ ...formData, images: newImages });
+  const removeAdditionalImage = (index: number) => {
+    setAdditionalImageFiles(prev => prev.filter((_, i) => i !== index));
+    setAdditionalImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleTagChange = (index: number, value: string) => {
@@ -132,13 +153,44 @@ export default function CreateComboPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setUploading(true);
 
     try {
+      // Validate banner image
+      if (!bannerImageFile && !formData.bannerImage) {
+        alert('Banner image is required');
+        setLoading(false);
+        setUploading(false);
+        return;
+      }
+
+      let bannerImageUrl = formData.bannerImage;
+      let additionalImageUrls: string[] = [];
+
+      // Upload banner image to Cloudinary if a new file is selected
+      if (bannerImageFile) {
+        console.log('Uploading banner image to Cloudinary...');
+        const bannerResult = await uploadToCloudinary(bannerImageFile, 'maeorganics/combos');
+        bannerImageUrl = bannerResult.url;
+      }
+
+      // Upload additional images to Cloudinary
+      if (additionalImageFiles.length > 0) {
+        console.log('Uploading additional images to Cloudinary...');
+        for (const file of additionalImageFiles) {
+          const result = await uploadToCloudinary(file, 'maeorganics/combos');
+          additionalImageUrls.push(result.url);
+        }
+      }
+
+      setUploading(false);
+
       // Filter out empty values
       const cleanedData = {
         ...formData,
+        bannerImage: bannerImageUrl,
+        images: additionalImageUrls.length > 0 ? additionalImageUrls : formData.images.filter(img => img),
         products: formData.products.filter(p => p.product),
-        images: formData.images.filter(img => img),
         tags: formData.tags.filter(tag => tag),
         coupon: formData.coupon || undefined,
         seo: {
@@ -155,6 +207,7 @@ export default function CreateComboPage() {
       alert(error.message || 'Failed to create combo');
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
@@ -401,55 +454,101 @@ export default function CreateComboPage() {
 
           {/* Images */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Images</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5" />
+              Images
+            </h2>
             
-            <div className="space-y-4">
+            <div className="space-y-6">
+              {/* Banner Image Upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Banner Image URL <span className="text-red-500">*</span>
+                  Banner Image <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="url"
-                  name="bannerImage"
-                  required
-                  value={formData.bannerImage}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="https://example.com/banner.jpg"
-                />
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer transition-colors">
+                      <Upload className="w-4 h-4" />
+                      Choose Banner Image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleBannerImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    {bannerImageFile && (
+                      <span className="text-sm text-gray-600">{bannerImageFile.name}</span>
+                    )}
+                  </div>
+                  
+                  {bannerImagePreview && (
+                    <div className="relative w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-200 overflow-hidden">
+                      <Image
+                        src={bannerImagePreview}
+                        alt="Banner preview"
+                        fill
+                        className="object-contain p-4"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setBannerImageFile(null);
+                          setBannerImagePreview('');
+                        }}
+                        className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
 
+              {/* Additional Images Upload */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Additional Images
-                  </label>
-                  <button
-                    type="button"
-                    onClick={addImage}
-                    className="text-sm text-green-600 hover:text-green-700"
-                  >
-                    + Add Image
-                  </button>
-                </div>
-                {formData.images.map((image, index) => (
-                  <div key={index} className="flex items-center gap-2 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Additional Images (Optional)
+                </label>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 cursor-pointer transition-colors">
+                    <Upload className="w-4 h-4" />
+                    Add More Images
                     <input
-                      type="url"
-                      value={image}
-                      onChange={(e) => handleImageChange(index, e.target.value)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="https://example.com/image.jpg"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleAdditionalImagesChange}
+                      className="hidden"
                     />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                ))}
+                  </label>
+
+                  {/* Additional Images Preview Grid */}
+                  {additionalImagePreviews.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                      {additionalImagePreviews.map((preview, index) => (
+                        <div key={index} className="relative w-full h-40 bg-gray-50 rounded-lg border-2 border-gray-200 overflow-hidden group">
+                          <Image
+                            src={preview}
+                            alt={`Additional image ${index + 1}`}
+                            fill
+                            className="object-contain p-2"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeAdditionalImage(index)}
+                            className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg opacity-0 group-hover:opacity-100"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 truncate opacity-0 group-hover:opacity-100 transition-opacity">
+                            {additionalImageFiles[index]?.name}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -641,7 +740,8 @@ export default function CreateComboPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              disabled={loading}
+              className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
@@ -650,10 +750,15 @@ export default function CreateComboPage() {
               disabled={loading}
               className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? (
+              {uploading ? (
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  Creating...
+                  Uploading Images...
+                </>
+              ) : loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  Creating Combo...
                 </>
               ) : (
                 <>
