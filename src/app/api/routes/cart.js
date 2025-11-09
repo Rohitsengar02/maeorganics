@@ -7,7 +7,7 @@ router.route('/')
   .get(verifyToken, getCart)
   .post(verifyToken, addItemToCart);
 
-router.route('/:productId')
+router.route('/:itemId')
   .delete(verifyToken, removeItemFromCart);
 
 module.exports = router;

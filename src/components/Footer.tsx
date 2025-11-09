@@ -2,23 +2,23 @@
 'use client';
 
 import { Mail, MapPin, Phone } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const usefulLinks = [
-  "Payments",
-  "Shipping",
-  "Product Returns",
-  "FAQ",
-  "Checkout",
+  { label: 'About Maeorganics', href: '/about' },
+  { label: 'Shop All', href: '/shop' },
+  { label: 'Combos', href: '/combos' },
+  { label: 'Checkout', href: '/checkout' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Thank You', href: '/thank-you' },
 ];
 
 const helpLinks = [
   { label: "Help Center", href: "/help" },
   { label: "Privacy & Policy", href: "/privacy-policy" },
-  { label: "Sell On Farmart", href: "#" },
-  { label: "Affiliate Program", href: "#" },
-  { label: "Our Suppliers", href: "#" },
-  { label: "Accessibility", href: "#" },
+  { label: 'Order Status', href: '/status' },
+  { label: 'Login', href: '/login' },
 ];
 
 export default function Footer() {
@@ -28,9 +28,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* About Section */}
           <div className="md:col-span-2 lg:col-span-1">
-            <h3 className="font-headline text-3xl font-black tracking-tight text-white">
-                Maeorganics<span className="text-[#f3b315]">.</span>
-            </h3>
+            <Link href="/" className="inline-flex items-center">
+              <Image
+                src="https://res.cloudinary.com/dntayojln/image/upload/v1762671446/WhatsApp_Image_2025-10-29_at_13.38.10_1e6b9cdc_w3dqx8.png"
+                alt="Maeorganics logo"
+                width={180}
+                height={60}
+                className="h-14 w-auto"
+                priority
+              />
+            </Link>
             <p className="mt-4 text-sm leading-relaxed">
               Maeorganics is a brand that stands for natural and healthy living. Our range of smoothies is designed to provide delicious taste and effective nutrition. We believe in the power of natural ingredients to deliver safe and sustainable products for a healthier lifestyle.
             </p>
@@ -64,9 +71,9 @@ export default function Footer() {
             <h4 className="text-lg font-bold text-white mb-4">Useful Links</h4>
             <ul className="space-y-2 text-sm">
               {usefulLinks.map((link) => (
-                <li key={link}>
-                  <Link href="#" className="hover:text-white transition-colors hover:underline">
-                    {link}
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:text-white transition-colors hover:underline">
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -95,12 +102,7 @@ export default function Footer() {
 
         <div className="mt-16 border-t border-white/10 pt-8 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} Maeorganics. All Rights Reserved.</p>
-          <p className="mt-2">
-            Developed by{' '}
-            <Link href="/developer" className="font-semibold text-primary hover:underline">
-              Rohit Sengar
-            </Link>
-          </p>
+         
         </div>
       </div>
     </footer>

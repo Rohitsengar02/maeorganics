@@ -11,6 +11,7 @@ import ShopFeatures from '@/components/ShopFeatures';
 import ProductGrid from '@/components/ProductGrid';
 import Footer from '@/components/Footer';
 import { BackgroundImage } from '@/components/BackgroundImage';
+import CombosCarousel from '@/components/CombosCarousel';
 import PromoBanner from '@/components/PromoBanner';
 import { BackgroundImage2 } from '@/components/BackgroundImage2';
 
@@ -44,6 +45,7 @@ export default function Home() {
           <FeaturedProducts />
           <WhyChooseUs />
           <CategoriesCarousel />
+          <CombosCarousel />
           <section className="py-24 bg-[#fdf8e8] relative ">
             <div className="container mx-auto max-w-7xl px-4 ">
               <div className="text-center mb-12">
@@ -57,7 +59,7 @@ export default function Home() {
               <ProductGrid ref={productGridRef} />
             </div>
           </section>
-          <ShopFeatures />
+          
           <PromoBanner ref={promoBannerRef} />
           <Footer />
         </main>

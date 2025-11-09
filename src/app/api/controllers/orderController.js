@@ -2,9 +2,14 @@ const Order = require('../models/Order');
 
 // Create order
 exports.createOrder = async (req, res) => {
+  console.log('[ORDER] Create order - START');
   try {
     const userId = req.user.id;
     const { items, address, payment, amounts, coupon, notes } = req.body;
+
+    console.log('[ORDER] User ID:', userId);
+    console.log('[ORDER] Items count:', items?.length);
+    console.log('[ORDER] Items:', JSON.stringify(items, null, 2));
 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ success: false, message: 'Order items are required' });
@@ -24,10 +29,16 @@ exports.createOrder = async (req, res) => {
       notes: notes || ''
     });
 
+    console.log('[ORDER] Order created successfully:', order._id);
     res.status(201).json({ success: true, data: order });
   } catch (error) {
-    console.error('Create order error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('[ORDER] Create order error:', error);
+    console.error('[ORDER] Error message:', error.message);
+    console.error('[ORDER] Error stack:', error.stack);
+    if (error.name === 'ValidationError') {
+      console.error('[ORDER] Validation errors:', error.errors);
+    }
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
 

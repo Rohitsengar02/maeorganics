@@ -4,22 +4,28 @@ const User = require('../models/User');
 // Middleware to verify Firebase ID token
 exports.verifyToken = async (req, res, next) => {
   try {
+    console.log('[AUTH] Verifying token for:', req.method, req.url);
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log('[AUTH] No token provided');
       return res.status(401).json({ message: 'No token provided' });
     }
 
     const idToken = authHeader.split(' ')[1];
+    console.log('[AUTH] Token found, verifying with Firebase...');
     
     try {
       const decodedToken = await admin.auth().verifyIdToken(idToken);
+      console.log('[AUTH] Token verified for user:', decodedToken.email);
       req.user = decodedToken;
       
       // Check if user exists in our database, if not create one
+      console.log('[AUTH] Checking MongoDB for user...');
       let user = await User.findOne({ uid: decodedToken.uid });
       
       if (!user) {
+        console.log('[AUTH] User not found in DB, creating...');
         user = new User({
           uid: decodedToken.uid,
           email: decodedToken.email,
@@ -27,6 +33,9 @@ exports.verifyToken = async (req, res, next) => {
           photoURL: decodedToken.picture || ''
         });
         await user.save();
+        console.log('[AUTH] User created in DB');
+      } else {
+        console.log('[AUTH] User found in DB:', user.email);
       }
       
       req.user.dbUser = user;
@@ -35,13 +44,14 @@ exports.verifyToken = async (req, res, next) => {
       if (user && user._id) {
         req.user.id = user._id.toString();
       }
+      console.log('[AUTH] Authentication successful, calling next()');
       next();
     } catch (error) {
-      console.error('Error verifying token:', error);
+      console.error('[AUTH] Error verifying token:', error.message);
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
   } catch (error) {
-    console.error('Auth middleware error:', error);
+    console.error('[AUTH] Middleware error:', error.message);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

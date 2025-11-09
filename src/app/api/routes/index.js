@@ -13,8 +13,8 @@ const couponRoutes = require('./coupons');
 const addressRoutes = require('./addresses');
 const orderRoutes = require('./orders');
 const offlineOrderRoutes = require('./offlineOrders');
-// Import other route files as needed
-// const orderRoutes = require('./orders');
+const contactRoutes = require('./contact');
+const comboRoutes = require('./combos');
 
 // Mount routes
 router.use('/auth', authRoutes);
@@ -28,6 +28,7 @@ router.use('/coupons', couponRoutes);
 router.use('/addresses', addressRoutes);
 router.use('/orders', orderRoutes);
 router.use('/offline-orders', offlineOrderRoutes);
-// Mount other routes
+router.use('/contact', contactRoutes);
+router.use('/combos', comboRoutes);
 
 module.exports = router;

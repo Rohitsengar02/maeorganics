@@ -62,22 +62,65 @@ export default function CartSummary({ onNext }: CartSummaryProps) {
         <ScrollArea className="h-[400px]">
             <div className="space-y-6 pr-4">
             {cartItems.map((item) => (
-                <div key={item.id} className="flex items-center gap-6">
-                <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border bg-white">
-                    <Image
-                    src={item.image.imageUrl}
-                    alt={item.name}
-                    fill
-                    className="object-contain p-2"
-                    />
-                </div>
-                <div className="flex-1">
-                    <p className="font-bold text-lg text-[#2d2b28]">{item.name}</p>
-                    <p className="text-sm text-gray-500">
-                    Qty: {item.quantity}
-                    </p>
-                </div>
-                <p className="font-bold text-lg text-[#2d2b28]">${(item.price * item.quantity).toFixed(2)}</p>
+                <div key={item.id} className="rounded-xl border border-gray-200 bg-white p-4">
+                  <div className="flex items-center gap-6">
+                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border bg-white">
+                        <Image
+                        src={item.image.imageUrl}
+                        alt={item.name || (item as any).title}
+                        fill
+                        className="object-contain p-2"
+                        />
+                        {(item as any).isCombo && (
+                          <div className="absolute top-1 right-1 bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                            COMBO
+                          </div>
+                        )}
+                    </div>
+                    <div className="flex-1">
+                        <p className="font-bold text-lg text-[#2d2b28]">{item.name || (item as any).title}</p>
+                        <p className="text-sm text-gray-500">
+                        Qty: {item.quantity}
+                        </p>
+                        {(item as any).isCombo && (item as any).originalPrice && (
+                          <p className="text-xs text-gray-400 line-through mt-1">
+                            Original: ₹{(item as any).originalPrice.toFixed(2)}
+                          </p>
+                        )}
+                    </div>
+                    <p className="font-bold text-lg text-[#2d2b28]">₹{(item.price * item.quantity).toFixed(2)}</p>
+                  </div>
+                  
+                  {/* Show combo products */}
+                  {(item as any).isCombo && (item as any).products && (item as any).products.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <p className="text-xs font-semibold text-gray-600 mb-3">Includes:</p>
+                      <div className="grid grid-cols-2 gap-3">
+                        {(item as any).products.map((comboProduct: any, idx: number) => (
+                          <div key={idx} className="flex items-center gap-2 bg-gray-50 rounded-lg p-2">
+                            <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded bg-white">
+                              {comboProduct.product?.images?.[0] && (
+                                <Image
+                                  src={comboProduct.product.images[0]}
+                                  alt={comboProduct.product?.name || 'Product'}
+                                  fill
+                                  className="object-contain p-1"
+                                />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium text-gray-800 truncate">
+                                {comboProduct.product?.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                Qty: {comboProduct.quantity}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
             ))}
             </div>

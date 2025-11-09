@@ -4,13 +4,28 @@ const cartItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
-    required: true
+    required: function() {
+      return this.itemType === 'product';
+    }
+  },
+  combo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Combo',
+    required: function() {
+      return this.itemType === 'combo';
+    }
   },
   quantity: {
     type: Number,
     required: true,
     min: 1,
     default: 1
+  },
+  itemType: {
+    type: String,
+    enum: ['product', 'combo'],
+    required: true,
+    default: 'product'
   }
 }, { _id: false });
 

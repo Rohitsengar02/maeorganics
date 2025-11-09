@@ -57,18 +57,28 @@ const CartSidebar = () => {
                       <div className="relative h-24 w-24 overflow-hidden rounded-lg border bg-white">
                         <Image
                           src={item.image.imageUrl}
-                          alt={item.name}
+                          alt={item.title || item.name}
                           fill
                           className="object-contain p-2"
                         />
+                        {item.isCombo && (
+                          <div className="absolute top-1 right-1 bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                            COMBO
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1">
                         <p className="font-bold text-base text-[#2d2b28]">
-                          {item.name}
+                          {item.title || item.name}
                         </p>
                         <p className="text-sm text-gray-500">
                           ₹{(item.price || 0).toFixed(2)}
                         </p>
+                        {item.isCombo && item.originalPrice && (
+                          <p className="text-xs text-gray-400 line-through">
+                            ₹{item.originalPrice.toFixed(2)}
+                          </p>
+                        )}
                         <div className="mt-2 flex h-8 items-center justify-between rounded-full border bg-white px-2">
                           <Button
                             variant="ghost"

@@ -36,6 +36,7 @@ interface ProductGridProps {
     tags?: string[];
     sort?: 'all' | 'price-asc' | 'price-desc' | 'date-desc' | 'alphabetical';
   };
+  gridClassName?: string;
 }
 
 // Convert API product to Smoothie format
@@ -64,7 +65,7 @@ const convertToSmoothie = (apiProduct: any): Smoothie => {
 };
 
 const ProductGrid = forwardRef<HTMLDivElement, ProductGridProps>(
-  ({ isGridView = true, filters }, ref) => {
+  ({ isGridView = true, filters, gridClassName }, ref) => {
     const [products, setProducts] = useState<Smoothie[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -75,7 +76,7 @@ const ProductGrid = forwardRef<HTMLDivElement, ProductGridProps>(
           setLoading(true);
           setError(null);
 
-          const response = await getProducts({ limit: 20 }); // Get up to 20 products
+          const response = await getProducts({ limit: 10 }); // Get up to 10 products
           if (response.success) {
             const base = response.data.map(convertToSmoothie);
             // enrich ratings from reviews collection
@@ -176,7 +177,7 @@ const ProductGrid = forwardRef<HTMLDivElement, ProductGridProps>(
         ref={ref}
         className={cn(
           'grid gap-4 sm:gap-8 relative',
-          isGridView ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'
+          isGridView ? gridClassName ?? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : 'grid-cols-1'
         )}
         initial="hidden"
         whileInView="visible"

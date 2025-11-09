@@ -19,6 +19,7 @@ import {
   LayoutDashboard,
   ShoppingCart,
   Package,
+  Package2,
   Users,
   BarChart,
   Settings,
@@ -59,6 +60,11 @@ const menuItems = [
     icon: Package,
   },
   {
+    href: '/admin/combos',
+    label: 'Combos',
+    icon: Package2,
+  },
+  {
     href: '/admin/reviews',
     label: 'Reviews',
     icon: MessageSquare,
@@ -82,6 +88,11 @@ const menuItems = [
     href: '/admin/analytics',
     label: 'Analytics',
     icon: BarChart,
+  },
+  {
+    href: '/admin/contacts',
+    label: 'Contacts',
+    icon: MessageSquare,
   },
   {
     href: '/admin/discounts',

@@ -44,10 +44,10 @@ export default function AdminLayout({
         <Sidebar>
           <AdminSidebar />
         </Sidebar>
-        <div className="flex flex-1 flex-col">
+        <div className="flex w-full flex-1 flex-col">
           <AdminHeader />
           <SidebarInset>
-            <main className="flex-1 p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 w-[80vw] p-4 sm:p-6 lg:p-8">
               {children}
             </main>
           </SidebarInset>

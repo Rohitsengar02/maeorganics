@@ -11,12 +11,16 @@ export const getCart = async () => {
   return response.json();
 };
 
-export const addItemToCart = async (productId: string, quantity: number) => {
+export const addItemToCart = async (productId: string, quantity: number, isCombo: boolean = false) => {
   const headers = await getAuthHeadersWithContentType();
+  const body = isCombo 
+    ? { comboId: productId, quantity }
+    : { productId, quantity };
+    
   const response = await fetch(`${API_BASE_URL}/api/cart`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({ productId, quantity }),
+    body: JSON.stringify(body),
   });
   if (!response.ok) {
     throw new Error('Failed to add item to cart');
@@ -24,9 +28,10 @@ export const addItemToCart = async (productId: string, quantity: number) => {
   return response.json();
 };
 
-export const removeItemFromCart = async (productId: string) => {
+export const removeItemFromCart = async (productId: string, isCombo: boolean = false) => {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/cart/${productId}`, {
+  const itemType = isCombo ? 'combo' : 'product';
+  const response = await fetch(`${API_BASE_URL}/api/cart/${productId}?itemType=${itemType}`, {
     method: 'DELETE',
     headers,
   });

@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getProducts, deleteProduct } from '@/lib/products-api';
 import {
   AlertDialog,
@@ -53,14 +53,20 @@ interface Product {
   stockStatus?: string;
 }
 
+const PAGE_SIZE = 20;
+
 export default function ProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -72,35 +78,103 @@ export default function ProductsPage() {
     }
   };
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await getProducts({ status: statusFilter, search: searchTerm });
-      if (response.success) {
-        setProducts(response.data);
-      } else {
-        setError('Failed to fetch products');
+  const loadProducts = useCallback(
+    async (pageToLoad: number = 1, reset: boolean = false) => {
+      try {
+        if (reset) {
+          setLoading(true);
+          setHasMore(true);
+          setCurrentPage(1);
+        } else {
+          setLoadingMore(true);
+        }
+
+        setError(null);
+
+        const response = await getProducts({
+          status: statusFilter,
+          search: searchTerm,
+          page: pageToLoad,
+          limit: PAGE_SIZE,
+        });
+
+        if (response.success) {
+          const newProducts: Product[] = response.data || [];
+
+          setProducts((prev) => {
+            if (reset) {
+              return newProducts;
+            }
+
+            const existingIds = new Set(prev.map((p) => p._id));
+            const merged = [...prev];
+            newProducts.forEach((product) => {
+              if (!existingIds.has(product._id)) {
+                merged.push(product);
+              }
+            });
+            return merged;
+          });
+
+          setCurrentPage(pageToLoad);
+
+          const pagination = response.pagination;
+          if (pagination && typeof pagination.pages === 'number') {
+            setHasMore(pageToLoad < pagination.pages);
+          } else {
+            setHasMore(newProducts.length === PAGE_SIZE);
+          }
+        } else {
+          setError('Failed to fetch products');
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products');
+      } finally {
+        if (reset) {
+          setLoading(false);
+        } else {
+          setLoadingMore(false);
+        }
       }
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      setError('Failed to load products');
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [searchTerm, statusFilter]
+  );
 
   useEffect(() => {
-    fetchProducts();
-  }, [statusFilter]);
+    loadProducts(1, true);
+  }, [loadProducts, statusFilter]);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      fetchProducts();
+      loadProducts(1, true);
     }, 300);
 
     return () => clearTimeout(debounceTimer);
-  }, [searchTerm]);
+  }, [searchTerm, loadProducts]);
+
+  useEffect(() => {
+    const current = sentinelRef.current;
+    if (!current) return;
+
+    if (!hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && !loading && !loadingMore && hasMore) {
+          loadProducts(currentPage + 1);
+        }
+      },
+      {
+        rootMargin: '200px',
+      }
+    );
+
+    observer.observe(current);
+
+    return () => observer.disconnect();
+  }, [hasMore, loading, loadingMore, currentPage, loadProducts]);
 
   const handleDeleteProduct = async () => {
     if (!productToDelete) return;
@@ -207,6 +281,8 @@ export default function ProductsPage() {
           <Input
             placeholder="Search products..."
             className="pl-10"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
           />
         </div>
         <Button variant="outline" className="flex items-center gap-2">
@@ -308,6 +384,12 @@ export default function ProductsPage() {
                 </TableBody>
               </Table>
             </div>
+            <div ref={sentinelRef} className="h-1" />
+            {loadingMore && (
+              <div className="flex justify-center py-4">
+                <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>

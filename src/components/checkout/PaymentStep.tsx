@@ -78,14 +78,33 @@ export default function PaymentStep({ onNext, onBack }: PaymentStepProps) {
       return;
     }
 
-    // Build items
-    const items = cartItems.map((it) => ({
-      productId: it.id,
-      name: it.name,
-      imageUrl: it.image.imageUrl,
-      price: it.price,
-      quantity: it.quantity,
-    }));
+    // Build items - handle both products and combos
+    const items = cartItems.map((it) => {
+      const isCombo = (it as any).isCombo || false;
+      const item: any = {
+        itemType: isCombo ? 'combo' : 'product',
+        name: (it as any).title || it.name,
+        imageUrl: it.image.imageUrl,
+        price: it.price,
+        quantity: it.quantity,
+      };
+      
+      if (isCombo) {
+        item.comboId = it.id;
+        // Include combo products if available
+        if ((it as any).products && (it as any).products.length > 0) {
+          item.comboProducts = (it as any).products.map((cp: any) => ({
+            productId: cp.product?._id,
+            name: cp.product?.name,
+            quantity: cp.quantity
+          }));
+        }
+      } else {
+        item.productId = it.id;
+      }
+      
+      return item;
+    });
 
     // Build coupon
     let coupon: any = null;

@@ -106,18 +106,46 @@ function ThankYouPageInner() {
         <div className="mt-10" id="invoice-items">
           <h2 className="text-xl font-semibold mb-4">Items</h2>
           <div className="space-y-4">
-            {order.items.map((it: any) => (
-              <div key={it.productId} className="flex items-center justify-between border rounded-lg p-4 bg-white/70">
-                <div>
-                  <p className="font-medium">{it.name}</p>
-                  <p className="text-sm text-gray-600">Qty: {it.quantity}</p>
+            {order.items.map((it: any, idx: number) => {
+              const isCombo = it.itemType === 'combo';
+              return (
+                <div key={it.productId || it.comboId || idx} className="border rounded-lg p-4 bg-white/70">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{it.name}</p>
+                        {isCombo && (
+                          <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                            COMBO
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-600">Qty: {it.quantity}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{fmt(it.price)} x {it.quantity}</p>
+                      <p className="text-sm text-gray-600">{fmt(it.price * it.quantity)}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Show combo products if available */}
+                  {isCombo && it.comboProducts && it.comboProducts.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-gray-200">
+                      <p className="text-xs font-semibold text-gray-600 mb-2">Includes:</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {it.comboProducts.map((cp: any, cpIdx: number) => (
+                          <div key={cpIdx} className="flex items-center gap-2 text-xs text-gray-700 bg-gray-50 rounded p-2">
+                            <div className="w-2 h-2 rounded-full bg-green-600"></div>
+                            <span className="font-medium">{cp.name}</span>
+                            <span className="text-gray-500">x {cp.quantity}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="text-right">
-                  <p className="font-medium">{fmt(it.price)} x {it.quantity}</p>
-                  <p className="text-sm text-gray-600">{fmt(it.price * it.quantity)}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-6 border-t pt-4 space-y-2 text-sm">

@@ -1,11 +1,36 @@
 const mongoose = require('mongoose');
 
 const orderItemSchema = new mongoose.Schema({
-  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  productId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Product',
+    required: function() {
+      return this.itemType === 'product';
+    }
+  },
+  comboId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Combo',
+    required: function() {
+      return this.itemType === 'combo';
+    }
+  },
+  itemType: {
+    type: String,
+    enum: ['product', 'combo'],
+    required: true,
+    default: 'product'
+  },
   name: { type: String, required: true },
   imageUrl: { type: String, default: '' },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true, min: 1 },
+  // For combo items, optionally store the products that were part of the combo at purchase time
+  comboProducts: [{
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    name: { type: String },
+    quantity: { type: Number }
+  }]
 });
 
 const addressSnapshotSchema = new mongoose.Schema({

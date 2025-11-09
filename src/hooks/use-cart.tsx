@@ -8,6 +8,10 @@ import { useAuth } from './use-auth';
 
 interface CartItem extends Smoothie {
   quantity: number;
+  title?: string; // For combos
+  isCombo?: boolean; // Flag to identify combos
+  originalPrice?: number; // For combos to show original price
+  finalPrice?: number; // For combos
 }
 
 interface CartContextType {
@@ -21,6 +25,7 @@ interface CartContextType {
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
+  refreshCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -45,18 +50,32 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         try {
           const response = await getCart();
           if (response.success) {
-            const items = response.data.items.map((item: any) => ({
-              ...item.product,
-              id: item.product._id,
-              quantity: item.quantity,
-              price: item.product.currentPrice || item.product.regularPrice,
-              image: {
-                id: `img-${item.product._id}`,
-                description: item.product.name,
-                imageUrl: item.product.images?.[0] || '/placeholder-product.png',
-                imageHint: item.product.name
+            const items = response.data.items.map((item: any) => {
+              // Handle both products and combos
+              const isCombo = item.itemType === 'combo';
+              const itemData = isCombo ? item.combo : item.product;
+              
+              if (!itemData) {
+                console.warn('Cart item has no product or combo data:', item);
+                return null;
               }
-            }));
+              
+              return {
+                ...itemData,
+                id: itemData._id,
+                quantity: item.quantity,
+                price: isCombo 
+                  ? itemData.finalPrice 
+                  : (itemData.currentPrice || itemData.regularPrice),
+                isCombo,
+                image: {
+                  id: `img-${itemData._id}`,
+                  description: itemData.title || itemData.name,
+                  imageUrl: (isCombo ? itemData.bannerImage : itemData.images?.[0]) || '/placeholder-product.png',
+                  imageHint: itemData.title || itemData.name
+                }
+              };
+            }).filter(Boolean); // Remove null items
             setCartItems(items);
           }
         } catch (error) {
@@ -70,87 +89,194 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const openCart = useCallback(() => setIsCartOpen(true), []);
   const closeCart = useCallback(() => setIsCartOpen(false), []);
 
+  const refreshCart = useCallback(async () => {
+    if (user) {
+      try {
+        const response = await getCart();
+        if (response.success) {
+          const items = response.data.items.map((item: any) => {
+            const isCombo = item.itemType === 'combo';
+            const itemData = isCombo ? item.combo : item.product;
+            
+            if (!itemData) {
+              console.warn('Cart item has no product or combo data:', item);
+              return null;
+            }
+            
+            return {
+              ...itemData,
+              id: itemData._id,
+              quantity: item.quantity,
+              price: isCombo 
+                ? itemData.finalPrice 
+                : (itemData.currentPrice || itemData.regularPrice),
+              isCombo,
+              image: {
+                id: `img-${itemData._id}`,
+                description: itemData.title || itemData.name,
+                imageUrl: (isCombo ? itemData.bannerImage : itemData.images?.[0]) || '/placeholder-product.png',
+                imageHint: itemData.title || itemData.name
+              }
+            };
+          }).filter(Boolean);
+          setCartItems(items);
+        }
+      } catch (error) {
+        console.error("Failed to refresh cart", error);
+      }
+    }
+  }, [user]);
+
   const addToCart = useCallback(async (product: Smoothie, quantity: number = 1) => {
     if (!user) {
       toast({ title: "Please log in to add items to your cart.", variant: "destructive" });
       return;
     }
     try {
-      const response = await addItemToCart(product.id, quantity);
+      const isCombo = (product as any).isCombo || false;
+      const response = await addItemToCart(product.id, quantity, isCombo);
       if (response.success) {
-        const items = response.data.items.map((item: any) => ({
-          ...item.product,
-          id: item.product._id,
-          quantity: item.quantity,
-          price: item.product.currentPrice || item.product.regularPrice,
-          image: {
-            id: `img-${item.product._id}`,
-            description: item.product.name,
-            imageUrl: item.product.images?.[0] || '/placeholder-product.png',
-            imageHint: item.product.name
+        const items = response.data.items.map((item: any) => {
+          const isComboItem = item.itemType === 'combo';
+          const itemData = isComboItem ? item.combo : item.product;
+          
+          if (!itemData) {
+            console.warn('Cart item has no product or combo data:', item);
+            return null;
           }
-        }));
+          
+          return {
+            ...itemData,
+            id: itemData._id,
+            quantity: item.quantity,
+            price: isComboItem 
+              ? itemData.finalPrice 
+              : (itemData.currentPrice || itemData.regularPrice),
+            isCombo: isComboItem,
+            image: {
+              id: `img-${itemData._id}`,
+              description: itemData.title || itemData.name,
+              imageUrl: (isComboItem ? itemData.bannerImage : itemData.images?.[0]) || '/placeholder-product.png',
+              imageHint: itemData.title || itemData.name
+            }
+          };
+        }).filter(Boolean);
         setCartItems(items);
         toast({ title: `Added ${product.name} to cart.` });
         openCart();
       }
     } catch (error) {
+      console.error('Add to cart error:', error);
       toast({ title: "Failed to add item to cart.", variant: "destructive" });
     }
   }, [user, openCart, toast]);
 
   const removeFromCart = useCallback(async (productId: string) => {
-    if (!user) return;
+    if (!user) {
+      console.log('[CART CLIENT] User not logged in, cannot remove item');
+      return;
+    }
+    
+    console.log('[CART CLIENT] Remove from cart - START');
+    console.log('[CART CLIENT] Product ID:', productId);
+    console.log('[CART CLIENT] Current cart items:', cartItems.length);
+    
+    // Find if this is a combo or product
+    const item = cartItems.find(i => i.id === productId);
+    const isCombo = item?.isCombo || false;
+    
+    console.log('[CART CLIENT] Item to remove:', {
+      id: productId,
+      name: item?.name,
+      isCombo,
+      found: !!item
+    });
+    
+    if (!item) {
+      console.error('[CART CLIENT] Item not found in cart state!');
+      toast({ title: "Item not found in cart.", variant: "destructive" });
+      return;
+    }
+    
+    // OPTIMISTIC UPDATE: Remove from UI immediately
+    const previousItems = [...cartItems];
+    const optimisticItems = cartItems.filter(i => i.id !== productId);
+    console.log('[CART CLIENT] Optimistically removing item, new count:', optimisticItems.length);
+    setCartItems(optimisticItems);
+    
     try {
-      const response = await removeItemFromCart(productId);
+      console.log('[CART CLIENT] Calling API to remove item...');
+      const response = await removeItemFromCart(productId, isCombo);
+      console.log('[CART CLIENT] API response:', response.success);
+      console.log('[CART CLIENT] Response items count:', response.data?.items?.length || 0);
+      
       if (response.success) {
-        const items = response.data.items.map((item: any) => ({
-          ...item.product,
-          id: item.product._id,
-          quantity: item.quantity,
-          price: item.product.currentPrice || item.product.regularPrice,
-          image: {
-            id: `img-${item.product._id}`,
-            description: item.product.name,
-            imageUrl: item.product.images?.[0] || '/placeholder-product.png',
-            imageHint: item.product.name
+        // Sync with backend response
+        const items = response.data.items.map((item: any) => {
+          const isCombo = item.itemType === 'combo';
+          const itemData = isCombo ? item.combo : item.product;
+          
+          if (!itemData) {
+            console.warn('Cart item has no product or combo data:', item);
+            return null;
           }
-        }));
+          
+          return {
+            ...itemData,
+            id: itemData._id,
+            quantity: item.quantity,
+            price: isCombo 
+              ? itemData.finalPrice 
+              : (itemData.currentPrice || itemData.regularPrice),
+            isCombo,
+            image: {
+              id: `img-${itemData._id}`,
+              description: itemData.title || itemData.name,
+              imageUrl: (isCombo ? itemData.bannerImage : itemData.images?.[0]) || '/placeholder-product.png',
+              imageHint: itemData.title || itemData.name
+            }
+          };
+        }).filter(Boolean);
+        
+        console.log('[CART CLIENT] Syncing with backend, final count:', items.length);
         setCartItems(items);
         toast({ title: "Item removed from cart." });
+        console.log('[CART CLIENT] Remove from cart - SUCCESS');
+      } else {
+        // Revert optimistic update
+        console.error('[CART CLIENT] API returned success: false, reverting');
+        setCartItems(previousItems);
+        toast({ title: "Failed to remove item from cart.", variant: "destructive" });
       }
     } catch (error) {
+      // Revert optimistic update on error
+      console.error('[CART CLIENT] Remove from cart error:', error);
+      console.log('[CART CLIENT] Reverting optimistic update');
+      setCartItems(previousItems);
       toast({ title: "Failed to remove item from cart.", variant: "destructive" });
     }
-  }, [user, toast]);
+  }, [user, cartItems, toast]);
 
-  const updateQuantity = useCallback(async (productId: string, quantity: number) => {
+  const updateQuantity = useCallback(async (itemId: string, quantity: number) => {
     if (!user) return;
     if (quantity <= 0) {
-      await removeFromCart(productId);
+      await removeFromCart(itemId);
     } else {
       try {
-        const response = await addItemToCart(productId, quantity);
+        // Find if this is a combo or product
+        const item = cartItems.find(i => i.id === itemId);
+        const isCombo = item?.isCombo || false;
+        
+        const response = await addItemToCart(itemId, quantity, isCombo);
         if (response.success) {
-          const items = response.data.items.map((item: any) => ({
-            ...item.product,
-            id: item.product._id,
-            quantity: item.quantity,
-            price: item.product.currentPrice || item.product.regularPrice,
-            image: {
-              id: `img-${item.product._id}`,
-              description: item.product.name,
-              imageUrl: item.product.images?.[0] || '/placeholder-product.png',
-              imageHint: item.product.name
-            }
-          }));
-          setCartItems(items);
+          // Refresh cart to get updated data
+          await refreshCart();
         }
       } catch (error) {
         toast({ title: "Failed to update quantity.", variant: "destructive" });
       }
     }
-  }, [user, removeFromCart, toast]);
+  }, [user, cartItems, removeFromCart, refreshCart, toast]);
   
   const cartCount = useMemo(() => cartItems.reduce((acc, item) => acc + item.quantity, 0), [cartItems]);
   
@@ -172,6 +298,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     isCartOpen,
     openCart,
     closeCart,
+    refreshCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -96,22 +96,48 @@ export default function OrderDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
-                    {order.items.map((item: any, index: number) => (
-                      <div key={index} className="flex items-center gap-4">
-                        <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border bg-white">
-                          {item.imageUrl ? (
-                            <Image src={item.imageUrl} alt={item.name} fill className="object-contain p-2" />
-                          ) : (
-                            <div className="h-full w-full flex items-center justify-center text-xs text-gray-500">IMG</div>
+                    {order.items.map((item: any, index: number) => {
+                      const isCombo = item.itemType === 'combo';
+                      return (
+                        <div key={index} className="border rounded-lg p-3 bg-white/50">
+                          <div className="flex items-center gap-4">
+                            <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border bg-white">
+                              {item.imageUrl ? (
+                                <Image src={item.imageUrl} alt={item.name} fill className="object-contain p-2" />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center text-xs text-gray-500">IMG</div>
+                              )}
+                              {isCombo && (
+                                <div className="absolute top-1 right-1 bg-green-600 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
+                                  COMBO
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-bold text-[#2d2b28]">{item.name}</p>
+                              <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                            </div>
+                            <p className="font-semibold">{fmt(item.price * item.quantity)}</p>
+                          </div>
+                          
+                          {/* Show combo products if available */}
+                          {isCombo && item.comboProducts && item.comboProducts.length > 0 && (
+                            <div className="mt-3 pt-3 border-t border-gray-200">
+                              <p className="text-xs font-semibold text-gray-600 mb-2">Includes:</p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {item.comboProducts.map((cp: any, cpIdx: number) => (
+                                  <div key={cpIdx} className="flex items-center gap-2 text-xs text-gray-700 bg-gray-50 rounded p-2">
+                                    <div className="w-2 h-2 rounded-full bg-green-600"></div>
+                                    <span className="font-medium">{cp.name}</span>
+                                    <span className="text-gray-500">x {cp.quantity}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
                           )}
                         </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-[#2d2b28]">{item.name}</p>
-                          <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                        </div>
-                        <p className="font-semibold">{fmt(item.price * item.quantity)}</p>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   {/* Delivery Progress */}
                   <div className="mt-6">

@@ -75,15 +75,22 @@ const connectDB = async () => {
       return;
     }
     
-    console.log('[MongoDB] Connecting...');
+    // Log masked URI for debugging
+    const maskedUri = process.env.MONGODB_URI.replace(/:([^:@]+)@/, ':****@');
+    console.log('[MongoDB] Connecting to:', maskedUri);
+    console.log('[MongoDB] URI length:', process.env.MONGODB_URI.length);
+    
     await mongoose.connect(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });
     
     console.log('[MongoDB] Connected successfully');
+    console.log('[MongoDB] Database:', mongoose.connection.name);
   } catch (error) {
     console.error('[MongoDB] Connection error:', error.message);
+    console.error('[MongoDB] Error code:', error.code);
+    lastMongoError = error.message;
     // Non-fatal in serverless - continue without MongoDB
   }
 };
@@ -99,6 +106,14 @@ app.get('/', (req, res) => {
     firebase: firebaseReady ? 'READY' : 'NOT_READY',
     timestamp: new Date().toISOString()
   });
+});
+
+// Debug middleware - log all requests
+app.use((req, res, next) => {
+  console.log(`[EXPRESS] ${req.method} ${req.url} ${req.path}`);
+  console.log(`[EXPRESS] Headers:`, Object.keys(req.headers));
+  console.log(`[EXPRESS] Body:`, req.body);
+  next();
 });
 
 // API Routes
@@ -210,13 +225,21 @@ app.get('/status', (req, res) => {
   </html>`);
 });
 
+// Debug: Catch-all to see what routes aren't matching
+app.use((req, res, next) => {
+  console.log('[EXPRESS] 404 - No route matched:', req.method, req.url, req.path);
+  console.log('[EXPRESS] Available routes should match /api/*');
+  next();
+});
+
 // 404 handler
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
     message: 'Route not found',
     path: req.path,
-    method: req.method
+    method: req.method,
+    url: req.url
   });
 });
 

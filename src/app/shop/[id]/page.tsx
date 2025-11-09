@@ -246,7 +246,12 @@ export default function ProductDetailPage() {
         id: product._id,
         name: product.name,
         price: product.currentPrice || product.regularPrice,
-        image: product.images?.[0] || '/placeholder-product.png',
+        image: {
+          id: `img-${product._id}`,
+          description: product.name,
+          imageUrl: product.images?.[0] || '/placeholder-product.png',
+          imageHint: product.name
+        },
         description: product.shortDescription || '',
         sku: product.sku,
         rating: 4.5, // Default rating

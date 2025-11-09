@@ -75,27 +75,53 @@ export default function OrderDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {order.items.map((it: any, idx: number) => (
-                  <div key={idx} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="relative h-12 w-12 rounded-md bg-muted overflow-hidden">
-                        {it.imageUrl ? (
-                          <Image src={it.imageUrl} alt={it.name} fill className="object-contain p-1" />
-                        ) : (
-                          <div className="h-full w-full flex items-center justify-center text-xs text-gray-500">IMG</div>
-                        )}
+                {order.items.map((it: any, idx: number) => {
+                  const isCombo = it.itemType === 'combo';
+                  return (
+                    <div key={idx} className="border rounded-lg p-3 bg-muted/30">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="relative h-12 w-12 rounded-md bg-white overflow-hidden border">
+                            {it.imageUrl ? (
+                              <Image src={it.imageUrl} alt={it.name} fill className="object-contain p-1" />
+                            ) : (
+                              <div className="h-full w-full flex items-center justify-center text-xs text-gray-500">IMG</div>
+                            )}
+                            {isCombo && (
+                              <div className="absolute top-0 right-0 bg-green-600 text-white text-[8px] px-1.5 py-0.5 rounded-bl-md font-bold">
+                                COMBO
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-medium">{it.name}</p>
+                            <p className="text-sm text-gray-500">Qty: {it.quantity}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">{fmt(it.price)} x {it.quantity}</p>
+                          <p className="text-sm text-gray-600">{fmt(it.price * it.quantity)}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium">{it.name}</p>
-                        <p className="text-sm text-gray-500">Qty: {it.quantity}</p>
-                      </div>
+                      
+                      {/* Show combo products */}
+                      {isCombo && it.comboProducts && it.comboProducts.length > 0 && (
+                        <div className="mt-3 pt-3 border-t">
+                          <p className="text-xs font-semibold text-gray-600 mb-2">Includes:</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {it.comboProducts.map((cp: any, cpIdx: number) => (
+                              <div key={cpIdx} className="flex items-center gap-2 text-xs text-gray-700 bg-white rounded p-2 border">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
+                                <span className="font-medium flex-1">{cp.name}</span>
+                                <span className="text-gray-500">x {cp.quantity}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium">{fmt(it.price)} x {it.quantity}</p>
-                      <p className="text-sm text-gray-600">{fmt(it.price * it.quantity)}</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               <Separator className="my-4" />
               <div className="space-y-2 text-sm">

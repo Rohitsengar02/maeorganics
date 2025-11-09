@@ -143,7 +143,11 @@ export default function ShopPage() {
               </div>
 
               {/* Product Grid */}
-              <ProductGrid isGridView={isGridView} filters={filters} />
+              <ProductGrid
+                isGridView={isGridView}
+                filters={filters}
+                gridClassName="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              />
             </div>
           </div>
         </div>

@@ -65,7 +65,7 @@ const WhyChooseUs = () => {
 
 
   return (
-    <section className="py-2 mt-[-18rem] lg:mt-[-5rem] sm:py-[-10rem] bg-[#fdf8e8] overflow-hidden relative z-10">
+    <section className="py-2  lg:mt-[-5rem] sm:py-[10rem] bg-[#fdf8e8] overflow-hidden relative z-10">
       <div className="container max-w-7xl mx-auto px-4">
         <motion.div 
           className="text-center mb-12 md:mb-16"
@@ -75,7 +75,7 @@ const WhyChooseUs = () => {
           variants={itemVariants}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Why Choose Our Smoothies?</h2>
+          <h2 className="text-4xl font-headline font-black text-[#2d2b28]">Why Choose us</h2>
           <p className="max-w-2xl mx-auto mt-4 text-[#5a5854]">
             Your self-care ritual in a bottle! It has branched-chain amino acids, is whatever & further has shatavari, an adaptogen that is prized.
           </p>
