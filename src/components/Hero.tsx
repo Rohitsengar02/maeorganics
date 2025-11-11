@@ -316,9 +316,9 @@ const Hero = () => {
         </motion.header>
 
         {/* Main Content */}
-        <div className="mt-8 flex flex-col items-center gap-8 text-center lg:mt-[-20px] lg:flex-row lg:items-center lg:gap-12 lg:text-left">
+        <div className="mt-24 flex flex-col-reverse items-center gap-4 text-center lg:mt-[-20px] lg:flex-row lg:items-center lg:gap-12 lg:text-left">
           {/* Left Content */}
-          <div className="flex-1 space-y-6 lg:space-y-8 mt-[2rem] lg:mt-[-2rem]">
+          <div className="flex-1 space-y-6 lg:space-y-8 mt-[-7rem] lg:mt-[-2rem]">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={`content-${currentSlide.id}`}
